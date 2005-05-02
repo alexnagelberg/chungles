@@ -104,15 +104,16 @@ public class FileList
 			}
 			else
 			{
-				FileList templist=new FileList(list.getHead());
+				FileList templist=new FileList(head);
 				list.setNext(templist);
 				templist.setPrev(list);
 				list=templist;
 			}
-			list.setLocalPath(files[0]);
-			list.setSize(new File(files[0]).length());
-			list.setRemotePath(files[0].substring(files[0].lastIndexOf('/')));
-			if (new File(files[0]).isFile())
+			//System.out.println(files[i]);
+			list.setLocalPath(files[i]);
+			list.setSize(new File(files[i]).length());
+			list.setRemotePath(files[i].substring(files[i].lastIndexOf('/')));
+			if (new File(files[i]).isFile())
 			{
 				list.setFileType(FILE);
 			}
@@ -120,10 +121,12 @@ public class FileList
 			{
 				list.setFileType(DIRECTORY);
 				FileList next=recurseFiles(list);
-				list.setNext(next.getHead());
+				//list.setNext(next.getHead());				
 				list=next;
+				
 			}
 		}
+		
 		return head;
 	}
 	
@@ -136,17 +139,27 @@ public class FileList
     	}	
 		
 		int i;		
-		FileList head=list;
+		FileList head=null;
 		for (i=0; i<files.length; i++)
-		{
-			FileList item=new FileList(head);
+		{			
+			FileList item;
+			if (head==null)
+			{
+				item=new FileList();
+				head=item;
+			}
+			else
+			{
+				item=new FileList(head);
+			}
 			list.setNext(item);
-			item.setPrev(list);			
-			item.setLocalPath(files[0].getAbsolutePath());
+			item.setPrev(list);	
+			
+			item.setLocalPath(files[i].getAbsolutePath());
 			int offset=list.getLocalPath().length()-list.getRemotePath().length();
-			item.setRemotePath(files[0].getAbsolutePath().substring(offset));
-			item.setSize(files[0].length());
-			if (files[0].isFile())
+			item.setRemotePath(files[i].getAbsolutePath().substring(offset));
+			item.setSize(files[i].length());
+			if (files[i].isFile())
 			{
 				item.setFileType(FILE);
 				list=item;
@@ -155,8 +168,11 @@ public class FileList
 			{
 				item.setFileType(DIRECTORY);
 				FileList next=recurseFiles(item);
-				item.setNext(next.getHead());
-				list=next;
+				if (next!=null)
+				{
+					item.setNext(next.getHead());
+					list=next;
+				}
 			}			
 		}
 		return list;

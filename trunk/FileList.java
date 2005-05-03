@@ -2,25 +2,21 @@ import java.io.File;
 
 public class FileList
 {
-	private final static int DIRECTORY=0;
-	private final static int FILE=1;
+	public final static int DIRECTORY=0;
+	public final static int FILE=1;
 	
 	private String remotePath, localPath;
 	private int fileType;
+	private static long totalSize=0;
+	private static int numFiles=0;
 	private long size;
-	private FileList next=null, previous=this, head;
+	private FileList next=null;
 	
-	public FileList()
+	private FileList()
 	{
-		this.head=this;
 	}
 	
-	public FileList(FileList head)
-	{
-		this.head=head;
-	}
-	
-	public void setNext(FileList next)
+	private void setNext(FileList next)
 	{
 		this.next=next;
 	}
@@ -30,17 +26,7 @@ public class FileList
 		return next;
 	}
 	
-	public void setPrev(FileList previous)
-	{
-		this.previous=previous;
-	}
-	
-	public FileList getPrev()
-	{
-		return previous;
-	}
-	
-	public void setRemotePath(String path)
+	private void setRemotePath(String path)
 	{
 		remotePath=path;
 	}
@@ -50,7 +36,7 @@ public class FileList
 		return remotePath;
 	}
 	
-	public void setLocalPath(String path)
+	private void setLocalPath(String path)
 	{
 		localPath=path;
 	}
@@ -60,7 +46,7 @@ public class FileList
 		return localPath;		
 	}
 	
-	public void setSize(long size)
+	private void setSize(long size)
 	{
 		this.size=size;
 	}
@@ -70,7 +56,7 @@ public class FileList
 		return size;
 	}
 	
-	public void setFileType(int type)
+	private void setFileType(int type)
 	{
 		fileType=type;
 	}
@@ -80,14 +66,19 @@ public class FileList
 		return fileType;
 	}
 	
-	private void setHead(FileList head)
+	public static long getTotalSize()
 	{
-		this.head=head;
+		return totalSize;
 	}
 	
-	private FileList getHead()
+	public static void resetTotalSize()
 	{
-		return head;
+		totalSize=0;
+	}
+	
+	public static int getNumFiles()
+	{
+		return numFiles;
 	}
 	
 	public static FileList recurseFiles(String[] files)
@@ -104,15 +95,15 @@ public class FileList
 			}
 			else
 			{
-				FileList templist=new FileList(head);
+				FileList templist=new FileList();
 				list.setNext(templist);
-				templist.setPrev(list);
 				list=templist;
 			}
-			//System.out.println(files[i]);
 			list.setLocalPath(files[i]);
 			list.setSize(new File(files[i]).length());
+			totalSize+=list.getSize();
 			list.setRemotePath(files[i].substring(files[i].lastIndexOf('/')));
+			numFiles++;
 			if (new File(files[i]).isFile())
 			{
 				list.setFileType(FILE);
@@ -120,8 +111,7 @@ public class FileList
 			else
 			{
 				list.setFileType(DIRECTORY);
-				FileList next=recurseFiles(list);
-				//list.setNext(next.getHead());				
+				FileList next=recurseFiles(list);				
 				list=next;
 				
 			}
@@ -139,26 +129,17 @@ public class FileList
     	}	
 		
 		int i;		
-		FileList head=null;
 		for (i=0; i<files.length; i++)
-		{			
-			FileList item;
-			if (head==null)
-			{
-				item=new FileList();
-				head=item;
-			}
-			else
-			{
-				item=new FileList(head);
-			}
-			list.setNext(item);
-			item.setPrev(list);	
+		{
+			FileList item=new FileList();
+			list.setNext(item);	
 			
 			item.setLocalPath(files[i].getAbsolutePath());
 			int offset=list.getLocalPath().length()-list.getRemotePath().length();
 			item.setRemotePath(files[i].getAbsolutePath().substring(offset));
 			item.setSize(files[i].length());
+			totalSize+=files[i].length();
+			numFiles++;
 			if (files[i].isFile())
 			{
 				item.setFileType(FILE);
@@ -170,8 +151,11 @@ public class FileList
 				FileList next=recurseFiles(item);
 				if (next!=null)
 				{
-					item.setNext(next.getHead());
 					list=next;
+				}
+				else
+				{
+					list=item;
 				}
 			}			
 		}

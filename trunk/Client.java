@@ -62,20 +62,20 @@ public class Client
 		
 	}
 	
-	public boolean requestFileSend(String path, File file)
+	public boolean requestFileSend(String path, FileList file)
 	{			
-		if (file.isFile())
+		if (file.getFileType()==FileList.FILE)
 		{
 			out.write(ServerConnectionThread.REQUEST_SEND);
 			out.println(path);
-			out.println(file.getAbsolutePath());
-			out.println(""+file.length());
+			out.println(file.getRemotePath());
+			out.println(""+file.getSize());
 		}
-		else if (file.isDirectory())
+		else
 		{
 			out.write(ServerConnectionThread.REQUEST_MKDIR);
 			out.println(path);
-			out.println(file.getAbsolutePath());
+			out.println(file.getRemotePath());
 		}
 		
 		int status=ServerConnectionThread.NO;
@@ -93,8 +93,14 @@ public class Client
 	
 	public void sendFile(final String filename, final SendProgressListener listener)
 	{
-		try
+		if (new File(filename).isDirectory())
 		{
+			listener.progressUpdate(filename.length());
+			return;
+		}
+		
+		try
+		{			
 			DataOutputStream out=new DataOutputStream(socket.getOutputStream());			
 			DataInputStream filein=new DataInputStream(new FileInputStream(filename));
 			byte[] buffer=new byte[1024];

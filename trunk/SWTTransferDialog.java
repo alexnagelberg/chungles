@@ -69,11 +69,11 @@ public class SWTTransferDialog
 		});		
 	}
 	
-	public void updateProgress(long sent, long fileSize, long totalSize)
+	public void updateProgress(long sent, long fileSize, long totalSent, long totalSize)
 	{
 		final int fileProgress=(int)(((double)sent/(double)fileSize)*100.);
-		final int filesProgress=(int)(((double)sent/(double)totalSize)*100.);
-		System.out.println(""+fileProgress);
+		final int filesProgress=(int)(((double)totalSent/(double)totalSize)*100.);
+		System.out.println(totalSent + "/" + totalSize);
 		display.asyncExec(new Runnable()
 		{
 			public void run()

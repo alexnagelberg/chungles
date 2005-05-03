@@ -118,9 +118,11 @@ public class ServerConnectionThread extends Thread
 		{
 			DataOutputStream out=new DataOutputStream(socket.getOutputStream());			
 			String path=in.readLine();
+			String share=path.substring(1, path.substring(1).indexOf('/')+1);			
+			path=Configuration.getSharePath(share)+path.substring(share.length()+2);
 			String file=in.readLine();			
 			long totalread=0, size=Long.parseLong(in.readLine());			
-			DataOutputStream fileout=new DataOutputStream(new FileOutputStream(file));
+			DataOutputStream fileout=new DataOutputStream(new FileOutputStream(path+file));
 			
 			// KLUDGE, REMOVE AND PUT REAL CODE
 			out.write(OK);

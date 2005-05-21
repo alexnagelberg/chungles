@@ -12,11 +12,11 @@ public class FileList
 	private long size;
 	private FileList next=null;
 	
-	private FileList()
+	public FileList()
 	{
 	}
 	
-	private void setNext(FileList next)
+	public void setNext(FileList next)
 	{
 		this.next=next;
 	}
@@ -26,7 +26,7 @@ public class FileList
 		return next;
 	}
 	
-	private void setRemotePath(String path)
+	public void setRemotePath(String path)
 	{
 		remotePath=path;
 	}
@@ -36,7 +36,7 @@ public class FileList
 		return remotePath;
 	}
 	
-	private void setLocalPath(String path)
+	public void setLocalPath(String path)
 	{
 		localPath=path;
 	}
@@ -46,7 +46,7 @@ public class FileList
 		return localPath;		
 	}
 	
-	private void setSize(long size)
+	public void setSize(long size)
 	{
 		this.size=size;
 	}
@@ -56,7 +56,7 @@ public class FileList
 		return size;
 	}
 	
-	private void setFileType(int type)
+	public void setFileType(int type)
 	{
 		fileType=type;
 	}
@@ -76,18 +76,36 @@ public class FileList
 		totalSize=0;
 	}
 	
+	public static void setTotalSize(long size)
+	{
+	    totalSize=size;
+	}
+	
 	public static int getNumFiles()
 	{
 		return numFiles;
 	}
 	
+	public static void resetNumFiles()
+	{
+		numFiles=0;
+	}
+	
+	public static void setNumFiles(int num)
+	{
+	    numFiles=num;
+	}
+	
 	public static FileList recurseFiles(String[] files)
 	{
 		int i;
+		resetTotalSize();
+		resetNumFiles();
 		FileList list=null;
 		FileList head=null;
 		for (i=0; i<files.length; i++)
 		{
+		        File f = new File(files[i]);
 			if (list==null)
 			{
 				list=new FileList();
@@ -100,11 +118,11 @@ public class FileList
 				list=templist;
 			}
 			list.setLocalPath(files[i]);
-			list.setSize(new File(files[i]).length());
+			list.setSize(f.length());
 			totalSize+=list.getSize();
-			list.setRemotePath(files[i].substring(files[i].lastIndexOf('/')));
+			list.setRemotePath("/"+f.getName());
 			numFiles++;
-			if (new File(files[i]).isFile())
+			if (f.isFile())
 			{
 				list.setFileType(FILE);
 			}
@@ -113,7 +131,6 @@ public class FileList
 				list.setFileType(DIRECTORY);
 				FileList next=recurseFiles(list);				
 				list=next;
-				
 			}
 		}
 		

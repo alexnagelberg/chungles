@@ -19,7 +19,9 @@ public class mDNSUtil
 						
 		JmDNS mdns=new JmDNS(ip);		
 		mdnslist.put(mdns.getInterface().getHostAddress(), mdns);
-		ServiceInfo service=new ServiceInfo("_chungles._tcp.local.", mdns.getInterface().getHostAddress()+"._chungles._tcp.local.", 6565, 0, 0, "Chungles Node");
+		ServiceInfo service=new ServiceInfo("_chungles._tcp.local.", 
+		        mdns.getInterface().getHostAddress()+"._chungles._tcp.local.", 6565, 0, 0,
+		        Configuration.getComputerName());
 		mdns.addServiceListener("_chungles._tcp.local.", new NodeDetect());
 		mdns.registerService(service);   		
 		

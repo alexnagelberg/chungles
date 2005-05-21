@@ -12,6 +12,7 @@ public class ServerConnectionThread extends Thread
 	public final static int REQUEST_MKDIR=4;
 	public final static int OK=4;
 	public final static int NO=5;
+	public final static int RECURSE_FILES=6;
 	public final static char IS_FILE='F';
 	public final static char IS_DIRECTORY='D';
 	
@@ -25,7 +26,7 @@ public class ServerConnectionThread extends Thread
 	{
 		try
 		{			
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			DataInputStream in = new DataInputStream(socket.getInputStream());
 			
 			int command=in.read();
 			while (command!=-1)
@@ -42,11 +43,11 @@ public class ServerConnectionThread extends Thread
 		
 	}
 	
-	private void executeCommand(int command, BufferedReader in)
+	private void executeCommand(int command, DataInputStream in)
 	{
 		try
 		{
-			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);		
+			DataOutputStream out = new DataOutputStream(socket.getOutputStream());		
 		
 			switch(command)
 			{
@@ -57,13 +58,18 @@ public class ServerConnectionThread extends Thread
 				}
 				case REQUEST_SEND:
 				{
-					requestSend(in);
+					requestSend(in, out);
 					break;
 				}
 				case REQUEST_MKDIR:
 				{
-					requestMakeDirectory(in);
+					requestMakeDirectory(in, out);
 					break;
+				}
+				case RECURSE_FILES:
+				{
+				    recurseFiles(in, out);
+				    break;
 				}
 			}
 		}
@@ -73,7 +79,7 @@ public class ServerConnectionThread extends Thread
 		}
 	}
 	
-	private void listShares(BufferedReader in, PrintWriter out) throws IOException
+	private void listShares(DataInputStream in, DataOutputStream out) throws IOException
 	{
 		String path=in.readLine();
 		
@@ -84,7 +90,7 @@ public class ServerConnectionThread extends Thread
 			while (iterator.hasNext())
 			{
 				out.write(IS_DIRECTORY);
-				out.println(iterator.next());
+				out.writeBytes(iterator.next()+"\n");
 			}
 		}
 		else
@@ -102,21 +108,20 @@ public class ServerConnectionThread extends Thread
 					out.write(IS_FILE);
 				else
 					out.write(IS_DIRECTORY);
-				out.println(files[i]);
+				out.writeBytes(files[i]+"\n");
 		  	   }
             }
         }
 		
 		// terminator
 		out.write(TERMINATOR);
-		out.println("");
+		out.writeBytes("\n");
 	}
 	
-	public void requestSend(BufferedReader in)
+	public void requestSend(DataInputStream in, DataOutputStream out)
 	{
 		try
-		{
-			DataOutputStream out=new DataOutputStream(socket.getOutputStream());			
+		{			
 			String path=in.readLine();
 			String share=path.substring(1, path.substring(1).indexOf('/')+1);			
 			path=Configuration.getSharePath(share)+path.substring(share.length()+2);
@@ -129,9 +134,17 @@ public class ServerConnectionThread extends Thread
 						
 			while (totalread<size)
 			{
-				DataInputStream datain=new DataInputStream(socket.getInputStream());
 				byte[] buffer=new byte[1024];
-				int read=datain.read(buffer);
+				int read;
+				if (size-totalread<1024)
+				{
+					//conversion of long to int ok, it's under 1024 ;)
+					read=in.read(buffer, 0, (int)(size-totalread));
+				}
+				else
+				{
+					read=in.read(buffer);
+				}
 				fileout.write(buffer, 0, read);
 				totalread+=read;
 			}
@@ -146,11 +159,10 @@ public class ServerConnectionThread extends Thread
 		
 	}
 	
-	public void requestMakeDirectory(BufferedReader in)
+	public void requestMakeDirectory(DataInputStream in, DataOutputStream out)
 	{
 		try
 		{
-			DataOutputStream out=new DataOutputStream(socket.getOutputStream());
 			String path=in.readLine();
 			String directory=in.readLine();
 			String share=path.substring(1, path.substring(1).indexOf('/')+1);
@@ -167,5 +179,22 @@ public class ServerConnectionThread extends Thread
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	private void recurseFiles(DataInputStream in, DataOutputStream out) throws IOException
+	{
+	    String path=in.readLine();
+		String share=path.substring(1, path.substring(1).indexOf('/')+1);			
+		path=Configuration.getSharePath(share)+"/"+path.substring(share.length()+2);
+		FileList list=FileList.recurseFiles(new String[] {path});
+		while (list!=null)
+		{
+		    out.writeBytes("/"+share+list.getLocalPath().
+		            substring(Configuration.getSharePath(share).length())+"\n");
+		    out.writeBytes(list.getSize()+"\n");
+		    list=list.getNext();
+		}
+		out.write(TERMINATOR);
+		out.writeBytes("\n");
 	}
 }

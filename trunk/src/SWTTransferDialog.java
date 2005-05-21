@@ -1,4 +1,7 @@
+import java.io.InputStream;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
 
 public class SWTTransferDialog
@@ -8,6 +11,7 @@ public class SWTTransferDialog
 	private Shell shell;
 	private Label currentFileLabel, fileRatioLabel;
 	private ProgressBar fileProgressBar, filesProgressBar;
+	private static int fileprogress, filesprogress;
 	
 	private SWTTransferDialog(Display display)
 	{
@@ -31,6 +35,8 @@ public class SWTTransferDialog
 
 		shell.setLayout(null);
 		shell.setText("File Send");
+		InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/chungles.gif");	
+		shell.setImage(new Image(display, in));
 		shell.layout();
 		shell.pack();
 		shell.setSize(640, 265);
@@ -71,22 +77,13 @@ public class SWTTransferDialog
 	
 	public void updateProgress(long sent, long fileSize, long totalSent, long totalSize)
 	{
-		final int fileProgress=(int)(((double)sent/(double)fileSize)*100.);
-		final int filesProgress=(int)(((double)totalSent/(double)totalSize)*100.);
-		System.out.println(totalSent + "/" + totalSize);
-		display.asyncExec(new Runnable()
-		{
-			public void run()
-			{		
-				fileProgressBar.setSelection(fileProgress);
-				filesProgressBar.setSelection(filesProgress);
-			}
-		});
+		fileprogress=(int)(((double)sent/(double)fileSize)*100.);
+		filesprogress=(int)(((double)totalSent/(double)totalSize)*100.);		
 	}
 	
 	public void updateLables(final String filename, final int file, final int files)
 	{
-		display.asyncExec(new Runnable()
+		display.syncExec(new Runnable()
 				{
 					public void run()
 					{
@@ -94,5 +91,27 @@ public class SWTTransferDialog
 						fileRatioLabel.setText("File " + file + " of " + files);
 					}
 				});
+	}
+	
+	public void progressThread()
+	{
+	    new Thread()
+	    {
+	        public void run()
+	        {	            
+	            int lastprogress=0;
+	            while (filesprogress<100)
+	            {                            	                
+	                display.syncExec(new Runnable()
+	                {
+	                    public void run()
+	                    {
+                            fileProgressBar.setSelection(fileprogress);
+                            filesProgressBar.setSelection(filesprogress);
+                        }
+                    });
+                }
+	        }
+	    }.start();
 	}
 }

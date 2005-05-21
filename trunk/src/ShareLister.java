@@ -1,6 +1,8 @@
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
+
+import java.io.InputStream;
 import java.util.*;
 
 public class ShareLister implements Listener
@@ -26,12 +28,14 @@ public class ShareLister implements Listener
 			child.setText(name.substring(1));
 			if (name.charAt(0)==ServerConnectionThread.IS_DIRECTORY)
 			{
-				child.setImage(new Image(SWTUtil.getInstance().getShell().getDisplay(), "folder.gif"));
+			    InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/folder.gif");	  	    	   			    
+				child.setImage(new Image(SWTUtil.getInstance().getShell().getDisplay(), in));
 				new TreeItem(child, SWT.NONE);
 			}
 			else
 			{
-				child.setImage(new Image(SWTUtil.getInstance().getShell().getDisplay(), "file.gif"));
+			    InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/file.gif");	
+				child.setImage(new Image(SWTUtil.getInstance().getShell().getDisplay(), in));
 			}
 		}
 	}
@@ -51,6 +55,6 @@ public class ShareLister implements Listener
 	{
 		while (node.getParentItem()!=null)
 			node=node.getParentItem();
-		return node.getText();
+		return NodeDetect.getIP(node.getText());
 	}
 }

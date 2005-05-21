@@ -7,10 +7,14 @@ import org.xml.sax.helpers.DefaultHandler;
 public class Configuration extends DefaultHandler
 {
 	private static Hashtable shares;
+	private static String computerName;
+	private static String temporaryFolder;
 	
 	public Configuration()
 	{
 		shares=new Hashtable();
+		computerName="Chungles Node";
+		temporaryFolder=System.getProperty("user.home")+"/.chungles";
 	}
 	
 	public static void parse()
@@ -34,13 +38,20 @@ public class Configuration extends DefaultHandler
 	
 	public void startElement(String namespaceURI, String localName,
 			String qualifiedName, Attributes attrs) throws SAXException
-	{
-		// A share
-		if (qualifiedName.equals("share"))
+	{		
+		if (qualifiedName.equals("share")) // A share
 		{
 			String name=attrs.getValue("name");
 			String map=attrs.getValue("map");
 			shares.put(name, map);
+		}
+		else if (qualifiedName.equals("computer")) // Computer name
+		{
+		    computerName=attrs.getValue("name");
+		}
+		else if (qualifiedName.equals("tempdir")) // Temporary Folder
+		{
+		    temporaryFolder=attrs.getValue("path");
 		}
 	}
 	
@@ -93,6 +104,12 @@ public class Configuration extends DefaultHandler
 			}
 			out.println("</shares>");
 			
+			// Computer Name
+			out.println("<computer name=\"" + computerName + "\"/>");
+			
+			// Temporary Folder
+			out.println("<tempdir path=\"" + temporaryFolder + "\"/>");
+			
 			// Closing
 			out.println("</chungles>");
 			out.close();
@@ -111,5 +128,25 @@ public class Configuration extends DefaultHandler
 	public static void clearShares()
 	{
 		shares.clear();
+	}
+	
+	public static String getComputerName()
+	{
+	    return computerName;
+	}
+	
+	public static void setComputerName(String name)
+	{
+	    computerName=name;
+	}
+	
+	public static String getTemporaryFolder()
+	{
+	    return temporaryFolder;
+	}
+	
+	public static void setTemporaryFolder(String path)
+	{
+	    temporaryFolder=path;
 	}
 }

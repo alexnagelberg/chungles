@@ -3,8 +3,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 
 public class TransferToNode extends DropTargetAdapter
-{
-	private static long totalSent=0;
+{	
+	private static long totalSent;
 	
     public void drop(DropTargetEvent event)
     {
@@ -23,6 +23,7 @@ public class TransferToNode extends DropTargetAdapter
     
     private void sendFiles(final String ip, final String path, final String[] files)
     {    	
+    	totalSent=0;
     	Thread thread=new Thread()
 		{
     		public void run()
@@ -32,6 +33,7 @@ public class TransferToNode extends DropTargetAdapter
 		    	Client client=new Client(ip);		    	
 		    	int i=0;
 		    	FileList list=FileList.recurseFiles(files);
+		    	dialog.progressThread();
 		    	while (list!=null)
 		    	{		    		
 		    		i++;
@@ -40,11 +42,14 @@ public class TransferToNode extends DropTargetAdapter
 		    			final long fileSize=list.getSize();
 						final long totalSize=FileList.getTotalSize();
 		    			dialog.updateLables(list.getLocalPath(), i, FileList.getNumFiles());
-		    			client.sendFile(list.getLocalPath(), new SendProgressListener()
-		    					{
+		    			client.sendFile(list, new SendProgressListener()
+		    					{		    						
+		    						private long lastSent=0;
+		    						
 		    						public void progressUpdate(long bytesSent)
 		    						{
-		    							totalSent+=bytesSent;
+		    							totalSent+=bytesSent-lastSent;
+		    							lastSent=bytesSent;
 		    							dialog.updateProgress(bytesSent, fileSize, totalSent, totalSize);		    							
 		    						}
 		    					});
@@ -60,7 +65,6 @@ public class TransferToNode extends DropTargetAdapter
 		    	}
 		    	client.close();
 		    	dialog.closeDialog();
-		    	totalSent=0;
     		}
 		};
 		thread.start();

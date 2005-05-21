@@ -1,9 +1,0 @@
-To install:
-
- *Get SWT libraries for your system from http://www.eclipse.org/swt/ and extract them inside this directory
- *Make sure java and javac are in your path or edit compile.sh/compile.bat and run.sh/run.bat and set the JAVA environment variable to the path for java binaries
- *Run compile.sh for *nix systems, compile.bat for windows
-
-To run:
-
- *Run run.sh for *nix systems, run.bat for windows

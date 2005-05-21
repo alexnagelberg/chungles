@@ -1,6 +1,9 @@
+import java.io.InputStream;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
@@ -18,6 +21,8 @@ public class SWTUtil
 	    shell = new Shell(display);	    
 	    shell.setText("Chungles");	    	    
 	    shell.setLayout(new FillLayout());
+	    InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/chungles.gif");	  	    	   
+	    shell.setImage(new Image(display, in));
 	    
 	    // Add tree
 	    tree=new Tree(shell, SWT.SINGLE);	    
@@ -25,6 +30,10 @@ public class SWTUtil
 	    DropTarget dt = new DropTarget(tree, DND.DROP_MOVE);
 	    dt.setTransfer(new Transfer[] {FileTransfer.getInstance()});
 	    dt.addDropListener(new TransferToNode());
+	    
+	    DragSource ds = new DragSource(tree, DND.DROP_MOVE);
+	    ds.setTransfer(new Transfer[] {FileTransfer.getInstance()});
+	    ds.addDragListener(new TransferFromNode());
 	    
 	    // Create menu
 	    Menu bar=new Menu(shell, SWT.BAR);

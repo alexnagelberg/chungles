@@ -9,12 +9,14 @@ public class Configuration extends DefaultHandler
 	private static Hashtable shares;
 	private static String computerName;
 	private static String temporaryFolder;
+	private static String seperator;
 	
 	public Configuration()
 	{
+		seperator=System.getProperty("file.separator");
 		shares=new Hashtable();
 		computerName="Chungles Node";
-		temporaryFolder=System.getProperty("user.home")+"/.chungles";
+		temporaryFolder=System.getProperty("user.home")+seperator+".chungles";
 	}
 	
 	public static void parse()
@@ -24,7 +26,8 @@ public class Configuration extends DefaultHandler
 		try
 		{
 			SAXParser saxParser = factory.newSAXParser();
-			File file=new File(System.getProperty("user.home")+"/.chungles/config.xml");
+			File file=new File(System.getProperty("user.home")+seperator+
+					".chungles"+seperator+"config.xml");
 			if (!file.exists())
 				createConfig(file);
 			else
@@ -69,7 +72,7 @@ public class Configuration extends DefaultHandler
 	{
 		try
 		{
-			new File(System.getProperty("user.home")+"/.chungles/").mkdir();
+			new File(System.getProperty("user.home")+seperator+".chungles"+seperator).mkdir();
 			file.createNewFile();
 			// Get the user to add shares
 			SWTPreferencesDialog.getInstance(
@@ -84,7 +87,7 @@ public class Configuration extends DefaultHandler
 	
 	public static void saveConfig()
 	{
-		String file=System.getProperty("user.home")+"/.chungles/config.xml";
+		String file=System.getProperty("user.home")+seperator+".chungles"+seperator+"config.xml";
 		try
 		{
 			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, false)));

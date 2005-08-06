@@ -47,7 +47,7 @@
 			</fileset>
 			<fileset dir="${basedir}/bin"/>
 			<manifest>
-				<attribute name="Class-Path" value="${jsap.jar} ${jmdns.jar} ${swt.jar} ${swt-pi.jar}"/>
+				
 				<attribute name="Main-Class" value="Main"/>
 			</manifest>
 		</jar>

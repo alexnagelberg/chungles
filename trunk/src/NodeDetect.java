@@ -11,26 +11,21 @@ public class NodeDetect implements ServiceListener
 	private static Hashtable ips;
 	private static Hashtable compnames; // provides reverse lookup
 	
-	public void addService(JmDNS mdns, String type, String name)
-	{			    
-		ServiceInfo service=mdns.getServiceInfo(type, name);
-		final SWTUtil swt=SWTUtil.getInstance();
-		if (swt == null)
-            return;
-        final String ip=name.substring(0, name.length() - (type.length() + 1));
-        final String compname=service.getNiceTextString()+" [" + ip + "]";
-		final Tree tree=swt.getTree();				
-		if (!swt.isActive())
-			return;
-						
-		if (nodes==null || ips==null || compnames==null)
+	public static void addNode(final String ip, final String compname)
+	{
+	    final SWTUtil swt=SWTUtil.getInstance();
+	    final Tree tree=swt.getTree();
+	    if (swt == null || !swt.isActive())
+	        return;
+	    
+	    if (nodes==null || ips==null || compnames==null)
 		{
 			nodes=new Hashtable();		
 			ips=new Hashtable();
 			compnames=new Hashtable();
 		}
-		
-		swt.getShell().getDisplay().syncExec(new Runnable()
+	    
+	    swt.getShell().getDisplay().syncExec(new Runnable()
 				{
 					public void run()
 					{
@@ -47,6 +42,16 @@ public class NodeDetect implements ServiceListener
 						}
 					}
 				});
+	    
+	}
+	
+	public void addService(JmDNS mdns, String type, String name)
+	{			    
+		ServiceInfo service=mdns.getServiceInfo(type, name);		
+        final String ip=name.substring(0, name.length() - (type.length() + 1));
+        final String compname=service.getNiceTextString()+" [" + ip + "]";
+        
+        addNode(ip, compname);
 	}
 
 	public void removeService(JmDNS mdns, String type, String name)

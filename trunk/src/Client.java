@@ -115,7 +115,73 @@ public class Client
 		}
 		catch (Exception e)
 		{
+		    e.printStackTrace();
 		}					
+	}
+	
+	public boolean requestRetrieveFile(final FileList file)
+	{
+	    int status=ServerConnectionThread.NO;
+	    
+	    try
+		{
+			if (file.getFileType()==FileList.FILE)
+			{
+				out.write(ServerConnectionThread.REQUEST_RECEIVE);				
+				out.writeBytes(file.getRemotePath()+"\n");
+			}
+			else
+			{
+				// Make directory
+			}
+			status=in.read();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	    
+	    return status==ServerConnectionThread.OK;
+	}
+	
+	public void retrieveFile(final String savePath, final FileList file, final ReceiveProgressListener listener)
+	{
+	    if (file.getFileType()==FileList.DIRECTORY)
+	    {
+	        listener.progressUpdate(file.getSize());
+			return;
+	    }
+	    
+	    try
+		{						
+	        
+			DataOutputStream fileout=new DataOutputStream(new FileOutputStream(savePath));			
+			long totalread=0;			            
+            long size=file.getSize();
+            
+            while (totalread<size)
+            {
+                byte[] buffer=new byte[1024];
+                int read;
+                if (size-totalread<1024)
+                {
+                    //conversion of long to int ok, it's under 1024 ;)
+                    read=in.read(buffer, 0, (int)(size-totalread));
+                }
+                else
+                {
+                    read=in.read(buffer);
+                }
+                fileout.write(buffer, 0, read);
+                totalread+=read;
+            }
+            fileout.close();
+			
+		}
+		catch (Exception e)
+		{
+		    e.printStackTrace();
+		}
 	}
 	
 	public FileList recurseFiles(String path)

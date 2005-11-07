@@ -30,10 +30,10 @@ public class mDNSUtil
 	
 	public static void closeInterfaces() throws IOException
 	{
-		Enumeration enum=mdnslist.elements();
-		while (enum.hasMoreElements())
+		Enumeration enumerator=mdnslist.elements();
+		while (enumerator.hasMoreElements())
 		{
-			JmDNS mdns=(JmDNS)enum.nextElement();
+			JmDNS mdns=(JmDNS)enumerator.nextElement();
 			System.out.println("Shutting down " + mdns.getInterface().getHostAddress());
 			mdns.close();			
 		}		

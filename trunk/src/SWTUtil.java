@@ -27,6 +27,8 @@ public class SWTUtil
 	    // Add tree
 	    tree=new Tree(shell, SWT.SINGLE);	    
 	    tree.addListener(SWT.Expand, new ShareLister());
+	    
+	    // Tree's drag n'dropables
 	    DropTarget dt = new DropTarget(tree, DND.DROP_MOVE);
 	    dt.setTransfer(new Transfer[] {FileTransfer.getInstance()});
 	    dt.addDropListener(new TransferToNode());
@@ -41,15 +43,24 @@ public class SWTUtil
 	    MenuItem item=new MenuItem(bar, SWT.CASCADE);
 	    item.setText("&File");
 	    Menu fileMenu=new Menu(shell, SWT.DROP_DOWN);
-	    item.setMenu(fileMenu);	    
+	    item.setMenu(fileMenu);
+	    item=new MenuItem(fileMenu, SWT.PUSH);
+	    item.setText("&Add undetected node");	    
+	    item.addSelectionListener(new SelectionListener()
+	            {
+	        		public void widgetDefaultSelected(SelectionEvent e) {}
+	        		
+	        		public void widgetSelected(SelectionEvent e)
+	        		{
+	        		    openAddNodeDialog();
+	        		}
+	            });
+	    
 	    item=new MenuItem(fileMenu, SWT.PUSH);	    
 	    item.setText("&Preferences");
 	    item.addSelectionListener(new SelectionListener()
 	    		{
-	    			public void widgetDefaultSelected(SelectionEvent e)
-	    			{
-	    				
-	    			}
+	    			public void widgetDefaultSelected(SelectionEvent e) {}
 	    			
 	    			public void widgetSelected(SelectionEvent e)
 	    			{
@@ -124,5 +135,10 @@ public class SWTUtil
 	public void openPreferencesDialog()
 	{
 		SWTPreferencesDialog.getInstance(shell.getDisplay()).openDialog();
+	}
+	
+	public void openAddNodeDialog()
+	{
+	    SWTAddNodeDialog.getInstance(shell.getDisplay()).openDialog();
 	}
 }

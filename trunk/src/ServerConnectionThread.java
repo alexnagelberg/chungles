@@ -10,6 +10,7 @@ public class ServerConnectionThread extends Thread
 	public final static int LIST_SHARES=2;
 	public final static int REQUEST_SEND=3;
 	public final static int REQUEST_MKDIR=4;
+	public final static int REQUEST_RECEIVE=5;
 	public final static int OK=4;
 	public final static int NO=5;
 	public final static int RECURSE_FILES=6;
@@ -60,6 +61,11 @@ public class ServerConnectionThread extends Thread
 				{
 					requestSend(in, out);
 					break;
+				}
+				case REQUEST_RECEIVE:
+				{
+				    requestReceive(in, out);
+				    break;
 				}
 				case REQUEST_MKDIR:
 				{
@@ -118,6 +124,54 @@ public class ServerConnectionThread extends Thread
 		out.writeBytes("\n");
 	}
 	
+	/**
+	 * Client requests a file from server thread
+	 * 
+	 * @param in Data input stream
+	 * @param out Data output stream
+	 */
+	public void requestReceive(DataInputStream in, DataOutputStream out)
+	{
+        System.out.println("REQ: ");
+	    try
+	    {
+	        String path=in.readLine();
+	        String share=path.substring(1, path.substring(1).indexOf('/')+1);			
+			path=Configuration.getSharePath(share)+path.substring(share.length()+2);
+			
+	        // KLUDGE, REMOVE AND PUT REAL CODE
+			out.write(OK);
+			
+            try
+            {                       
+                DataInputStream filein=new DataInputStream(new FileInputStream(path));
+                byte[] buffer=new byte[1024];
+                int read;
+                while ((read = filein.read(buffer)) != -1)
+                {
+                    out.write(buffer, 0, read);
+                }
+                filein.close();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            
+			
+	    }
+	    catch (Exception e)
+	    {
+	        e.printStackTrace();
+	    }
+	}
+	
+	/**
+	 * Client requests to send to server thread 
+	 * 
+	 * @param in Data input stream
+	 * @param out Data output stream
+	 */
 	public void requestSend(DataInputStream in, DataOutputStream out)
 	{
 		try
@@ -189,8 +243,11 @@ public class ServerConnectionThread extends Thread
 		FileList list=FileList.recurseFiles(new String[] {path});
 		while (list!=null)
 		{
-		    out.writeBytes("/"+share+list.getLocalPath().
-		            substring(Configuration.getSharePath(share).length())+"\n");
+		    String localPath=list.getLocalPath();
+		    if (File.separatorChar!='/')
+		    	localPath=localPath.replace(File.separatorChar, '/');
+			out.writeBytes("/"+share+localPath.
+		            substring(Configuration.getSharePath(share).length())+"\n");			
 		    out.writeBytes(list.getSize()+"\n");
 		    list=list.getNext();
 		}

@@ -46,8 +46,7 @@ public class SWTPreferencesDialog
         shell.setImage(new Image(display, in));
         shell.setLayout(null);
 
-        CTabFolder folder = new CTabFolder(shell, SWT.FLAT | SWT.TOP);
-        Display display = shell.getDisplay();
+        CTabFolder folder = new CTabFolder(shell, SWT.FLAT | SWT.TOP);        
 
         //PRETTIES!
         folder.setSelectionBackground(new Color[]

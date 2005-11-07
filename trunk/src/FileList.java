@@ -105,7 +105,7 @@ public class FileList
 		FileList head=null;
 		for (i=0; i<files.length; i++)
 		{
-		        File f = new File(files[i]);
+		    File f = new File(files[i]);
 			if (list==null)
 			{
 				list=new FileList();
@@ -153,7 +153,10 @@ public class FileList
 			
 			item.setLocalPath(files[i].getAbsolutePath());
 			int offset=list.getLocalPath().length()-list.getRemotePath().length();
-			item.setRemotePath(files[i].getAbsolutePath().substring(offset));
+			String remotePath=files[i].getAbsolutePath().substring(offset);
+			if (File.separatorChar!='/') //win32 crap >:o
+			    remotePath=remotePath.replace(File.separatorChar, '/');
+			item.setRemotePath(remotePath);
 			item.setSize(files[i].length());
 			totalSize+=files[i].length();
 			numFiles++;

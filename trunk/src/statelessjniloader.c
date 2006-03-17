@@ -94,10 +94,12 @@ Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nthaw
 	jfieldID id=(*env)->GetFieldID(env, class, "dlhandle", "I");
 	void *lib=(void *)((*env)->GetIntField(env, obj, id));
 	
+	// Get required memory field
 	class=(*env)->GetObjectClass(env, stateobj);
 	id=(*env)->GetFieldID(env, class, "memory", "J");
 	long reqmem=(*env)->GetLongField(env, stateobj, id);
 	
+	// Get buffer's length, allocate buffer, then retrieve buffer
 	jmethodID methid=(*env)->GetMethodID(env, class, "getBuffer", "()[B");
 	jbyteArray byteBuf=(*env)->CallObjectMethod(env, stateobj, methid);	
 	long length=(*env)->GetArrayLength(env, byteBuf);

@@ -9,6 +9,10 @@ Java_org_chungles_frameworks_stateless_StatelessNativeLibraryLoader_addApplicati
 	const char *libname=(*env)->GetStringUTFChars(env, library, NULL);
 	jint handle=(jint)dlopen(libname, RTLD_LAZY);	
 	
+	char *error=dlerror();
+	if (error)
+		fprintf(stderr, error);
+	
 	// Creates new instance of StatelessNativeApplication
 	jclass class=(*env)->FindClass(env, "org/chungles/frameworks/stateless/StatelessNativeApplication");
 	jmethodID id=(*env)->GetMethodID(env, class, "<init>", "(I)V");
@@ -19,8 +23,8 @@ Java_org_chungles_frameworks_stateless_StatelessNativeLibraryLoader_addApplicati
 	{
 		{"ngetAppID", "()Ljava/lang/String;", (void *)Java_org_chungles_frameworks_stateless_StatelessNativeApplication_ngetAppID},
 		{"ngetSystemCommand", "()Ljava/lang/String;", (void *)Java_org_chungles_frameworks_stateless_StatelessNativeApplication_ngetSystemCommand},
-		{"nfreeze", "()Lorg/chungles/frameworks/stateless/State;", (void *)Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nfreeze},
-		{"nthaw", "(Lorg/chungles/frameworks/stateless/State;)V", (void *)Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nthaw},
+		{"nfreeze", "()Lorg/chungles/frameworks/stateless/NativeState;", (void *)Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nfreeze},
+		{"nthaw", "(Lorg/chungles/frameworks/stateless/NativeState;)V", (void *)Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nthaw},
 		{"nhasEnoughMemory", "(J)Z", (void *)Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nhasEnoughMemory}
 	};
 	(*env)->RegisterNatives(env, class, method, 5);
@@ -83,8 +87,27 @@ Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nfreeze
 
 JNIEXPORT void JNICALL
 Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nthaw
-(JNIEnv *env, jobject obj, jobject state)
+(JNIEnv *env, jobject obj, jobject stateobj)
 {
+	// retrieve dl handle from instance
+	jclass class=(*env)->GetObjectClass(env, obj);
+	jfieldID id=(*env)->GetFieldID(env, class, "dlhandle", "I");
+	void *lib=(void *)((*env)->GetIntField(env, obj, id));
+	
+	class=(*env)->GetObjectClass(env, stateobj);
+	id=(*env)->GetFieldID(env, class, "memory", "J");
+	long reqmem=(*env)->GetLongField(env, stateobj, id);
+	
+	jmethodID methid=(*env)->GetMethodID(env, class, "getBuffer", "()[B");
+	jbyteArray byteBuf=(*env)->CallObjectMethod(env, stateobj, methid);	
+	long length=(*env)->GetArrayLength(env, byteBuf);
+	char *buffer=malloc(sizeof(char)*length);
+	(*env)->GetByteArrayRegion(env, byteBuf, 0, length, buffer);
+		
+	state st={buffer, length, reqmem};	
+	void (*thaw_func)(state *)=(void (*)(state *))dlsym(lib, "thaw");
+	(*thaw_func)(&st);
+
 }
 	
 JNIEXPORT jboolean JNICALL

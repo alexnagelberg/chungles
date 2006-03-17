@@ -9,8 +9,8 @@ public class StatelessNativeApplication implements StatelessApplication
     
     native String ngetAppID();
     native String ngetSystemCommand();
-    native State nfreeze();
-    native void nthaw(State state);
+    native NativeState nfreeze();
+    native void nthaw(NativeState state);
     native boolean nhasEnoughMemory(long size);
     
     public StatelessNativeApplication(int dlhandle)
@@ -39,7 +39,7 @@ public class StatelessNativeApplication implements StatelessApplication
     
     public void thaw(State thaw)
     {
-        nthaw(thaw);
+        nthaw((NativeState)thaw);
     }
     
     public boolean hasEnoughMemory(long size)

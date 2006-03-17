@@ -33,7 +33,7 @@ JNIEXPORT jstring JNICALL Java_org_chungles_frameworks_stateless_StatelessNative
 /*
  * Class:     org_chungles_frameworks_stateless_StatelessNativeApplication
  * Method:    nfreeze
- * Signature: ()Lorg/chungles/frameworks/stateless/State;
+ * Signature: ()Lorg/chungles/frameworks/stateless/NativeState;
  */
 JNIEXPORT jobject JNICALL Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nfreeze
   (JNIEnv *, jobject);
@@ -41,7 +41,7 @@ JNIEXPORT jobject JNICALL Java_org_chungles_frameworks_stateless_StatelessNative
 /*
  * Class:     org_chungles_frameworks_stateless_StatelessNativeApplication
  * Method:    nthaw
- * Signature: (Lorg/chungles/frameworks/stateless/State;)V
+ * Signature: (Lorg/chungles/frameworks/stateless/NativeState;)V
  */
 JNIEXPORT void JNICALL Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nthaw
   (JNIEnv *, jobject, jobject);

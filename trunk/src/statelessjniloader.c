@@ -1,17 +1,25 @@
 #include "javalibraryloader.h"
 #include "statelessapp.h"
-#include <dlfcn.h>
+#include <stdlib.h>
+#include <ltdl.h>
 
 JNIEXPORT jobject JNICALL
 Java_org_chungles_frameworks_stateless_StatelessNativeLibraryLoader_addApplication
 (JNIEnv *env, jobject obj, jstring library)
 {
 	const char *libname=(*env)->GetStringUTFChars(env, library, NULL);
-	jint handle=(jint)dlopen(libname, RTLD_LAZY);	
-	
-	char *error=dlerror();
-	if (error)
-		fprintf(stderr, error);
+	if (lt_dlinit())
+	{
+		fprintf(stderr, "could not init\n");
+		return NULL;
+	}
+
+	jint temp_handle=(jint)lt_dlopenext(libname);
+        if (!handle)
+	{
+		fprintf(stderr, "could not load module\n");
+		return NULL;
+	}
 	
 	// Creates new instance of StatelessNativeApplication
 	jclass class=(*env)->FindClass(env, "org/chungles/frameworks/stateless/StatelessNativeApplication");
@@ -39,10 +47,10 @@ Java_org_chungles_frameworks_stateless_StatelessNativeApplication_ngetAppID
 	// retrieve dl handle from instance
 	jclass class=(*env)->GetObjectClass(env, obj);
 	jfieldID id=(*env)->GetFieldID(env, class, "dlhandle", "I");
-	void *lib=(void *)((*env)->GetIntField(env, obj, id));
+	lt_dlhandle lib=(lt_dlhandle)((*env)->GetIntField(env, obj, id));
 
 	// call get_app_id and return output	
-	char *(*get_id)()=(char * (*)())dlsym(lib, "get_app_id");
+	char *(*get_id)()=(char * (*)())lt_dlsym(lib, "get_app_id");
 	return (*env)->NewStringUTF(env, (*get_id)());
 }
 
@@ -53,10 +61,10 @@ Java_org_chungles_frameworks_stateless_StatelessNativeApplication_ngetSystemComm
 	// retrieve dl handle from instance
 	jclass class=(*env)->GetObjectClass(env, obj);
 	jfieldID id=(*env)->GetFieldID(env, class, "dlhandle", "I");
-	void *lib=(void *)((*env)->GetIntField(env, obj, id));
+	lt_dlhandle lib=(lt_dlhandle)((*env)->GetIntField(env, obj, id));
 	
 	// call get_system_command and return output
-	char *(*get_command)()=(char * (*)())dlsym(lib, "get_system_command");
+	char *(*get_command)()=(char * (*)())lt_dlsym(lib, "get_system_command");
 	return (*env)->NewStringUTF(env, (*get_command)());
 }
 
@@ -67,10 +75,10 @@ Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nfreeze
 	// retrieve dl handle from instance
 	jclass class=(*env)->GetObjectClass(env, obj);
 	jfieldID id=(*env)->GetFieldID(env, class, "dlhandle", "I");
-	void *lib=(void *)((*env)->GetIntField(env, obj, id));
+	lt_dlhandle lib=(lt_dlhandle)((*env)->GetIntField(env, obj, id));
 	
 	// call freeze function and retrieve state
-	state *(*freeze_func)()=(state * (*)())dlsym(lib, "freeze");
+	state *(*freeze_func)()=(state * (*)())lt_dlsym(lib, "freeze");
 	state st=*(*freeze_func)();
 	
 	// convert c buffer to byte array
@@ -92,7 +100,7 @@ Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nthaw
 	// retrieve dl handle from instance
 	jclass class=(*env)->GetObjectClass(env, obj);
 	jfieldID id=(*env)->GetFieldID(env, class, "dlhandle", "I");
-	void *lib=(void *)((*env)->GetIntField(env, obj, id));
+	lt_dlhandle lib=(lt_dlhandle)((*env)->GetIntField(env, obj, id));
 	
 	// Get required memory field
 	class=(*env)->GetObjectClass(env, stateobj);
@@ -107,7 +115,7 @@ Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nthaw
 	(*env)->GetByteArrayRegion(env, byteBuf, 0, length, buffer);
 		
 	state st={buffer, length, reqmem};	
-	void (*thaw_func)(state *)=(void (*)(state *))dlsym(lib, "thaw");
+	void (*thaw_func)(state *)=(void (*)(state *))lt_dlsym(lib, "thaw");
 	(*thaw_func)(&st);
 
 }
@@ -119,9 +127,9 @@ Java_org_chungles_frameworks_stateless_StatelessNativeApplication_nhasEnoughMemo
 	// retrieve dl handle from instance
 	jclass class=(*env)->GetObjectClass(env, obj);
 	jfieldID id=(*env)->GetFieldID(env, class, "dlhandle", "I");
-	void *lib=(void *)((*env)->GetIntField(env, obj, id));
+	lt_dlhandle lib=(lt_dlhandle)((*env)->GetIntField(env, obj, id));
 	
-	int ((*memory_func)(long))=(int (*)(long))dlsym(lib, "has_enough_memory");
+	int ((*memory_func)(long))=(int (*)(long))lt_dlsym(lib, "has_enough_memory");
 	return ((*memory_func)(memory))?JNI_TRUE:JNI_FALSE;
 }
 	

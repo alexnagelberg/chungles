@@ -79,8 +79,10 @@ EGREP = @EGREP@
 F77 = @F77@
 GCJ = @GCJ@
 GCJFLAGS = @GCJFLAGS@
+INCLTDL = @INCLTDL@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 JMODSUFFIX = @JMODSUFFIX@
+LIBLTDL = @LIBLTDL@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 MODSUFFIX = @MODSUFFIX@
@@ -96,19 +98,19 @@ am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
 
-INCLUDES = -I$(top_srcdir)
+INCLUDES = -I$(top_srcdir) @INCLTDL@
 lib_LTLIBRARIES = libstatelessjniloader.la
 libstatelessjniloader_la_SOURCES = statelessjniloader.c
 libstatelessjniloader_la_LDFLAGS = -shrext $(JMODSUFFIX)
-
+libstatelessjniloader_la_LIBADD = @LIBLTDL@
 noinst_HEADERS = javalibraryloader.h
 include_HEADERS = statelessapp.h
 subdir = src
-mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(lib_LTLIBRARIES)
 
-libstatelessjniloader_la_LIBADD =
+libstatelessjniloader_la_DEPENDENCIES =
 am_libstatelessjniloader_la_OBJECTS = statelessjniloader.lo
 libstatelessjniloader_la_OBJECTS = \
 	$(am_libstatelessjniloader_la_OBJECTS)
@@ -118,7 +120,7 @@ DEFAULT_INCLUDES =  -I. -I$(srcdir)
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-depcomp = $(SHELL) $(top_srcdir)/config/depcomp
+depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/statelessjniloader.Plo
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \

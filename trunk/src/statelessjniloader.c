@@ -14,7 +14,7 @@ Java_org_chungles_frameworks_stateless_StatelessNativeLibraryLoader_addApplicati
 		return NULL;
 	}
 
-	jint temp_handle=(jint)lt_dlopenext(libname);
+	jint handle=(jint)lt_dlopenext(libname);
         if (!handle)
 	{
 		fprintf(stderr, "could not load module\n");

@@ -7,8 +7,9 @@ public class Main
 {
     public static void main(String[] args) throws IOException
     {
-        DaemonUtil dutil = DaemonUtil.getInstance();
-        dutil.parseArgs(args);
+        //DaemonUtil dutil = DaemonUtil.getInstance();
+        //dutil.parseArgs(args);
+	Configuration.parse();
         SWTUtil swt = SWTUtil.getInstance();
 
         Enumeration netInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -30,14 +31,14 @@ public class Main
         server.start();
 
         // Go! If daemon mode run daemon loop otherwise run window loop
-        if (dutil.getConfig().getBoolean("daemon"))
+        /*if (dutil.getConfig().getBoolean("daemon"))
         {
             dutil.run();
         }
         else
-        {
+        {*/
             swt.mainLoop();
-        }
+        //}
 
         // Window or daemon shuts down, we shut down
         server.stopListening();

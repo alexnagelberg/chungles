@@ -96,7 +96,7 @@ public class SWTUtil
 	
 	public static SWTUtil getInstance()
 	{
-		if (instance==null && !DaemonUtil.getInstance().getConfig().getBoolean("daemon"))
+		if (instance==null)// && !DaemonUtil.getInstance().getConfig().getBoolean("daemon"))
 		{
 			instance=new SWTUtil();
 		}

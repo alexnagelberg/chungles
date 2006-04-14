@@ -5,8 +5,8 @@ import java.util.*;
 public class Client
 {
 	private Socket socket;
-	DataOutputStream out;
-	DataInputStream in;
+	private OutputStream out;
+	private InputStream in;
 	
 	private Client()
 	{
@@ -18,8 +18,8 @@ public class Client
 		try
 		{
 			socket=new Socket(ip, 6565);
-			in=new DataInputStream(socket.getInputStream());
-			out=new DataOutputStream(socket.getOutputStream());
+			in=socket.getInputStream();
+			out=socket.getOutputStream();
 		}
 		catch (Exception e)
 		{
@@ -40,15 +40,17 @@ public class Client
 	}
 	
 	public LinkedList listDir(String path)
-	{		
+	{
+        DataOutputStream dout=new DataOutputStream(out);
+        BufferedReader bin=new BufferedReader(new InputStreamReader(in));
 		LinkedList list=new LinkedList();		
 		try
 		{
-			out.write(ServerConnectionThread.LIST_SHARES);
-			out.writeBytes(path+"\n");
+			dout.write(ServerConnectionThread.LIST_SHARES);
+			dout.writeBytes(path+"\n");
 			
 			String inputLine;
-			while ((inputLine = in.readLine()) != null &&
+			while ((inputLine = bin.readLine()) != null &&
 					inputLine.toCharArray()[0]!=ServerConnectionThread.TERMINATOR)
 			{					
 				list.add(inputLine);
@@ -64,23 +66,23 @@ public class Client
 	
 	public boolean requestFileSend(String path, FileList file)
 	{					
-		
+        DataOutputStream dout=new DataOutputStream(out);        
 		int status=ServerConnectionThread.NO;
 		
 		try
 		{
 			if (file.getFileType()==FileList.FILE)
 			{
-				out.write(ServerConnectionThread.REQUEST_SEND);
-				out.writeBytes(path+"\n");
-				out.writeBytes(file.getRemotePath()+"\n");
-				out.writeBytes(file.getSize()+"\n");
+				dout.write(ServerConnectionThread.REQUEST_SEND);
+				dout.writeBytes(path+"\n");
+				dout.writeBytes(file.getRemotePath()+"\n");
+				dout.writeBytes(file.getSize()+"\n");
 			}
 			else
 			{
-				out.write(ServerConnectionThread.REQUEST_MKDIR);
-				out.writeBytes(path+"\n");
-				out.writeBytes(file.getRemotePath()+"\n");
+				dout.write(ServerConnectionThread.REQUEST_MKDIR);
+				dout.writeBytes(path+"\n");
+				dout.writeBytes(file.getRemotePath()+"\n");
 			}
 			status=in.read();
 		}
@@ -121,14 +123,15 @@ public class Client
 	
 	public boolean requestRetrieveFile(final FileList file)
 	{
+        DataOutputStream dout=new DataOutputStream(out);
 	    int status=ServerConnectionThread.NO;
 	    
 	    try
 		{
 			if (file.getFileType()==FileList.FILE)
 			{
-				out.write(ServerConnectionThread.REQUEST_RECEIVE);				
-				out.writeBytes(file.getRemotePath()+"\n");
+				dout.write(ServerConnectionThread.REQUEST_RECEIVE);				
+				dout.writeBytes(file.getRemotePath()+"\n");
 			}
 			else
 			{
@@ -186,20 +189,22 @@ public class Client
 	
 	public FileList recurseFiles(String path)
 	{
+        DataOutputStream dout=new DataOutputStream(out);
+        BufferedReader bin=new BufferedReader(new InputStreamReader(in));
 	    try
 	    {
-		    out.write(ServerConnectionThread.RECURSE_FILES);
-		    out.writeBytes(path.substring(0,path.length()-1)+"\n");
+		    dout.write(ServerConnectionThread.RECURSE_FILES);
+		    dout.writeBytes(path.substring(0,path.length()-1)+"\n");
 		    FileList list=new FileList();
 		    FileList head=list;		
 		    String inputLine;
 		    FileList.resetNumFiles();
 		    FileList.resetTotalSize();
-		    while ((inputLine = in.readLine()) != null &&
+		    while ((inputLine = bin.readLine()) != null &&
 		    	inputLine.toCharArray()[0]!=ServerConnectionThread.TERMINATOR)
 		    {		        
 		        list.setRemotePath(inputLine);
-		        list.setSize(Long.parseLong(in.readLine()));
+		        list.setSize(Long.parseLong(bin.readLine()));
 		        FileList.setNumFiles(FileList.getNumFiles()+1);
 		        FileList.setTotalSize(FileList.getTotalSize()+list.getSize());
 		        list.setNext(new FileList());

@@ -61,7 +61,7 @@ public class NodeDetect implements ServiceListener
             return;
 		final String ip=name.substring(0, name.length() - (type.length() + 1));
 		final String compname=(String)compnames.get(ip);
-		final Tree tree=swt.getTree();				
+				
 		if (!swt.isActive())
 			return;
 						

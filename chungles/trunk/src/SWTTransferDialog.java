@@ -99,7 +99,6 @@ public class SWTTransferDialog
 	    {
 	        public void run()
 	        {	            
-	            int lastprogress=0;
 	            while (filesprogress<100)
 	            {                            	                
 	                display.syncExec(new Runnable()

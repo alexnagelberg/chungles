@@ -199,22 +199,24 @@ public class Client
 	    {
 		    dout.write(ServerConnectionThread.RECURSE_FILES);
 		    dout.writeBytes(path.substring(0,path.length()-1)+"\n");
-		    FileList list=new FileList();
+		    FileList list=new FileList();            
 		    FileList head=list;		
 		    String inputLine;
-		    FileList.resetNumFiles();
-		    FileList.resetTotalSize();
+		    int numFiles=0;
+            long totalSize=0; 
 		    while ((inputLine = bin.readLine()) != null &&
 		    	inputLine.toCharArray()[0]!=ServerConnectionThread.TERMINATOR)
 		    {		        
 		        list.setRemotePath(inputLine);
 		        list.setFileType(Integer.parseInt(bin.readLine()));
 		        list.setSize(Long.parseLong(bin.readLine()));
-		        FileList.setNumFiles(FileList.getNumFiles()+1);
-		        FileList.setTotalSize(FileList.getTotalSize()+list.getSize());
+		        numFiles++;
+                totalSize+=list.getSize();                
 		        list.setNext(new FileList());
 		        list=list.getNext();
 		    }
+            FileList.setNumFiles(numFiles);
+            FileList.setTotalSize(totalSize);
 		    return head;
 		    
 	    }

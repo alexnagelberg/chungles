@@ -64,7 +64,8 @@ public class SWTUtil
         putFile=new MenuItem(popup, SWT.PUSH);
         putFile.setText("Send file(s) to...");
         putFile.setEnabled(false);        
-	    
+	    putFile.addSelectionListener(new TransferToNode());
+        
 	    // Create menu
 	    Menu bar=new Menu(shell, SWT.BAR);
 	    shell.setMenuBar(bar);

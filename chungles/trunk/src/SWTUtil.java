@@ -14,28 +14,56 @@ public class SWTUtil
 	private Shell shell;
 	private boolean isActive;	
 	private static SWTUtil instance;
-	
+	private MenuItem getFile, putFile;
+    
 	private SWTUtil()
 	{
 		Display display = new Display();
 	    shell = new Shell(display);	    
 	    shell.setText("Chungles");	    	    
 	    shell.setLayout(new FillLayout());
-	    InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/chungles.gif");	  	    	   
+	    InputStream in=SWTUtil.class.getResourceAsStream("images/chungles.gif");	  	    	   
 	    shell.setImage(new Image(display, in));
 	    
 	    // Add tree
-	    tree=new Tree(shell, SWT.SINGLE);	    
+	    tree=new Tree(shell, SWT.MULTI);	    
 	    tree.addListener(SWT.Expand, new ShareLister());
+        tree.addListener(SWT.Selection, new Listener()
+                {
+                    public void handleEvent(Event e) // Adds pop-up menu items as needed
+                    {                        
+                        getFile.setEnabled(false);
+                        putFile.setEnabled(false);
+                        TreeItem items[]=tree.getSelection();
+                        int i;
+                        for (i=0; i<items.length; i++)
+                        {
+                            if (items[i].getParentItem()!=null)
+                            {
+                                getFile.setEnabled(true);
+                                if (items[i].getItemCount()>0 && items.length==1)
+                                    putFile.setEnabled(true);
+                                break;
+                            }
+                        }
+                    }
+                });
 	    
 	    // Tree's drag n'dropables
 	    DropTarget dt = new DropTarget(tree, DND.DROP_MOVE);
 	    dt.setTransfer(new Transfer[] {FileTransfer.getInstance()});
 	    dt.addDropListener(new TransferToNode());
 	    
-	    DragSource ds = new DragSource(tree, DND.DROP_MOVE);
-	    ds.setTransfer(new Transfer[] {FileTransfer.getInstance()});
-	    ds.addDragListener(new TransferFromNode());
+        // Pop-up menu
+        Menu popup=new Menu(shell, SWT.POP_UP);
+        tree.setMenu(popup);
+        getFile=new MenuItem(popup, SWT.PUSH);
+        getFile.setText("Get File(s)");
+        getFile.setEnabled(false);
+        getFile.addSelectionListener(new TransferFromNode());
+        putFile=new MenuItem(popup, SWT.PUSH);
+        putFile.setText("Send file(s) to...");
+        putFile.setEnabled(false);        
 	    
 	    // Create menu
 	    Menu bar=new Menu(shell, SWT.BAR);

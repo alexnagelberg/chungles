@@ -34,7 +34,7 @@ public class SWTTransferDialog
 		shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 
 		shell.setLayout(null);
-		shell.setText("File Send");
+		shell.setText("File Transfer");
 		InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/chungles.gif");	
 		shell.setImage(new Image(display, in));
 		shell.layout();
@@ -75,10 +75,10 @@ public class SWTTransferDialog
 		});		
 	}
 	
-	public void updateProgress(long sent, long fileSize, long totalSent, long totalSize)
+	public void updateProgress(long transferred, long fileSize, long totalTransferred, long totalSize)
 	{
-		fileprogress=(int)(((double)sent/(double)fileSize)*100.);
-		filesprogress=(int)(((double)totalSent/(double)totalSize)*100.);		
+		fileprogress=(int)(((double)transferred/(double)fileSize)*100.);
+		filesprogress=(int)(((double)totalTransferred/(double)totalSize)*100.);		
 	}
 	
 	public void updateLables(final String filename, final int file, final int files)

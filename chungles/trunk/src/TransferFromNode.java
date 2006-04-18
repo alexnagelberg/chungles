@@ -1,45 +1,32 @@
-import java.io.*;
-import org.eclipse.swt.dnd.*;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 
-public class TransferFromNode extends DragSourceAdapter
-{
-	private File tempDirFile;
-	private TreeItem[] items;    
-    private String[] filesMoved;
+public class TransferFromNode implements SelectionListener
+{   
+	private static long totalReceived;
+    public void widgetDefaultSelected(SelectionEvent e) {}
     
-	public void dragStart(DragSourceEvent event)
-	{
-		items=SWTUtil.getInstance().getTree().getSelection();        
-        
-        try
-        {            
-            File file=File.createTempFile("chungles","", new File(Configuration.getTemporaryFolder()));
-            String tempdir=file.getAbsolutePath();
-            file.delete();
-            tempDirFile=new File(tempdir);
-            file.mkdir();
-            event.doit=true;
-        }
-        catch (Exception e)
-        {
-            event.doit=false;
-            System.err.println("could not write to tempdir");
-            e.printStackTrace();
-        }
-	}
-	
-    public void dragSetData(DragSourceEvent event)
-    {   
-        int i;    	
-        Display display=SWTUtil.getInstance().getShell().getDisplay();
-        SWTTransferDialog dialog=SWTTransferDialog.getInstance(display);
-        dialog.openDialog();
-        
-    	FileList lists[]=new FileList[items.length];
+    public void widgetSelected(SelectionEvent e)
+    {
+    		int i;
+    		Shell shell=SWTUtil.getInstance().getShell();
+        TreeItem[] items=SWTUtil.getInstance().getTree().getSelection();
+        FileList lists[]=new FileList[items.length];
         String IPs[]=new String[items.length];
         int numFiles=0;
-        int totalSize=0;
+        long totalSize=0;
+        
+        // Save dialog
+        DirectoryDialog directoryDialog=new DirectoryDialog(shell);
+        directoryDialog.setMessage("Select save path");
+        directoryDialog.open();
+        String savepath=directoryDialog.getFilterPath();
+        
+        // If they cancel
+        if (savepath.equals(""))
+        		return;
+        
+        // Ask client(s) to recurse the path(s)
         for (i=0; i<items.length; i++)
         {
             IPs[i]=ShareLister.getIP(items[i]);
@@ -48,55 +35,49 @@ public class TransferFromNode extends DragSourceAdapter
             numFiles+=FileList.getNumFiles();
             totalSize+=FileList.getTotalSize();
             client.close();                        
-        }
-        filesMoved=new String[numFiles];
-        getFiles(lists, IPs, numFiles, totalSize);
-        //event.data=filesMoved;
-        event.data=new String []{tempDirFile.getAbsolutePath()+"/test"};
-        try
-        {
-            new File(tempDirFile.getAbsolutePath()+"/test").createNewFile();
-        }
-        catch (Exception e)
-        {
-            
-        }
+        }        
+        
+        // Open retrieve dialog
+        Display display=SWTUtil.getInstance().getShell().getDisplay();
+        SWTTransferDialog dialog=SWTTransferDialog.getInstance(display);
+        dialog.openDialog();
+        
+        getFiles(lists, IPs, numFiles, totalSize, savepath);
     }
     
-    public void dragFinished(DragSourceEvent event)
+    private void getFiles(final FileList[] lists, final String[] IPs, final int numFiles, final long totalSize, final String savepath)
     {
-    	tempDirFile.delete();        
-    }
-    
-    private void getFiles(final FileList[] lists, final String[] IPs, final int numFiles, final int totalSize)
-    {
+    		totalReceived=0;
         Thread thread=new Thread()
         {
             public void run()
             {                
                 int curFile=0;
                 Display display=SWTUtil.getInstance().getShell().getDisplay();
-    			final SWTTransferDialog dialog=SWTTransferDialog.getInstance(display);                
+                final SWTTransferDialog dialog=SWTTransferDialog.getInstance(display);                
                 int i;
                 dialog.progressThread();
                 for (i=0; i<lists.length; i++)
                 {
                     FileList list=lists[i];
                     Client client=new Client(IPs[i]);                    
-                    int offset=list.getRemotePath().lastIndexOf('/');
-                    
+                    int offset=list.getRemotePath().lastIndexOf('/')+1;
+                    String separator=System.getProperty("file.separator");                    
                     while (list.getRemotePath()!=null)
                     {                        
-                        String savePath=tempDirFile.getAbsolutePath()+list.getRemotePath().substring(offset);
-                        //filesMoved[curFile++]=savePath;                        
-                        if (client.requestRetrieveFile(list))
+                        String outputfile=savepath+separator+list.getRemotePath().substring(offset);
+                        if (client.requestRetrieveFile(list, outputfile))
                         {
-                            dialog.updateLables(list.getRemotePath(), curFile, numFiles);
-                            client.retrieveFile(savePath, list, new ReceiveProgressListener()
+                        	   final long fileSize=list.getSize();    						   
+                            dialog.updateLables(list.getRemotePath(), curFile+1, numFiles);
+                            client.retrieveFile(outputfile, list, new ReceiveProgressListener()
                                     {
+                            			  private long lastReceived=0;
                                         public void progressUpdate(long bytesReceived)
                                         {
-                                            
+                                        	totalReceived+=bytesReceived-lastReceived;
+    		    								lastReceived=bytesReceived;
+    		    								dialog.updateProgress(bytesReceived, fileSize, totalReceived, totalSize);
                                         }
                                     });
                         }

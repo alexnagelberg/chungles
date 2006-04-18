@@ -1,11 +1,39 @@
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.*;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.widgets.*;
 
-public class TransferToNode extends DropTargetAdapter
+public class TransferToNode extends DropTargetAdapter implements SelectionListener
 {	
 	private static long totalSent;
-	
+
+    public void widgetDefaultSelected(SelectionEvent e) {}
+    
+    public void widgetSelected(SelectionEvent e)
+    {
+        Shell shell=SWTUtil.getInstance().getShell();
+        FileDialog fileDialog=new FileDialog(shell, SWT.OPEN | SWT.MULTI);        
+        fileDialog.setText("Choose files to send");
+        if (fileDialog.open()==null)
+            return;
+        
+        String files[]=fileDialog.getFileNames();
+        String separator=System.getProperty("file.separator");
+        int i;
+        for (i=0; i<files.length; i++)
+        {
+            files[i]=fileDialog.getFilterPath()+separator+files[i];
+        }
+        
+        SWTTransferDialog dialog=SWTTransferDialog.getInstance(SWTUtil.getInstance().getShell().getDisplay());
+        dialog.openDialog();
+        
+        TreeItem item=SWTUtil.getInstance().getTree().getSelection()[0];
+        String path=ShareLister.getPath(item);
+        String ip=ShareLister.getIP(item);
+        sendFiles(ip, path, files);
+    }
+    
     public void drop(DropTargetEvent event)
     {
     	String [] droppedFiles=(String [])event.data;       	

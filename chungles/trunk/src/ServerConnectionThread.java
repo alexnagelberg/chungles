@@ -145,12 +145,12 @@ public class ServerConnectionThread extends Thread
 	public void requestReceive()
 	{
         BufferedReader bin=new BufferedReader(new InputStreamReader(in));
-        System.out.println("REQ: ");
 	    try
 	    {
+	    		String separator=System.getProperty("file.separator");
 	        String path=bin.readLine();
 	        String share=path.substring(1, path.substring(1).indexOf('/')+1);			
-			path=Configuration.getSharePath(share)+path.substring(share.length()+2);
+			path=Configuration.getSharePath(share)+separator+path.substring(share.length()+2);
 			
 	        // KLUDGE, REMOVE AND PUT REAL CODE
 			out.write(OK);
@@ -169,9 +169,7 @@ public class ServerConnectionThread extends Thread
             catch (Exception e)
             {
                 e.printStackTrace();
-            }
-            
-			
+            }            			
 	    }
 	    catch (Exception e)
 	    {
@@ -265,7 +263,8 @@ public class ServerConnectionThread extends Thread
 		    if (File.separatorChar!='/')
 		    	localPath=localPath.replace(File.separatorChar, '/');
 			dout.writeBytes("/"+share+localPath.
-		            substring(Configuration.getSharePath(share).length())+"\n");			
+		            substring(Configuration.getSharePath(share).length())+"\n");
+			dout.writeBytes(list.getFileType()+"\n");
 		    dout.writeBytes(list.getSize()+"\n");
 		    list=list.getNext();
 		}

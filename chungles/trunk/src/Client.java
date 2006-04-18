@@ -121,23 +121,26 @@ public class Client
 		}					
 	}
 	
-	public boolean requestRetrieveFile(final FileList file)
+	public boolean requestRetrieveFile(final FileList file, final String savePath)
 	{
         DataOutputStream dout=new DataOutputStream(out);
 	    int status=ServerConnectionThread.NO;
-	    
 	    try
 		{
 			if (file.getFileType()==FileList.FILE)
 			{
 				dout.write(ServerConnectionThread.REQUEST_RECEIVE);				
 				dout.writeBytes(file.getRemotePath()+"\n");
+				return in.read()==ServerConnectionThread.OK;
 			}
 			else
 			{
-				// Make directory
-			}
-			status=in.read();
+				File dir=new File(savePath);
+				// If path exists, then:
+				// Return success/fail if it's a directory or not
+				// Otherwise, return the success/fail of creating that directory
+				return dir.exists()?dir.isDirectory():dir.mkdir();
+			}			
 		}
 		catch (Exception e)
 		{
@@ -169,7 +172,7 @@ public class Client
                 if (size-totalread<1024)
                 {
                     //conversion of long to int ok, it's under 1024 ;)
-                    read=in.read(buffer, 0, (int)(size-totalread));
+                    read=in.read(buffer, 0, (int)(size-totalread));                    
                 }
                 else
                 {
@@ -177,6 +180,7 @@ public class Client
                 }
                 fileout.write(buffer, 0, read);
                 totalread+=read;
+                listener.progressUpdate(totalread);
             }
             fileout.close();
 			
@@ -204,6 +208,7 @@ public class Client
 		    	inputLine.toCharArray()[0]!=ServerConnectionThread.TERMINATOR)
 		    {		        
 		        list.setRemotePath(inputLine);
+		        list.setFileType(Integer.parseInt(bin.readLine()));
 		        list.setSize(Long.parseLong(bin.readLine()));
 		        FileList.setNumFiles(FileList.getNumFiles()+1);
 		        FileList.setTotalSize(FileList.getTotalSize()+list.getSize());

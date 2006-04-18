@@ -42,7 +42,7 @@ public class SWTPreferencesDialog
 
         shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
         shell.setText("Chungles Preferences");
-        InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/chungles.gif");	
+        InputStream in=SWTUtil.class.getResourceAsStream("images/chungles.gif");	
         shell.setImage(new Image(display, in));
         shell.setLayout(null);
 
@@ -139,27 +139,7 @@ public class SWTPreferencesDialog
         
         compname = new Text(composite, SWT.NONE);
         compname.setText(Configuration.getComputerName());
-        compname.setBounds(115, 355, 375, 20);
-        
-        tabItem = new CTabItem(folder, SWT.NONE);
-        tabItem.setText("Other");
-
-        composite = new Composite(folder, SWT.NONE);
-        tabItem.setControl(composite);
-        composite.setLayout(null);
-        
-        label=new Label(composite, SWT.NONE);
-        label.setText("Directory for temporary files:");
-        label.setBounds(5, 5, 485, 15);
-        
-        tempdir = new Text(composite, SWT.NONE);
-        tempdir.setText(Configuration.getTemporaryFolder());
-        tempdir.setBounds(5, 25, 570, 25);
-        
-        Button browse = new Button(composite, SWT.PUSH);
-        browse.setText("...");
-        browse.setBounds(585, 25, 30, 25);
-        browse.addSelectionListener(listener);
+        compname.setBounds(115, 355, 375, 20);                
         
         Button okbutton = new Button(shell, SWT.PUSH | SWT.CENTER);
         okbutton.setText("&Ok");
@@ -214,9 +194,6 @@ public class SWTPreferencesDialog
                 
                 // set computer's name
                 Configuration.setComputerName(compname.getText());
-
-                // set temporary folder
-                Configuration.setTemporaryFolder(tempdir.getText());
                 
                 Configuration.saveConfig();
                 shell.dispose();

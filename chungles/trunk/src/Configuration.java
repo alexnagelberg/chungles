@@ -15,6 +15,11 @@ public class Configuration extends DefaultHandler
 		computerName="Chungles Node";
 	}
 	
+	public static String getVersion()
+	{
+		return "0.1";
+	}
+	
 	public static void parse()
 	{
 		DefaultHandler handler=new Configuration();

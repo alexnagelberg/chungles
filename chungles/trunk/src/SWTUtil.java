@@ -22,7 +22,7 @@ public class SWTUtil
 	    shell = new Shell(display);	    
 	    shell.setText("Chungles");	    	    
 	    shell.setLayout(new FillLayout());
-	    InputStream in=SWTUtil.class.getResourceAsStream("images/chungles.gif");	  	    	   
+	    InputStream in=SWTUtil.class.getResourceAsStream("images/chungles.png");	  	    	   
 	    shell.setImage(new Image(display, in));
 	    
 	    // Add tree
@@ -67,7 +67,7 @@ public class SWTUtil
 	    putFile.addSelectionListener(new TransferToNode());
         
 	    // Create menu
-	    Menu bar=new Menu(shell, SWT.BAR);
+	    Menu bar=new Menu(shell, SWT.BAR | SWT.LEFT_TO_RIGHT);
 	    shell.setMenuBar(bar);
 	    MenuItem item=new MenuItem(bar, SWT.CASCADE);
 	    item.setText("&File");
@@ -102,10 +102,7 @@ public class SWTUtil
 	    item.setText("E&xit");
 	    item.addSelectionListener(new SelectionListener()
 	    		{
-	    			public void widgetDefaultSelected(SelectionEvent e)
-	    			{
-	    				
-	    			}
+	    			public void widgetDefaultSelected(SelectionEvent e) {}
 	    			
 	    			public void widgetSelected(SelectionEvent e)
 	    			{
@@ -115,6 +112,23 @@ public class SWTUtil
 	    				item.getParent().getShell().dispose();
 	    			}
 	    		});
+	    
+	    // Help menu
+	    item=new MenuItem(bar, SWT.CASCADE);
+	    item.setText("&Help");
+	    Menu helpMenu=new Menu(shell, SWT.DROP_DOWN);
+	    item.setMenu(helpMenu);
+	    item=new MenuItem(helpMenu, SWT.PUSH);
+	    item.setText("&About");
+	    item.addSelectionListener(new SelectionListener()
+	        {
+	        		public void widgetDefaultSelected(SelectionEvent e) {}
+	        		
+	        		public void widgetSelected(SelectionEvent e)
+	        		{
+	        		    openAboutDialog();
+	        		}
+	        });
 	    
 	    shell.pack();	    
 	    shell.setSize(640,480);
@@ -169,5 +183,10 @@ public class SWTUtil
 	public void openAddNodeDialog()
 	{
 	    SWTAddNodeDialog.getInstance(shell.getDisplay()).openDialog();
+	}
+	
+	public void openAboutDialog()
+	{
+		SWTAboutDialog.getInstance(shell.getDisplay()).openDialog();
 	}
 }

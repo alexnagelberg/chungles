@@ -42,7 +42,7 @@ public class SWTPreferencesDialog
 
         shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
         shell.setText("Chungles Preferences");
-        InputStream in=SWTUtil.class.getResourceAsStream("images/chungles.gif");	
+        InputStream in=SWTUtil.class.getResourceAsStream("images/chungles.png");	
         shell.setImage(new Image(display, in));
         shell.setLayout(null);
 

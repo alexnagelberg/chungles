@@ -35,7 +35,7 @@ public class SWTTransferDialog
 
 		shell.setLayout(null);
 		shell.setText("File Transfer");
-		InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/chungles.gif");	
+		InputStream in=SWTTransferDialog.class.getResourceAsStream("images/chungles.png");	
 		shell.setImage(new Image(display, in));
 		shell.layout();
 		shell.pack();

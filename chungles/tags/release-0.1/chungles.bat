@@ -1,0 +1,1 @@
+java -Djava.library.path=lib -classpath lib\chungles.jar;lib\JSAP_1.03a.jar;lib\jmdns.jar;lib\swt.jar Main

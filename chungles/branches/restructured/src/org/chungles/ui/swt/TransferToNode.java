@@ -1,7 +1,11 @@
+package org.chungles.ui.swt;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
+
+import org.chungles.core.*;
 
 public class TransferToNode extends DropTargetAdapter implements SelectionListener
 {	

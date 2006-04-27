@@ -1,12 +1,16 @@
+package org.chungles.ui.swt;
 
 import java.io.InputStream;
 import java.util.Iterator;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
+
+import org.chungles.core.*;
 
 // Singleton
 public class SWTPreferencesDialog
@@ -42,7 +46,7 @@ public class SWTPreferencesDialog
 
         shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
         shell.setText("Chungles Preferences");
-        InputStream in=SWTUtil.class.getResourceAsStream("images/chungles.png");	
+        InputStream in=ClassLoader.getSystemResourceAsStream("images/chungles.png");	
         shell.setImage(new Image(display, in));
         shell.setLayout(null);
 
@@ -195,7 +199,7 @@ public class SWTPreferencesDialog
                 // set computer's name
                 Configuration.setComputerName(compname.getText());
                 
-                Configuration.saveConfig();
+                ConfigurationParser.saveConfig();
                 shell.dispose();
             }
             else if (button.getText().equals("&Remove Share"))

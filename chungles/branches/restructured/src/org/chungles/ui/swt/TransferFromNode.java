@@ -1,5 +1,9 @@
+package org.chungles.ui.swt;
+
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
+
+import org.chungles.core.*;
 
 public class TransferFromNode implements SelectionListener
 {

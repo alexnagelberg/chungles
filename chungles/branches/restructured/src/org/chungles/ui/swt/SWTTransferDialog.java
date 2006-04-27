@@ -1,3 +1,5 @@
+package org.chungles.ui.swt;
+
 import java.io.InputStream;
 
 import org.eclipse.swt.SWT;
@@ -35,7 +37,7 @@ public class SWTTransferDialog
 
 		shell.setLayout(null);
 		shell.setText("File Transfer");
-		InputStream in=SWTTransferDialog.class.getResourceAsStream("images/chungles.png");	
+		InputStream in=ClassLoader.getSystemResourceAsStream("images/chungles.png");	
 		shell.setImage(new Image(display, in));
 		shell.layout();
 		shell.pack();

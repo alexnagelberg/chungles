@@ -1,3 +1,5 @@
+package org.chungles.core;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.*;
@@ -8,7 +10,7 @@ public class mDNSUtil
 {
 	private static Hashtable mdnslist;		
 	
-	public static void bindNewInterface(InetAddress ip) throws IOException
+	public static void bindNewInterface(InetAddress ip, ServiceListener nodeDetector) throws IOException
 	{
 		if (mdnslist==null)
 		{
@@ -22,7 +24,7 @@ public class mDNSUtil
 		ServiceInfo service=new ServiceInfo("_chungles._tcp.local.", 
 		        mdns.getInterface().getHostAddress()+"._chungles._tcp.local.", 6565, 0, 0,
 		        Configuration.getComputerName());
-		mdns.addServiceListener("_chungles._tcp.local.", new NodeDetect());
+		mdns.addServiceListener("_chungles._tcp.local.", nodeDetector);
 		mdns.registerService(service);   		
 		
 		

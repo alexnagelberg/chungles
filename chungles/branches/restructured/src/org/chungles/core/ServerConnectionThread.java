@@ -1,3 +1,5 @@
+package org.chungles.core;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;

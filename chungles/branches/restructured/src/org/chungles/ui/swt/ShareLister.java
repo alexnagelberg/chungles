@@ -1,9 +1,14 @@
+package org.chungles.ui.swt;
+
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
 
 import java.io.InputStream;
 import java.util.*;
+
+import org.chungles.core.*;
+import org.chungles.application.*;
 
 public class ShareLister implements Listener
 {

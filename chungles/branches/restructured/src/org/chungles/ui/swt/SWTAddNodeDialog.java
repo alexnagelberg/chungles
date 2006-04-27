@@ -1,3 +1,5 @@
+package org.chungles.ui.swt;
+
 import java.io.InputStream;
 import java.net.InetAddress;
 
@@ -7,6 +9,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
 
+import org.chungles.application.*;
 public class SWTAddNodeDialog
 {
     private static SWTAddNodeDialog dialog;
@@ -36,7 +39,7 @@ public class SWTAddNodeDialog
 
         shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
         shell.setText("Add Chungles Node");
-        InputStream in=SWTAddNodeDialog.class.getResourceAsStream("images/chungles.png");	
+        InputStream in=ClassLoader.getSystemResourceAsStream("images/chungles.png");	
         shell.setImage(new Image(display, in));
         shell.setLayout(null);
         

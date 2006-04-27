@@ -1,16 +1,22 @@
+package org.chungles.application;
 
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
 
+import org.chungles.ui.UI;
+import org.chungles.ui.swt.*;
+import org.chungles.core.*;
+
 public class Main
 {
+	public static UI ui;
+	
     public static void main(String[] args) throws IOException
     {
-        //DaemonUtil dutil = DaemonUtil.getInstance();
-        //dutil.parseArgs(args);
-	Configuration.parse();
-        SWTUtil swt = SWTUtil.getInstance();
+        ui=new SWTUI(); // Place holder till UI selector setup
+        if (!ConfigurationParser.parse())
+        		ui.openPreferencesDialog();
 
         Enumeration netInterfaces = NetworkInterface.getNetworkInterfaces();
         while (netInterfaces.hasMoreElements())
@@ -22,7 +28,7 @@ public class Main
                 InetAddress ip = (InetAddress) ipAddresses.nextElement();
                 if (ip.getHostAddress().indexOf(':')<0) // IPv6 currently not supported
                 {
-                    mDNSUtil.bindNewInterface(ip);
+                    mDNSUtil.bindNewInterface(ip, new NodeDetect());
                 }
             }
         }
@@ -30,17 +36,9 @@ public class Main
         ServerThread server = new ServerThread();
         server.start();
 
-        // Go! If daemon mode run daemon loop otherwise run window loop
-        /*if (dutil.getConfig().getBoolean("daemon"))
-        {
-            dutil.run();
-        }
-        else
-        {*/
-            swt.mainLoop();
-        //}
+        ui.takeover();
 
-        // Window or daemon shuts down, we shut down
+        // UI shuts down, we shut down.
         server.stopListening();
         mDNSUtil.closeInterfaces();
         System.exit(0);

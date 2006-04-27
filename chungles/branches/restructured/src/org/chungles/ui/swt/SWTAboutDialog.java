@@ -1,9 +1,13 @@
+package org.chungles.ui.swt;
+
 import org.eclipse.swt.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.*;
 import java.io.*;
+
+import org.chungles.core.*;
 
 public class SWTAboutDialog
 {
@@ -33,7 +37,7 @@ public class SWTAboutDialog
 		
 		shell.setLayout(null);
 		shell.setText("About");
-		InputStream in=SWTAboutDialog.class.getResourceAsStream("images/chungles.png");	
+		InputStream in=ClassLoader.getSystemResourceAsStream("images/chungles.png");	
 		Image chunglesGif=new Image(display, in);
 		shell.setImage(chunglesGif);
 		shell.layout();

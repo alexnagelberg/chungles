@@ -1,3 +1,5 @@
+package org.chungles.ui.swt;
+
 import java.io.InputStream;
 
 import org.eclipse.swt.SWT;
@@ -22,7 +24,7 @@ public class SWTUtil
 	    shell = new Shell(display);	    
 	    shell.setText("Chungles");	    	    
 	    shell.setLayout(new FillLayout());
-	    InputStream in=SWTUtil.class.getResourceAsStream("images/chungles.png");	  	    	   
+	    InputStream in=ClassLoader.getSystemResourceAsStream("images/chungles.png");	  	    	   
 	    shell.setImage(new Image(display, in));
 	    
 	    // Add tree

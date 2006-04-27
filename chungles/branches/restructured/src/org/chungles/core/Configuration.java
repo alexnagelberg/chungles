@@ -1,4 +1,4 @@
-package org.chungles.application;
+package org.chungles.core;
 
 import java.util.*;
 
@@ -7,7 +7,7 @@ public class Configuration
 	private static Hashtable shares;
 	private static String computerName;
 	
-	public Configuration()
+	public static void init()
 	{
 		shares=new Hashtable();
 		computerName="Chungles Node";

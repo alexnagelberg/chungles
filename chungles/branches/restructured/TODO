@@ -1,3 +1,11 @@
+bugs:
+*abort functionality
+*node hashtable woes
+*need cleaner method of handling exceptions (debug system with fault taulerance)
+*needs to handle disconnects in the middle of file transfer
+*keep a hash table of interfaces available and handle changes in interfaces showing up/going down
+
+features:
 *(optional) multicast transfers
 *(optional) gzip compression on line (default: no)
 *(optional) ssl encryption (default: no)
@@ -8,3 +16,4 @@
 *search feature
 *separate core functionality, set up packages (crucial) - this means having classes that do core chungles functionality and then many things can use it
 *integrate stateless
+*multi-thread interface init

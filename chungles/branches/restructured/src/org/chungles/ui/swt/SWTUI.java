@@ -27,9 +27,9 @@ public class SWTUI implements UI
 	
 	public void addNode(final String IP, final String compname, final Hashtable ips, final Hashtable compnames)
 	{
-		swtutil.getShell().getDisplay().asyncExec(new Runnable()
-		{
-			final Tree tree=swtutil.getTree();
+        final Tree tree=swtutil.getTree();
+		swtutil.getShell().getDisplay().syncExec(new Runnable()
+		{			
 			public void run()
 			{
 				if (!nodes.containsKey(compname))
@@ -41,7 +41,7 @@ public class SWTUI implements UI
 				    node.setImage(new Image(swtutil.getShell().getDisplay(), in));
 				    nodes.put(compname, node);
 				    ips.put(compname, IP);
-		    			compnames.put(IP, compname);
+		    		compnames.put(IP, compname);
 				}
 			}
 		});
@@ -53,6 +53,9 @@ public class SWTUI implements UI
 		{
 			public void run()
 			{
+                if (compname==null)
+                    return;
+                
 				final TreeItem node=(TreeItem)nodes.get(compname);
 				if (node!=null)
 				{

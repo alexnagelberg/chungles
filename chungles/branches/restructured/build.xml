@@ -48,7 +48,7 @@
 			<fileset dir="${basedir}/bin"/>
 			<manifest>
 				
-				<attribute name="Main-Class" value="Main"/>
+				<attribute name="Main-Class" value="org.chungles.application.Main"/>
 			</manifest>
 		</jar>
 	</target>
@@ -62,7 +62,7 @@
 	</target>
 
 	<target name="run" depends="compile">
-		<java classname="Main" fork="yes">
+		<java classname="org.chungles.application.Main" fork="yes">
 			<sysproperty key="java.library.path" value="${lib.dir}"/>
 			<classpath refid="compile.path"/>
 			<classpath refid="project.path"/>

@@ -14,6 +14,5 @@ features:
 *more file operations (del,move,copy,etc)
 *file resuming
 *search feature
-*separate core functionality, set up packages (crucial) - this means having classes that do core chungles functionality and then many things can use it
 *integrate stateless
 *multi-thread interface init

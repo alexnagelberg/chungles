@@ -8,8 +8,6 @@ import javax.xml.parsers.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
-import org.chungles.core.*;
-
 public class ConfigurationParser extends DefaultHandler
 {
 	public static boolean parse()
@@ -22,7 +20,10 @@ public class ConfigurationParser extends DefaultHandler
 			SAXParser saxParser = factory.newSAXParser();
 			File file=new File(System.getProperty("user.home")+"/.chungles/config.xml");
 			if (!file.exists())
+			{
+				createConfig(file);
 				return false;
+			}
 			else
 				saxParser.parse(file, handler);
 		}

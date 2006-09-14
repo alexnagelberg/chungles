@@ -6,6 +6,7 @@ import java.util.*;
 
 import org.chungles.ui.UI;
 import org.chungles.ui.swt.*;
+import org.chungles.ui.daemon.*;
 import org.chungles.core.*;
 
 public class Main
@@ -14,7 +15,16 @@ public class Main
 	
     public static void main(String[] args) throws IOException
     {
-        ui=new SWTUI(); // Place holder till UI selector setup
+    	ArgumentParser argparse=new ArgumentParser(args);
+    	
+    	String uitype=argparse.getUI();
+    	if (uitype.equals("swt"))
+    		ui=new SWTUI();
+    	//else if (uitype.equals("console"))
+    	//	ui=new ConsoleUI();
+    	else // daemon
+    		ui=new DaemonUI();
+    	
         if (!ConfigurationParser.parse())
         		ui.openPreferencesDialog();
 

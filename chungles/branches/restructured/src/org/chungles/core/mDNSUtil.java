@@ -10,7 +10,7 @@ public class mDNSUtil
 {
 	private static Hashtable mdnslist;		
 	
-	public static void bindNewInterface(InetAddress ip, ServiceListener nodeDetector) throws IOException
+	public static void bindNewInterface(InetAddress ip, ServiceListener nodeDetector, boolean isServing) throws IOException
 	{
 		if (mdnslist==null)
 		{
@@ -21,11 +21,15 @@ public class mDNSUtil
 						
 		JmDNS mdns=new JmDNS(ip);		
 		mdnslist.put(mdns.getInterface().getHostAddress(), mdns);
-		ServiceInfo service=new ServiceInfo("_chungles._tcp.local.", 
+		mdns.addServiceListener("_chungles._tcp.local.", nodeDetector);
+		
+		if (isServing)
+		{
+			ServiceInfo service=new ServiceInfo("_chungles._tcp.local.", 
 		        mdns.getInterface().getHostAddress()+"._chungles._tcp.local.", 6565, 0, 0,
 		        Configuration.getComputerName());
-		mdns.addServiceListener("_chungles._tcp.local.", nodeDetector);
-		mdns.registerService(service);   		
+			mdns.registerService(service);
+		}
 		
 		
 	}

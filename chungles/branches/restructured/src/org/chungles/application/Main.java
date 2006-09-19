@@ -1,12 +1,13 @@
 package org.chungles.application;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.util.*;
 
 import org.chungles.ui.UI;
 import org.chungles.ui.swt.*;
 import org.chungles.ui.daemon.*;
+//import org.chungles.ui.console.*;
 import org.chungles.core.*;
 
 public class Main
@@ -21,13 +22,27 @@ public class Main
     	if (uitype.equals("swt"))
     		ui=new SWTUI();
     	//else if (uitype.equals("console"))
-    	//	ui=new ConsoleUI();
+    		//ui=new ConsoleUI();
     	else // daemon
     		ui=new DaemonUI();
     	
         if (!ConfigurationParser.parse())
         		ui.openPreferencesDialog();
 
+        File lockfile=new File(System.getProperty("user.home")+"/.chungles/.lock");
+        boolean isServer=!lockfile.exists();
+        
+        if (!isServer)
+        {
+        	System.out.println("Detected " + lockfile.getAbsolutePath() + ": Assuming " + 
+        			"another instance is running. Disabling server.");
+        }
+        else
+        {        	        
+        	lockfile.createNewFile();
+        	lockfile.deleteOnExit();
+        }
+        
         Enumeration netInterfaces = NetworkInterface.getNetworkInterfaces();
         while (netInterfaces.hasMoreElements())
         {
@@ -38,7 +53,7 @@ public class Main
                 InetAddress ip = (InetAddress) ipAddresses.nextElement();
                 if (ip.getHostAddress().indexOf(':')<0) // IPv6 currently not supported
                 {
-                    mDNSUtil.bindNewInterface(ip, new NodeDetect());
+                    mDNSUtil.bindNewInterface(ip, new NodeDetect(), isServer);
                 }
             }
         }
@@ -48,7 +63,7 @@ public class Main
 
         ui.takeover();
 
-        // UI shuts down, we shut down.
+        // UI shuts down, we shut down.        
         server.stopListening();
         mDNSUtil.closeInterfaces();
         System.exit(0);

@@ -6,6 +6,7 @@ public class Configuration
 {
 	private static Hashtable shares;
 	private static String computerName;
+	private static String REV="$Rev$";
 	
 	public static void init()
 	{
@@ -15,7 +16,8 @@ public class Configuration
 	
 	public static String getVersion()
 	{
-		return "0.1";
+		StringTokenizer tok=new StringTokenizer(REV, "$Rev: ");
+		return "r"+tok.nextToken();
 	}
 	
 	public static String getSharePath(String name)

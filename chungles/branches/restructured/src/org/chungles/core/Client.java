@@ -228,4 +228,21 @@ public class Client
 	    }
 	    return null;
 	}
+	
+	public boolean pathExists(String path)
+	{
+		DataOutputStream dout=new DataOutputStream(out);
+		
+		try
+		{
+			dout.write(ServerConnectionThread.PATH_EXISTS);
+			dout.writeBytes(path+"\n");
+			return (in.read()==ServerConnectionThread.YES);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

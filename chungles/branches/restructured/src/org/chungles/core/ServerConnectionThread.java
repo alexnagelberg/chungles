@@ -14,8 +14,10 @@ public class ServerConnectionThread extends Thread
 	public final static int REQUEST_MKDIR=4;
 	public final static int REQUEST_RECEIVE=5;
 	public final static int OK=4;
+	public final static int YES=4;
 	public final static int NO=5;
 	public final static int RECURSE_FILES=6;
+	public final static int PATH_EXISTS=7;
 	public final static char IS_FILE='F';
 	public final static char IS_DIRECTORY='D';
 	
@@ -89,6 +91,11 @@ public class ServerConnectionThread extends Thread
 				    recurseFiles();
 				    break;
 				}
+				case PATH_EXISTS:
+				{
+					checkPath();
+					break;
+				}
 			}
 		}
 		catch (Exception e)
@@ -140,9 +147,6 @@ public class ServerConnectionThread extends Thread
 	
 	/**
 	 * Client requests a file from server thread
-	 * 
-	 * @param in Data input stream
-	 * @param out Data output stream
 	 */
 	public void requestReceive()
 	{
@@ -181,9 +185,6 @@ public class ServerConnectionThread extends Thread
 	
 	/**
 	 * Client requests to send to server thread 
-	 * 
-	 * @param in Data input stream
-	 * @param out Data output stream
 	 */
 	public void requestSend()
 	{
@@ -272,5 +273,34 @@ public class ServerConnectionThread extends Thread
 		}
 		dout.write(TERMINATOR);
 		dout.writeBytes("\n");
+	}
+	
+	/**
+	 * Checks to see if path exists on server.
+	 * 
+	 * @throws IOException
+	 */
+	private void checkPath() throws IOException
+	{
+		BufferedReader bin=new BufferedReader(new InputStreamReader(in));		
+		String path=bin.readLine();
+		StringTokenizer tok=new StringTokenizer(path, "/");
+		String share=tok.nextToken();
+		if (!tok.hasMoreTokens())
+		{
+			if (Configuration.getSharePath(share)!=null)
+				out.write(YES);
+			else
+				out.write(NO);
+		}
+		else
+		{		
+			path=Configuration.getSharePath(share)+"/"+path.substring(share.length()+2);
+
+			if (new File(path).exists())
+				out.write(YES);
+			else
+				out.write(NO);
+		}
 	}
 }

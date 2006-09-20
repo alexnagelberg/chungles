@@ -26,9 +26,8 @@ public class TransferFromNode implements SelectionListener
         // Save dialog
         DirectoryDialog directoryDialog = new DirectoryDialog(shell);
         directoryDialog.setMessage("Select save path");
-        directoryDialog.open();
-        String savepath = directoryDialog.getFilterPath();
-
+        String savepath = directoryDialog.open();
+        
         // If they cancel
         if (savepath.equals(""))
             return;

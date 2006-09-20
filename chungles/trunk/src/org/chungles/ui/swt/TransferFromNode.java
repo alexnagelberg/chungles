@@ -29,7 +29,7 @@ public class TransferFromNode implements SelectionListener
         String savepath = directoryDialog.open();
         
         // If they cancel
-        if (savepath.equals(""))
+        if (savepath==null || savepath.equals(""))
             return;
 
         // Ask client(s) to recurse the path(s)

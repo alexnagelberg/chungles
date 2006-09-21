@@ -4,13 +4,13 @@ import java.util.*;
 
 public class Configuration
 {
-	private static Hashtable shares;
+	private static Hashtable<String, String> shares;
 	private static String computerName;
 	private static String REV="$Rev$";
 	
 	public static void init()
 	{
-		shares=new Hashtable();
+		shares=new Hashtable<String, String>();
 		computerName="Chungles Node";
 	}
 	
@@ -22,10 +22,10 @@ public class Configuration
 	
 	public static String getSharePath(String name)
 	{
-		return (String)shares.get(name);
+		return shares.get(name);
 	}
 	
-	public static Iterator getSharesIterator()
+	public static Iterator<String> getSharesIterator()
 	{
 		return shares.keySet().iterator();
 	}

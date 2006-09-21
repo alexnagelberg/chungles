@@ -113,7 +113,7 @@ public class ServerConnectionThread extends Thread
 		// Send root list
 		if (path.equals("/"))
 		{
-			Iterator iterator=Configuration.getSharesIterator();
+			Iterator<String> iterator=Configuration.getSharesIterator();
 			while (iterator.hasNext())
 			{
 				dout.write(IS_DIRECTORY);
@@ -153,7 +153,7 @@ public class ServerConnectionThread extends Thread
         BufferedReader bin=new BufferedReader(new InputStreamReader(in));
 	    try
 	    {
-	    		String separator=System.getProperty("file.separator");
+	    	String separator=System.getProperty("file.separator");
 	        String path=bin.readLine();
 	        String share=path.substring(1, path.substring(1).indexOf('/')+1);			
 			path=Configuration.getSharePath(share)+separator+path.substring(share.length()+2);

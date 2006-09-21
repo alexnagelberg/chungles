@@ -75,10 +75,10 @@ public class ConfigurationParser extends DefaultHandler
 			
 			// Shares			
 			out.println("<shares>");
-			Iterator iterator=Configuration.getSharesIterator();
+			Iterator<String> iterator=Configuration.getSharesIterator();
 			while (iterator.hasNext())
 			{
-				String share=(String)iterator.next();
+				String share=iterator.next();
 				String map=Configuration.getSharePath(share);
 				out.println("<share name=\"" + share + "\" map=\"" + map + "\"/>");
 			}

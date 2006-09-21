@@ -161,10 +161,10 @@ public class SWTPreferencesDialog
 
     private void populateList()
     {
-        Iterator iterator = Configuration.getSharesIterator();
+        Iterator<String> iterator = Configuration.getSharesIterator();
         while (iterator.hasNext())
         {
-            String share = (String) iterator.next();
+            String share = iterator.next();
             String map = Configuration.getSharePath(share);
             TableItem item = new TableItem(table, SWT.NONE);
             item.setText(new String[]

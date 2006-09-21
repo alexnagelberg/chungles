@@ -8,10 +8,10 @@ public class DaemonUI implements UI
 {
 	public void takeover()
 	{	
-		System.out.println("Press 'q' to quit.");
 		try
 		{
-			while (System.in.read()!='q');
+			while (true) // main loop
+				System.in.read();
 		}
 		catch (Exception e)
 		{

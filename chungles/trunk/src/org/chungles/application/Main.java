@@ -59,12 +59,12 @@ public class Main
         }
 
         ServerThread server = new ServerThread();
-        server.start();
+        if (isServer) server.start();
 
         ui.takeover();
 
         // UI shuts down, we shut down.        
-        server.stopListening();
+        if (isServer) server.stopListening();
         mDNSUtil.closeInterfaces();
         System.exit(0);
     }

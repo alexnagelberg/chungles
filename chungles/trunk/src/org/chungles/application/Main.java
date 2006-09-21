@@ -7,7 +7,7 @@ import java.util.*;
 import org.chungles.ui.UI;
 import org.chungles.ui.swt.*;
 import org.chungles.ui.daemon.*;
-//import org.chungles.ui.console.*;
+import org.chungles.ui.console.*;
 import org.chungles.core.*;
 
 public class Main
@@ -21,8 +21,8 @@ public class Main
     	String uitype=argparse.getUI();
     	if (uitype.equals("swt"))
     		ui=new SWTUI();
-    	//else if (uitype.equals("console"))
-    		//ui=new ConsoleUI();
+    	else if (uitype.equals("console"))
+    		ui=new ConsoleUI();
     	else // daemon
     		ui=new DaemonUI();
     	

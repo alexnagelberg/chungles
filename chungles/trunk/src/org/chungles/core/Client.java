@@ -41,11 +41,11 @@ public class Client
 		}
 	}
 	
-	public LinkedList listDir(String path)
+	public LinkedList<String> listDir(String path)
 	{
         DataOutputStream dout=new DataOutputStream(out);
         BufferedReader bin=new BufferedReader(new InputStreamReader(in));
-		LinkedList list=new LinkedList();		
+		LinkedList<String> list=new LinkedList<String>();		
 		try
 		{
 			dout.write(ServerConnectionThread.LIST_SHARES);

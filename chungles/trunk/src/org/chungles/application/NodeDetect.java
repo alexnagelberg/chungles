@@ -5,15 +5,15 @@ import javax.jmdns.*;
 
 public class NodeDetect implements ServiceListener
 {
-	private static Hashtable ips;
-	private static Hashtable compnames; // provides reverse lookup
+	private static Hashtable<String, String> ips;
+	private static Hashtable<String, String> compnames; // provides reverse lookup
 	
 	public static void addNode(final String ip, final String compname)
 	{
 	    if (ips==null || compnames==null)
 		{					
-			ips=new Hashtable();
-			compnames=new Hashtable();
+			ips=new Hashtable<String, String>();
+			compnames=new Hashtable<String, String>();
 		}
 
 	    Main.ui.addNode(ip, compname, ips, compnames);
@@ -36,8 +36,8 @@ public class NodeDetect implements ServiceListener
 				
 		if (ips==null || compnames==null)
 		{			
-			ips=new Hashtable();
-			compnames=new Hashtable();
+			ips=new Hashtable<String, String>();
+			compnames=new Hashtable<String, String>();
 		}
 		
 		Main.ui.removeNode(ip, compname, ips, compnames);
@@ -49,6 +49,6 @@ public class NodeDetect implements ServiceListener
 	
 	public static String getIP(String compname)
 	{
-	    return (String)ips.get(compname);
+	    return ips.get(compname);
 	}
 }

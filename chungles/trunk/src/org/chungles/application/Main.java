@@ -43,14 +43,14 @@ public class Main
         	lockfile.deleteOnExit();
         }
         
-        Enumeration netInterfaces = NetworkInterface.getNetworkInterfaces();
+        Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
         while (netInterfaces.hasMoreElements())
         {
-            NetworkInterface ni = (NetworkInterface) netInterfaces.nextElement();
-            Enumeration ipAddresses = (Enumeration) ni.getInetAddresses();
+            NetworkInterface ni = netInterfaces.nextElement();
+            Enumeration<InetAddress> ipAddresses = ni.getInetAddresses();
             while (ipAddresses.hasMoreElements())
             {                
-                InetAddress ip = (InetAddress) ipAddresses.nextElement();
+                InetAddress ip = ipAddresses.nextElement();
                 if (ip.getHostAddress().indexOf(':')<0) // IPv6 currently not supported
                 {
                     mDNSUtil.bindNewInterface(ip, new NodeDetect(), isServer);

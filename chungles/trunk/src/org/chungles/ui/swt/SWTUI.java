@@ -12,12 +12,12 @@ import org.chungles.ui.UI;
 public class SWTUI implements UI
 {
 	private SWTUtil swtutil;
-	private static Hashtable nodes;
+	private static Hashtable<String, TreeItem> nodes;
 	
 	public SWTUI()
 	{		
 		swtutil=SWTUtil.getInstance();
-		nodes=new Hashtable();
+		nodes=new Hashtable<String, TreeItem>();
 	}
 	
 	public void takeover()
@@ -25,7 +25,7 @@ public class SWTUI implements UI
 		swtutil.mainLoop();
 	}
 	
-	public void addNode(final String IP, final String compname, final Hashtable ips, final Hashtable compnames)
+	public void addNode(final String IP, final String compname, final Hashtable<String, String> ips, final Hashtable<String, String> compnames)
 	{
         final Tree tree=swtutil.getTree();
 		swtutil.getShell().getDisplay().syncExec(new Runnable()
@@ -47,7 +47,7 @@ public class SWTUI implements UI
 		});
 	}
 	
-	public void removeNode(final String IP, final String compname, final Hashtable ips, final Hashtable compnames)
+	public void removeNode(final String IP, final String compname, final Hashtable<String, String> ips, final Hashtable<String, String> compnames)
 	{		
 		swtutil.getShell().getDisplay().syncExec(new Runnable()
 		{
@@ -56,7 +56,7 @@ public class SWTUI implements UI
                 if (compname==null)
                     return;
                 
-				final TreeItem node=(TreeItem)nodes.get(compname);
+				final TreeItem node=nodes.get(compname);
 				if (node!=null)
 				{
 					node.dispose();

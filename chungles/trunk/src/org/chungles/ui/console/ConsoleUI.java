@@ -9,7 +9,7 @@ import java.util.*;
 public class ConsoleUI implements UI
 {	
 	private String workingpath="/";
-	private Hashtable ips, compnames;
+	private Hashtable<String, String> ips, compnames;
 	private Client client;
 	
 	public void takeover()
@@ -30,7 +30,7 @@ public class ConsoleUI implements UI
 		}
 	}
 	
-	public void addNode(String IP, String compname, Hashtable ips, Hashtable compnames)
+	public void addNode(String IP, String compname, Hashtable<String, String> ips, Hashtable<String, String> compnames)
 	{
 		if (!ips.containsKey(compname))
 		{
@@ -41,7 +41,7 @@ public class ConsoleUI implements UI
 		}		
 	}
 	
-	public void removeNode(String IP, String compname, Hashtable ips, Hashtable compnames)
+	public void removeNode(String IP, String compname, Hashtable<String, String> ips, Hashtable<String, String> compnames)
 	{
 		if (compname==null)
 			return;
@@ -86,10 +86,10 @@ public class ConsoleUI implements UI
 		System.out.println("Path - " + workingpath);
 		if (workingpath.equals("/"))
 		{
-			Enumeration compenum=compnames.elements();
+			Enumeration<String> compenum=compnames.elements();
 			while(compenum.hasMoreElements())
 			{				
-				String name=(String)compenum.nextElement();
+				String name=compenum.nextElement();
 				System.out.println(name);
 			}
 		}
@@ -98,7 +98,7 @@ public class ConsoleUI implements UI
 			if (client!=null)
 			{
 				int start=workingpath.indexOf('/', 1);
-				LinkedList listing;
+				LinkedList<String> listing;
 				if (start==-1)
 					listing=client.listDir("/");
 				else
@@ -109,10 +109,10 @@ public class ConsoleUI implements UI
 					listing=client.listDir(path);
 				}
 				
-				ListIterator iter=listing.listIterator();
+				ListIterator<String> iter=listing.listIterator();
 				while (iter.hasNext())
 				{
-					String name=(String)iter.next();
+					String name=iter.next();
 					if (name.charAt(0)==ServerConnectionThread.IS_DIRECTORY)
 						System.out.print("(D) ");
 					else
@@ -138,7 +138,7 @@ public class ConsoleUI implements UI
 			 * is a "..", it pops a string off the stack. Otherwise it adds the token
 			 * to the stack. It then pops the whole stack to an absolute path name. ^_^
 			 */
-			Stack pathstack=new Stack();
+			Stack<String> pathstack=new Stack<String>();
 			StringTokenizer tok=new StringTokenizer(workingpath, "/");
 			while (tok.hasMoreElements())
 			{
@@ -179,7 +179,7 @@ public class ConsoleUI implements UI
 			
 			StringTokenizer tok=new StringTokenizer(path.substring(1),"/");						
 			String compname=tok.nextToken();				
-			client=new Client((String)ips.get(compname));
+			client=new Client(ips.get(compname));
 			if (!tok.hasMoreElements() || client.pathExists(path.substring(compname.length()+1)))
 			{
 				workingpath=path;
@@ -209,9 +209,6 @@ public class ConsoleUI implements UI
 		if (client!=null && client.pathExists(path))
 		{
 			System.out.println("Retrieving files...");
-			//FileList filelist=new FileList();
-			//filelist.setFileType(FileList.FILE);
-			//filelist.setRemotePath(path);
 			FileList filelist=client.recurseFiles(path);
 			if (!client.requestRetrieveFile(filelist, System.getProperty("user.dir")))
 				System.out.println("Err");

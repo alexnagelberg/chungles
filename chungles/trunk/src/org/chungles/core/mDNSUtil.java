@@ -8,13 +8,13 @@ import javax.jmdns.*;
 
 public class mDNSUtil
 {
-	private static Hashtable mdnslist;		
+	private static Hashtable<String, JmDNS> mdnslist;		
 	
 	public static void bindNewInterface(InetAddress ip, ServiceListener nodeDetector, boolean isServing) throws IOException
 	{
 		if (mdnslist==null)
 		{
-			mdnslist=new Hashtable();
+			mdnslist=new Hashtable<String, JmDNS>();
 		}
 		
 		System.out.println("Listening on " + ip.getHostAddress());
@@ -36,10 +36,10 @@ public class mDNSUtil
 	
 	public static void closeInterfaces() throws IOException
 	{
-		Enumeration enumerator=mdnslist.elements();
+		Enumeration<JmDNS> enumerator=mdnslist.elements();
 		while (enumerator.hasMoreElements())
 		{
-			JmDNS mdns=(JmDNS)enumerator.nextElement();
+			JmDNS mdns=enumerator.nextElement();
 			System.out.println("Shutting down " + mdns.getInterface().getHostAddress());
 			mdns.close();			
 		}		

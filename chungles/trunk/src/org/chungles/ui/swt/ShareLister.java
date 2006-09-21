@@ -23,12 +23,12 @@ public class ShareLister implements Listener
 		String path=getPath(node);					
 		String ip=getIP(node);
 		Client client=new Client(ip);
-		ListIterator iterator=client.listDir(path).listIterator();
+		ListIterator<String> iterator=client.listDir(path).listIterator();
 		client.close();
 		
 		while (iterator.hasNext())
 		{
-			String name=(String)iterator.next();			
+			String name=iterator.next();			
 			TreeItem child=new TreeItem(node, SWT.NONE);
 			child.setText(name.substring(1));
 			if (name.charAt(0)==ServerConnectionThread.IS_DIRECTORY)

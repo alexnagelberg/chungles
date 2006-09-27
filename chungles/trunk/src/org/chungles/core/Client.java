@@ -22,6 +22,7 @@ public class Client
 			socket=new Socket(ip, 6565);
 			in=socket.getInputStream();
 			out=socket.getOutputStream();
+			socket.setSoTimeout(10000);
 		}
 		catch (Exception e)
 		{
@@ -235,6 +236,13 @@ public class Client
 		
 		try
 		{
+			Version ver=getVersion();
+			if (ver.getMinor()<2)
+			{
+				System.out.println("Sorry, chungles client is using protocol: " + ver);
+				return false;
+			}
+			
 			dout.write(ServerConnectionThread.PATH_EXISTS);
 			dout.writeBytes(path+"\n");
 			return (in.read()==ServerConnectionThread.YES);
@@ -244,5 +252,22 @@ public class Client
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	public Version getVersion()
+	{		
+		BufferedReader bin=new BufferedReader(new InputStreamReader(in));
+		try
+		{
+			socket.setSoTimeout(2000);
+			out.write(ServerConnectionThread.CHECK_PROTOCOL_VERSION);
+			Version ver=new Version(bin.readLine());
+			socket.setSoTimeout(10000);
+			return ver;
+		}
+		catch (Exception e)
+		{
+			return new Version();
+		}
 	}
 }

@@ -18,8 +18,12 @@ public class ServerConnectionThread extends Thread
 	public final static int NO=5;
 	public final static int RECURSE_FILES=6;
 	public final static int PATH_EXISTS=7;
+	public final static int CHECK_PROTOCOL_VERSION=8;
+	
 	public final static char IS_FILE='F';
 	public final static char IS_DIRECTORY='D';
+	
+	public final static Version PROTOCOL_VERSION=new Version(0,2,0);
 	
     private InputStream in;
     private OutputStream out;
@@ -94,6 +98,11 @@ public class ServerConnectionThread extends Thread
 				case PATH_EXISTS:
 				{
 					checkPath();
+					break;
+				}
+				case CHECK_PROTOCOL_VERSION:
+				{
+					returnVersion();
 					break;
 				}
 			}
@@ -302,5 +311,11 @@ public class ServerConnectionThread extends Thread
 			else
 				out.write(NO);
 		}
+	}
+	
+	private void returnVersion() throws IOException
+	{
+		DataOutputStream dout=new DataOutputStream(out);
+		dout.writeBytes(PROTOCOL_VERSION+"\n");
 	}
 }

@@ -212,13 +212,14 @@ public class SWTPreferencesDialog
             else if (button.getText().equals("&Add Share"))
             {
                 DirectoryDialog openDialog = new DirectoryDialog(shell);
-                openDialog.setMessage("Select share path");
-                openDialog.open();
-                String path = openDialog.getFilterPath();
-
-                TableItem item = new TableItem(table, SWT.NONE);
-                item.setText(new String[]
-                { "changeme", path });
+                openDialog.setMessage("Select share path");                
+                String path = openDialog.open(); 
+                if (path!=null && !path.equals(""))
+                {
+                	TableItem item = new TableItem(table, SWT.NONE);
+                	item.setText(new String[]
+                	                        { "changeme", path });
+                }
             }
             else if (button.getText().equals("..."))
             {

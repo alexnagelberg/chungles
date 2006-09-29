@@ -1,6 +1,7 @@
 package org.chungles.core;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetAddress;
 import java.util.*;
 
@@ -18,18 +19,25 @@ public class mDNSUtil
 		}
 		
 		System.out.println("Listening on " + ip.getHostAddress());
-						
-		JmDNS mdns=new JmDNS(ip);		
-		mdnslist.put(mdns.getInterface().getHostAddress(), mdns);
-		mdns.addServiceListener("_chungles._tcp.local.", nodeDetector);
-		
-		if (isServing)
-		{
-			ServiceInfo service=new ServiceInfo("_chungles._tcp.local.", 
-		        mdns.getInterface().getHostAddress()+"._chungles._tcp.local.", 6565, 0, 0,
-		        Configuration.getComputerName());
-			mdns.registerService(service);
-		}
+		try
+        {
+    		JmDNS mdns=new JmDNS(ip);		
+    		mdnslist.put(mdns.getInterface().getHostAddress(), mdns);
+    		mdns.addServiceListener("_chungles._tcp.local.", nodeDetector);
+    		
+    		if (isServing)
+    		{
+    			ServiceInfo service=new ServiceInfo("_chungles._tcp.local.", 
+    		        mdns.getInterface().getHostAddress()+"._chungles._tcp.local.", 6565, 0, 0,
+    		        Configuration.getComputerName());
+    			mdns.registerService(service);
+    		}
+        }
+        catch (BindException e)
+        {
+            System.out.println("Failed to listen on interface: " + ip.getHostAddress());
+            return;
+        }
 		
 		
 	}

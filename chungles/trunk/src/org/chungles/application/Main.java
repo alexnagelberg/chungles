@@ -13,7 +13,8 @@ import org.chungles.core.*;
 public class Main
 {
 	public static UI ui;
-	
+	private static boolean isServer;
+    
     public static void main(String[] args) throws IOException
     {
     	ArgumentParser argparse=new ArgumentParser(args);
@@ -30,7 +31,7 @@ public class Main
         		ui.openPreferencesDialog();
 
         File lockfile=new File(System.getProperty("user.home")+"/.chungles/.lock");
-        boolean isServer=!lockfile.exists();
+        isServer=!lockfile.exists();
         
         if (!isServer)
         {
@@ -43,20 +44,35 @@ public class Main
         	lockfile.deleteOnExit();
         }
         
-        Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
-        while (netInterfaces.hasMoreElements())
+        Thread mdnsthread=new Thread()
         {
-            NetworkInterface ni = netInterfaces.nextElement();
-            Enumeration<InetAddress> ipAddresses = ni.getInetAddresses();
-            while (ipAddresses.hasMoreElements())
-            {                
-                InetAddress ip = ipAddresses.nextElement();
-                if (ip.getHostAddress().indexOf(':')<0) // IPv6 currently not supported
+            public void run()
+            {
+                try
                 {
-                    mDNSUtil.bindNewInterface(ip, new NodeDetect(), isServer);
+                    Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
+                    while (netInterfaces.hasMoreElements())
+                    {
+                        NetworkInterface ni = netInterfaces.nextElement();
+                        Enumeration<InetAddress> ipAddresses = ni.getInetAddresses();
+                        while (ipAddresses.hasMoreElements())
+                        {                
+                            InetAddress ip = ipAddresses.nextElement();
+                            if (ip.getHostAddress().indexOf(':')<0) // IPv6 currently not supported
+                            {
+                                mDNSUtil.bindNewInterface(ip, new NodeDetect(), isServer);
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
             }
-        }
+        };
+        mdnsthread.start();
+        
 
         ServerThread server = new ServerThread();
         if (isServer) server.start();

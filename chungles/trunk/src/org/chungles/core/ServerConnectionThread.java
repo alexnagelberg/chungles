@@ -202,7 +202,7 @@ public class ServerConnectionThread extends Thread
 		{			
 			String path=bin.readLine();
 			String share=path.substring(1, path.substring(1).indexOf('/')+1);			
-			path=Configuration.getSharePath(share)+path.substring(share.length()+2);
+			path=Configuration.getSharePath(share)+"/"+path.substring(share.length()+2);
 			String file=bin.readLine();			
 			long totalread=0, size=Long.parseLong(bin.readLine());			
 			DataOutputStream fileout=new DataOutputStream(new FileOutputStream(path+file));

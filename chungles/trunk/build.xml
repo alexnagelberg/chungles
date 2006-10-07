@@ -44,7 +44,7 @@
 			replace='REV=" "'/>
 	</target>
 	
-	<target name="compile" depends="prepare">
+	<target name="compile" depends="prepare,setversion">
 		<javac srcdir="${src.dir}"
 			destdir="${bin.dir}">
 			<classpath refid="compile.path"/>

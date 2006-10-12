@@ -68,9 +68,26 @@ public class ConsoleUI implements UI
 		else if (cmd.equals("ls"))
 			listPath();
 		else if (firstTok.equals("get"))
-			getFile(tok.nextToken("\n").trim());
+		{
+			if (tok.countTokens()==2)		
+				getFile(tok.nextToken("\n").trim());
+			else
+				System.out.println("Syntax: get <file>");
+		}
+		else if (firstTok.equals("put"))
+		{
+			if (tok.countTokens()==2)
+				putFile(tok.nextToken("\n").trim());
+			else
+				System.out.println("Syntax: put <file>");
+		}
 		else if (firstTok.equals("cd"))
-			changeDirectory(tok.nextToken("\n").trim());
+		{
+			if (tok.countTokens()==2)
+				changeDirectory(tok.nextToken("\n").trim());
+			else
+				System.out.println("Syntax: cd <directory>");
+		}
 		else
 			System.out.println("Unrecognized command.");
 		System.out.println();
@@ -233,4 +250,44 @@ public class ConsoleUI implements UI
 		}
 		
 	}
-}
+	
+	private void putFile(String file)
+	{
+		if (file==null || file.equals(""))
+		{
+			System.out.println("Syntax: put <file>");
+			return;
+		}
+		
+		StringTokenizer tok = new StringTokenizer(workingpath, "/");
+		if (tok.countTokens()>=2)
+		{
+			String files[]={file};
+			FileList list=FileList.recurseFiles(files);
+			String path=tok.nextToken();
+			path=workingpath.substring(path.length()+1);
+			if (client.requestFileSend(path, list))
+			{
+				client.sendFile(list, new SendProgressListener()
+				{
+					private int hundredkb=0;
+					public void progressUpdate(long bytesSent)
+					{
+						int temp=(int)(bytesSent/100000);
+						if (temp>hundredkb)
+							System.out.println((temp*100) + "K");
+						hundredkb=temp;
+					}
+				});
+			}
+			else
+			{
+				System.out.println("There was an error sending.");
+			}
+		}
+		else
+		{
+			System.out.println("You're not in a chungles share.");
+		}
+		}
+	}

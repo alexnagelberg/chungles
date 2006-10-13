@@ -6,7 +6,7 @@ import java.util.*;
 
 import org.chungles.ui.UI;
 import org.chungles.ui.swt.*;
-import org.chungles.ui.daemon.*;
+import org.chungles.ui.dummy.*;
 import org.chungles.ui.console.*;
 import org.chungles.core.*;
 
@@ -25,7 +25,7 @@ public class Main
     	else if (uitype.equals("console"))
     		ui=new ConsoleUI();
     	else // daemon
-    		ui=new DaemonUI();
+    		ui=new NullUI();
     	
         if (!ConfigurationParser.parse())
         		ui.openPreferencesDialog();

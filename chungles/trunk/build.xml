@@ -79,7 +79,7 @@
 		<echo file="${basedir}/run.sh">java -classpath ${swt.jar}:${jmdns.jar}:${lib.dir}/chungles.jar -Djava.library.path=${lib.dir} org.chungles.application.Main --ui=swt
 		</echo>
 		
-		<echo file="${basedir}/run-daemon.sh">java -classpath ${jmdns.jar}:${lib.dir}/chungles.jar org.chungles.application.Main --ui=none
+		<echo file="${basedir}/run-dummy.sh">java -classpath ${jmdns.jar}:${lib.dir}/chungles.jar org.chungles.application.Main --ui=null
 		</echo>
 		
 		<chmod dir="${basedir}" perm="a+x" includes="**/run*.sh"/>

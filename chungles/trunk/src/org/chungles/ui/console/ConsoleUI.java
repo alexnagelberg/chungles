@@ -87,7 +87,7 @@ public class ConsoleUI implements UI
 			if (numTokens>=2)
 				changeDirectory(tok.nextToken("\n").trim());
 			else
-				System.out.println("Syntax: cd <directory> (" + numTokens + ")");
+				System.out.println("Syntax: cd <directory>");
 		}
 		else
 			System.out.println("Unrecognized command.");

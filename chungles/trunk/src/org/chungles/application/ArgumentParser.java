@@ -32,7 +32,7 @@ public class ArgumentParser
 				{
 					// There are three options: console, swt, and none (daemon)
 					if (!argvalue.equals("console") && !argvalue.equals("swt")
-							&& !argvalue.equals("none"))
+							&& !argvalue.equals("null"))
 						System.out.println("Invalid UI type");
 					else
 						ui=argvalue;
@@ -40,7 +40,7 @@ public class ArgumentParser
 				else if (argswitch.equals("help"))
 				{
 					System.out.println("Options are:");
-					System.out.println("--ui=<ui type>      Sets UI where 'ui type' is either swt, console, or none(daemon mode).");
+					System.out.println("--ui=<ui type>      Sets UI where 'ui type' is either swt, console, or null.");
 					System.out.println("--help              Shows this screen.");
 				}
 						

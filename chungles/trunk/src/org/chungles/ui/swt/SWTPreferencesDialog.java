@@ -97,7 +97,7 @@ public class SWTPreferencesDialog
                 if (item == null)
                     return;
 
-                Text newEditor = new Text(table, SWT.NONE);
+                Text newEditor = new Text(table, SWT.BORDER);
                 newEditor.setText(item.getText(0));
                 newEditor.addKeyListener(new KeyListener()
                 {
@@ -141,7 +141,7 @@ public class SWTPreferencesDialog
         label.setText("Computer name: ");
         label.setBounds(5, 355, 110, 20);
         
-        compname = new Text(composite, SWT.NONE);
+        compname = new Text(composite, SWT.BORDER);
         compname.setText(Configuration.getComputerName());
         compname.setBounds(115, 355, 375, 20);                
         

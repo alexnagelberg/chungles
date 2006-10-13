@@ -1,10 +1,10 @@
-package org.chungles.ui.daemon;
+package org.chungles.ui.dummy;
 
 import java.util.*;
 import org.chungles.ui.UI;
 
 // We're not going to do anything in here. This is a null UI.
-public class DaemonUI implements UI
+public class NullUI implements UI
 {
 	public void takeover()
 	{	

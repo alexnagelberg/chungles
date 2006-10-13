@@ -60,6 +60,7 @@ public class ConsoleUI implements UI
 	private void parseCommand(String cmd)
 	{
 		StringTokenizer tok=new StringTokenizer(cmd);
+        int numTokens=tok.countTokens();
 		String firstTok=tok.nextToken();
 		if (cmd.equals("quit"))
 			System.out.println("kthxbai");
@@ -69,24 +70,24 @@ public class ConsoleUI implements UI
 			listPath();
 		else if (firstTok.equals("get"))
 		{
-			if (tok.countTokens()==2)		
+			if (numTokens>=2)		
 				getFile(tok.nextToken("\n").trim());
 			else
 				System.out.println("Syntax: get <file>");
 		}
 		else if (firstTok.equals("put"))
 		{
-			if (tok.countTokens()==2)
+			if (numTokens>=2)
 				putFile(tok.nextToken("\n").trim());
 			else
 				System.out.println("Syntax: put <file>");
 		}
 		else if (firstTok.equals("cd"))
 		{
-			if (tok.countTokens()==2)
+			if (numTokens>=2)
 				changeDirectory(tok.nextToken("\n").trim());
 			else
-				System.out.println("Syntax: cd <directory>");
+				System.out.println("Syntax: cd <directory> (" + numTokens + ")");
 		}
 		else
 			System.out.println("Unrecognized command.");

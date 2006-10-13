@@ -101,7 +101,7 @@
 		<delete dir="${doc.dir}"/>
 		<delete file="${lib.dir}/chungles.jar"/>
 		<delete file="${basedir}/run-console.sh"/>
-		<delete file="${basedir}/run-daemon.sh"/>
+		<delete file="${basedir}/run-dummy.sh"/>
 		<delete file="${basedir}/run.sh"/>
 	</target>
 

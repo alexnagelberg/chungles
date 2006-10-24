@@ -19,6 +19,7 @@ public class ServerConnectionThread extends Thread
 	public final static int RECURSE_FILES=6;
 	public final static int PATH_EXISTS=7;
 	public final static int CHECK_PROTOCOL_VERSION=8;
+	public final static int REQUEST_DELETE=9;
 	
 	public final static char IS_FILE='F';
 	public final static char IS_DIRECTORY='D';
@@ -103,6 +104,11 @@ public class ServerConnectionThread extends Thread
 				case CHECK_PROTOCOL_VERSION:
 				{
 					returnVersion();
+					break;
+				}
+				case REQUEST_DELETE:
+				{
+					deleteFile();
 					break;
 				}
 			}
@@ -317,5 +323,35 @@ public class ServerConnectionThread extends Thread
 	{
 		DataOutputStream dout=new DataOutputStream(out);
 		dout.writeBytes(PROTOCOL_VERSION+"\n");
+	}
+	
+	private void deleteFile() throws IOException
+	{
+		BufferedReader bin=new BufferedReader(new InputStreamReader(in));
+		String path=bin.readLine();
+		String share=path.substring(1, path.substring(1).indexOf('/')+1);			
+		path=Configuration.getSharePath(share)+"/"+path.substring(share.length()+2);
+				
+		if (recurseDelete(new File(path)))
+			out.write(OK);
+		else
+			out.write(NO);
+	}
+	
+	private boolean recurseDelete(File file)
+	{		
+		if (file.isDirectory())
+		{
+			File[] files=file.listFiles();
+			int i;
+			boolean ok=true;
+			for (i=0; i<files.length; i++)
+				if (!recurseDelete(files[i])) ok=false;
+			return ok && file.delete();
+		}
+		else
+		{
+			return file.delete();
+		}
 	}
 }

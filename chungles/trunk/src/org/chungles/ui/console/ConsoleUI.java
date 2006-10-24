@@ -89,6 +89,13 @@ public class ConsoleUI implements UI
 			else
 				System.out.println("Syntax: cd <directory>");
 		}
+		else if (firstTok.equals("rm"))
+		{
+			if (numTokens>=2)
+				deleteFile(tok.nextToken("\n").trim());
+			else
+				System.out.println("Syntax: rm <path>");
+		}
 		else
 			System.out.println("Unrecognized command.");
 		System.out.println();
@@ -223,7 +230,6 @@ public class ConsoleUI implements UI
             path+="/";
         
 		path=path.substring(path.indexOf('/', 1));
-		System.out.println(path);
 		if (client!=null && client.pathExists(path))
 		{
 			System.out.println("Retrieving files...");
@@ -290,5 +296,24 @@ public class ConsoleUI implements UI
 		{
 			System.out.println("You're not in a chungles share.");
 		}
+	}
+	
+	private void deleteFile(String file)
+	{		
+		String path = (workingpath.charAt(workingpath.length()-1)=='/') ? 
+				workingpath+file : workingpath+"/"+file;
+        
+        if (path.charAt(path.length()-1)!='/') // This is dumb, I apologize
+            path+="/";
+        
+		path=path.substring(path.indexOf('/', 1));
+		if (client!=null && client.pathExists(path))
+		{
+			if (client.deleteFile(path))
+				System.out.println("Deleted.");
+			else
+				System.out.println("There were errors deleting.");
 		}
 	}
+	
+}

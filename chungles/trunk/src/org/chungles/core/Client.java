@@ -270,4 +270,27 @@ public class Client
 			return new Version();
 		}
 	}
+	
+	public boolean deleteFile(String path)
+	{
+		DataOutputStream dout=new DataOutputStream(out);
+		try
+		{
+			Version ver=getVersion();
+			if (ver.getMinor()<2)
+			{
+				System.out.println("Sorry, chungles client is using protocol: " + ver);
+				return false;
+			}
+			
+			dout.write(ServerConnectionThread.REQUEST_DELETE);
+			dout.writeBytes(path+"\n");
+			return in.read()==ServerConnectionThread.OK;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}		
+	}
 }

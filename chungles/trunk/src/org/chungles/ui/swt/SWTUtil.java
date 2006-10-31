@@ -3,32 +3,97 @@ package org.chungles.ui.swt;
 import java.io.InputStream;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.graphics.*;
 
 // Singleton
-public class SWTUtil
+public class SWTUtil implements SelectionListener
 {
 	private Tree tree;
 	private Shell shell;
 	private boolean isActive;	
 	private static SWTUtil instance;
 	private MenuItem getFile, putFile;
+    private ToolBar toolBar;
+    private ToolItem downloaditem, uploaditem, deleteitem, newdiritem, preferencesitem, quititem;
+    private TreeEditor treeeditor;
     
 	private SWTUtil()
 	{
 		Display display = new Display();
 	    shell = new Shell(display);	    
-	    shell.setText("Chungles");	    	    
-	    shell.setLayout(new FillLayout());
+	    shell.setText("Chungles");	    
+	    shell.setLayout(null);
 	    InputStream in=ClassLoader.getSystemResourceAsStream("images/chungles.png");	  	    	   
-	    shell.setImage(new Image(display, in));
+	    shell.setImage(new Image(display, in));	    
+	    Rectangle area=shell.getClientArea();		
+	    
+	    // Add Toolbar
+	    toolBar = new ToolBar (shell, SWT.HORIZONTAL);
+	    toolBar.setBounds(0, 0, area.width, 33);
+        
+	    // Download Button
+	    downloaditem=new ToolItem(toolBar, SWT.PUSH);
+	    in=ClassLoader.getSystemResourceAsStream("images/download.png");	    
+	    downloaditem.setImage(new Image(display, in));
+        downloaditem.setToolTipText("Download file");
+        downloaditem.addSelectionListener(new TransferFromNode());
+        downloaditem.setEnabled(false);
+	    
+	    // Upload Button
+	    uploaditem=new ToolItem(toolBar, SWT.PUSH);
+	    in=ClassLoader.getSystemResourceAsStream("images/upload.png");
+	    uploaditem.setImage(new Image(display, in));
+        uploaditem.setToolTipText("Upload file");
+        downloaditem.addSelectionListener(new TransferToNode());
+        uploaditem.setEnabled(false);
+        
+	    // Delete Button
+	    deleteitem=new ToolItem(toolBar, SWT.PUSH);
+	    in=ClassLoader.getSystemResourceAsStream("images/delete.png");
+	    deleteitem.setImage(new Image(display, in));
+        deleteitem.setToolTipText("Delete file");
+        deleteitem.addSelectionListener(new SWTDeleteSelection());
+        deleteitem.setEnabled(false);
+        
+	    // New Directory Button
+	    newdiritem=new ToolItem(toolBar, SWT.PUSH);
+	    in=ClassLoader.getSystemResourceAsStream("images/newdirectory.png");
+	    newdiritem.setImage(new Image(display, in));
+        newdiritem.setToolTipText("Create new directory");
+        newdiritem.addSelectionListener(new SWTNewDirectory());        
+	    newdiritem.setEnabled(false);
+        
+	    // Spacer
+	    ToolItem toolitem=new ToolItem(toolBar, SWT.SEPARATOR);
+	    toolitem.setWidth(20);
+	    
+	    // Preferences Button
+	    preferencesitem=new ToolItem(toolBar, SWT.PUSH);	    
+	    in=ClassLoader.getSystemResourceAsStream("images/preferences.png");
+	    preferencesitem.setImage(new Image(display, in));
+        preferencesitem.addSelectionListener(this);
+        preferencesitem.setToolTipText("Preferences");
+	    
+	    // Quit Button    	    	
+	    quititem=new ToolItem(toolBar, SWT.PUSH);
+	    in=ClassLoader.getSystemResourceAsStream("images/quit.png");
+	    quititem.setImage(new Image(display, in));
+        quititem.addSelectionListener(this);
+        quititem.setToolTipText("Quit");
 	    
 	    // Add tree
-	    tree=new Tree(shell, SWT.MULTI);	    
+	    tree=new Tree(shell, SWT.MULTI | SWT.BORDER);
+	    treeeditor=new TreeEditor(tree);
+        treeeditor.horizontalAlignment = SWT.LEFT;
+        treeeditor.grabHorizontal = true;
+
+        
+        tree.setFocus();
+	    tree.setBounds(0, toolBar.getSize().y, area.width, area.height-toolBar.getSize().y);
 	    tree.addListener(SWT.Expand, new ShareLister());
         tree.addListener(SWT.Selection, new Listener()
                 {
@@ -36,6 +101,11 @@ public class SWTUtil
                     {                        
                         getFile.setEnabled(false);
                         putFile.setEnabled(false);
+                        downloaditem.setEnabled(false);
+                        uploaditem.setEnabled(false);
+                        deleteitem.setEnabled(false);
+                        newdiritem.setEnabled(false);
+                        
                         TreeItem items[]=tree.getSelection();
                         int i;
                         for (i=0; i<items.length; i++)
@@ -43,8 +113,14 @@ public class SWTUtil
                             if (items[i].getParentItem()!=null)
                             {
                                 getFile.setEnabled(true);
+                                downloaditem.setEnabled(true);
+                                deleteitem.setEnabled(true);
                                 if (items[i].getItemCount()>0 && items.length==1)
+                                {
                                     putFile.setEnabled(true);
+                                    uploaditem.setEnabled(true);
+                                    newdiritem.setEnabled(true);
+                                }
                                 break;
                             }
                         }
@@ -132,6 +208,17 @@ public class SWTUtil
 	        		}
 	        });
 	    
+	       	    	
+	    shell.addListener(SWT.Resize, new Listener()
+		{
+			public void handleEvent(Event event)
+			{
+				Rectangle area=shell.getClientArea();
+				toolBar.setBounds(0, 0, area.width, toolBar.getSize().y);
+				tree.setBounds(0, toolBar.getSize().y, area.width, area.height-toolBar.getSize().y);
+			}
+		});
+	    
 	    shell.pack();	    
 	    shell.setSize(640,480);
 	    shell.open();
@@ -141,7 +228,7 @@ public class SWTUtil
 	
 	public static SWTUtil getInstance()
 	{
-		if (instance==null)// && !DaemonUtil.getInstance().getConfig().getBoolean("daemon"))
+		if (instance==null)
 		{
 			instance=new SWTUtil();
 		}
@@ -154,6 +241,11 @@ public class SWTUtil
 		return tree;
 	}
 	
+    public TreeEditor getTreeEditor()
+    {
+        return treeeditor;
+    }
+    
 	public Shell getShell()
 	{
 		return shell;
@@ -191,4 +283,18 @@ public class SWTUtil
 	{
 		SWTAboutDialog.getInstance(shell.getDisplay()).openDialog();
 	}
+    
+	public void widgetDefaultSelected(SelectionEvent e) {}
+    
+    public void widgetSelected(SelectionEvent e)
+    {
+        if (e.getSource()==quititem)
+        {
+            shell.dispose();
+        }
+        else if (e.getSource()==preferencesitem)
+        {
+            openPreferencesDialog();
+        }        
+    }
 }

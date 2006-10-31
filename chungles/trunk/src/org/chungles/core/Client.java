@@ -293,4 +293,23 @@ public class Client
 			return false;
 		}		
 	}
+    
+    public boolean mkdir(String path, String directory)
+    {
+        directory="/"+directory;
+        
+        DataOutputStream dout=new DataOutputStream(out);
+        try
+        {
+            dout.write(ServerConnectionThread.REQUEST_MKDIR);
+            dout.writeBytes(path+"\n");
+            dout.writeBytes(directory+"\n");
+            return in.read()==ServerConnectionThread.OK;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

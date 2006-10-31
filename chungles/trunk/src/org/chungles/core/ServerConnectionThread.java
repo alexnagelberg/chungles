@@ -172,9 +172,15 @@ public class ServerConnectionThread extends Thread
 	        String path=bin.readLine();
 	        String share=path.substring(1, path.substring(1).indexOf('/')+1);			
 			path=Configuration.getSharePath(share)+separator+path.substring(share.length()+2);
-			
+									
 	        // KLUDGE, REMOVE AND PUT REAL CODE
-			out.write(OK);
+			if (validPath(path))
+				out.write(OK);
+			else
+			{
+				out.write(NO);
+				return;
+			}			
 			
             try
             {                       
@@ -214,7 +220,13 @@ public class ServerConnectionThread extends Thread
 			DataOutputStream fileout=new DataOutputStream(new FileOutputStream(path+file));
 			
 			// KLUDGE, REMOVE AND PUT REAL CODE
-			out.write(OK);
+			if (validPath(path))
+				out.write(OK);
+			else
+			{
+				out.write(NO);
+				return;
+			}
 						
 			while (totalread<size)
 			{
@@ -255,7 +267,7 @@ public class ServerConnectionThread extends Thread
 			path=Configuration.getSharePath(share)+path.substring(share.length()+2)+directory;
 			
 			File file=new File(path);
-			if ((file.isDirectory() && !file.isFile()) || file.mkdirs())
+			if (validPath(path) && ((file.isDirectory() && !file.isFile()) || file.mkdirs()))
 				out.write(OK);
 			else
 				out.write(NO);			
@@ -274,6 +286,13 @@ public class ServerConnectionThread extends Thread
 	    String path=bin.readLine();
 		String share=path.substring(1, path.substring(1).indexOf('/')+1);			
 		path=Configuration.getSharePath(share)+"/"+path.substring(share.length()+2);
+		if (!validPath(path))
+		{
+			dout.write(TERMINATOR);
+			dout.writeBytes("\n");
+			return;
+		}
+		
 		FileList list=FileList.recurseFiles(new String[] {path});
 		while (list!=null)
 		{
@@ -312,7 +331,7 @@ public class ServerConnectionThread extends Thread
 		{		
 			path=Configuration.getSharePath(share)+"/"+path.substring(share.length()+2);
 
-			if (new File(path).exists())
+			if (validPath(path) && new File(path).exists())
 				out.write(YES);
 			else
 				out.write(NO);
@@ -331,8 +350,8 @@ public class ServerConnectionThread extends Thread
 		String path=bin.readLine();
 		String share=path.substring(1, path.substring(1).indexOf('/')+1);			
 		path=Configuration.getSharePath(share)+"/"+path.substring(share.length()+2);
-				
-		if (recurseDelete(new File(path)))
+						
+		if (validPath(path) && recurseDelete(new File(path)))
 			out.write(OK);
 		else
 			out.write(NO);
@@ -353,5 +372,17 @@ public class ServerConnectionThread extends Thread
 		{
 			return file.delete();
 		}
+	}
+	
+	private boolean validPath(String path)
+	{
+		StringTokenizer tok=new StringTokenizer(path,"/");
+		while (tok.hasMoreTokens())
+		{
+			String curtok=tok.nextToken();
+			if (curtok.equals(".."))
+				return false;
+		}
+		return true;
 	}
 }

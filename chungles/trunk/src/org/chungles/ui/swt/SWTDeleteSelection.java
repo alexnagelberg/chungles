@@ -29,9 +29,12 @@ public class SWTDeleteSelection implements SelectionListener
 				if (!client.deleteFile(file))
 					System.out.println("Err deleting " + file + " from " + IP);
 				else
+				{
 					items[i].dispose();
+					SWTUtil.getInstance().deselectAllInTree();
+				}
                 client.close();
-			}
+			}			
 		}
     }
 }

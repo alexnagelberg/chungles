@@ -20,6 +20,11 @@ public class SWTUI implements UI
 		nodes=new Hashtable<String, TreeItem>();
 	}
 	
+	public boolean takeoverWaitsForInterfaces()
+	{
+		return false;
+	}
+	
 	public void takeover()
 	{		
 		swtutil.mainLoop();

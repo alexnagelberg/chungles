@@ -6,6 +6,11 @@ import org.chungles.ui.UI;
 // We're not going to do anything in here. This is a null UI.
 public class NullUI implements UI
 {
+	public boolean takeoverWaitsForInterfaces()
+	{
+		return false;
+	}
+	
 	public void takeover()
 	{	
 		try

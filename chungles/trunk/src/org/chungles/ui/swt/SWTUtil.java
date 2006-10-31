@@ -297,4 +297,13 @@ public class SWTUtil implements SelectionListener
             openPreferencesDialog();
         }        
     }
+    
+    public void deselectAllInTree()
+    {
+    	tree.deselectAll();
+    	downloaditem.setEnabled(false);
+    	uploaditem.setEnabled(false);
+    	deleteitem.setEnabled(false);
+    	newdiritem.setEnabled(false);
+    }
 }

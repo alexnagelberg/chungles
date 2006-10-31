@@ -96,6 +96,13 @@ public class ConsoleUI implements UI
 			else
 				System.out.println("Syntax: rm <path>");
 		}
+		else if (firstTok.equals("mkdir"))
+		{
+			if (numTokens>=2)
+				mkdir(tok.nextToken("\n").trim());
+			else
+				System.out.println("Syntax: mkdir <path>");
+		}
 		else
 			System.out.println("Unrecognized command.");
 		System.out.println();
@@ -223,14 +230,22 @@ public class ConsoleUI implements UI
 	
 	private void getFile(String file)
 	{
-		String path = (workingpath.charAt(workingpath.length()-1)=='/') ? 
-				workingpath+file : workingpath+"/"+file;
+		String path;
+		if (workingpath.length()==1)
+			path=file;
+		else
+			path = (workingpath.charAt(workingpath.length()-1)=='/')?
+					workingpath+file : workingpath+"/"+file;
         
         if (path.charAt(path.length()-1)!='/') // This is dumb, I apologize
             path+="/";
         
 		path=path.substring(path.indexOf('/', 1));
-		if (client!=null && client.pathExists(path))
+		
+		if (client==null)
+			openClient(path);
+		
+		if (client.pathExists(path))
 		{
 			System.out.println("Retrieving files...");
 			FileList filelist=client.recurseFiles(path);
@@ -266,13 +281,17 @@ public class ConsoleUI implements UI
 			return;
 		}
 		
-		StringTokenizer tok = new StringTokenizer(workingpath, "/");
+		StringTokenizer tok = new StringTokenizer(workingpath, "/");		
+		
 		if (tok.countTokens()>=2)
 		{
 			String files[]={file};
 			FileList list=FileList.recurseFiles(files);
 			String path=tok.nextToken();
 			path=workingpath.substring(path.length()+1);
+			if (client==null)
+				openClient(path);
+			
 			if (client.requestFileSend(path, list))
 			{
 				client.sendFile(list, new SendProgressListener()
@@ -300,20 +319,62 @@ public class ConsoleUI implements UI
 	
 	private void deleteFile(String file)
 	{		
-		String path = (workingpath.charAt(workingpath.length()-1)=='/') ? 
-				workingpath+file : workingpath+"/"+file;
+		String path;
+		if (workingpath.length()==1)
+			path=file;
+		else
+			path = (workingpath.charAt(workingpath.length()-1)=='/')?
+					workingpath+file : workingpath+"/"+file;
         
         if (path.charAt(path.length()-1)!='/') // This is dumb, I apologize
             path+="/";
         
 		path=path.substring(path.indexOf('/', 1));
-		if (client!=null && client.pathExists(path))
+		
+		if (client==null)
+			openClient(path);
+		
+		if (client.pathExists(path))
 		{
 			if (client.deleteFile(path))
 				System.out.println("Deleted.");
 			else
 				System.out.println("There were errors deleting.");
-		}
+		}		
 	}
 	
+	private void mkdir(String directory)
+	{
+		String path;
+		if (workingpath.length()==1)
+			path=directory;
+		else
+			path = (workingpath.charAt(workingpath.length()-1)=='/')?
+					workingpath+directory : workingpath+"/"+directory;
+		
+		if (path.charAt(path.length()-1)=='/')
+			path=path.substring(0, path.length()-1);
+		
+		directory=path.substring(path.lastIndexOf('/')+1);
+		path=path.substring(path.indexOf('/',1), path.length()-directory.length());
+		
+		if (client==null)
+			openClient(path);
+		
+		if (client.mkdir(path, directory))
+			System.out.println(path+directory+" created successfully.");
+		else
+			System.out.println("Error creating "+path+directory);		
+	}
+	
+	private void openClient(String path)
+	{
+		StringTokenizer tok=new StringTokenizer(path.substring(1),"/");						
+		String compname=tok.nextToken();
+		
+		if (client!=null)
+			client.close();
+		
+		client=new Client(ips.get(compname));		
+	}
 }

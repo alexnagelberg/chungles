@@ -51,7 +51,7 @@ public class SWTNewDirectory implements SelectionListener
                 text.dispose();
                 if (!remoteCreateDirectory(IP, path,name))
                 {
-                    tree.setSelection(child.getParentItem());
+                	SWTUtil.getInstance().deselectAllInTree();
                     child.dispose();
                 }
             }
@@ -76,7 +76,7 @@ public class SWTNewDirectory implements SelectionListener
                     text.dispose();
                     if (!remoteCreateDirectory(IP, path,name))
                     {
-                        tree.setSelection(child.getParentItem());
+                    	SWTUtil.getInstance().deselectAllInTree();
                         child.dispose();
                     }
                 }
@@ -85,7 +85,7 @@ public class SWTNewDirectory implements SelectionListener
                     text.removeFocusListener(focusadapt);
                     text.dispose();
                     child.dispose();
-                    tree.setSelection(child.getParentItem());
+                    SWTUtil.getInstance().deselectAllInTree();
                 }
             }
         });       
@@ -94,6 +94,8 @@ public class SWTNewDirectory implements SelectionListener
     
     private boolean remoteCreateDirectory(String IP, String path, String directory)
     {
+    	System.out.println("D: " + directory);
+    	System.out.println("P: " + path);
         Client client=new Client(IP);
         boolean status=client.mkdir(path, directory);
         client.close();

@@ -37,4 +37,12 @@ public interface UI
 	 *
 	 */
 	public void openPreferencesDialog();
+	
+	/**
+	 * Determines whether or not takeover should be called after the interfaces are
+	 * brought up or during.
+	 * 
+	 * @return true if takeover should be called after interfaces are up, false if during.
+	 */
+	public boolean takeoverWaitsForInterfaces();
 }

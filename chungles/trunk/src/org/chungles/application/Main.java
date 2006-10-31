@@ -44,7 +44,51 @@ public class Main
         	lockfile.deleteOnExit();
         }
         
-        Thread mdnsthread=new Thread()
+        if (ui.takeoverWaitsForInterfaces())
+        	blockingmDNSBind();
+        else
+        	threadedmDNSBind();     
+        
+
+        ServerThread server = new ServerThread();
+        if (isServer) server.start();
+
+        ui.takeover();
+
+        // UI shuts down, we shut down.        
+        if (isServer) server.stopListening();
+        mDNSUtil.closeInterfaces();
+        System.exit(0);
+    }
+
+    private static void blockingmDNSBind()
+    {
+    	try
+        {
+            Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (netInterfaces.hasMoreElements())
+            {
+                NetworkInterface ni = netInterfaces.nextElement();
+                Enumeration<InetAddress> ipAddresses = ni.getInetAddresses();
+                while (ipAddresses.hasMoreElements())
+                {                
+                    InetAddress ip = ipAddresses.nextElement();
+                    if (ip.getHostAddress().indexOf(':')<0) // IPv6 currently not supported
+                    {
+                        mDNSUtil.bindNewInterface(ip, new NodeDetect(), isServer);
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    private static void threadedmDNSBind()
+    {
+    	Thread mdnsthread=new Thread()
         {
             public void run()
             {
@@ -72,17 +116,5 @@ public class Main
             }
         };
         mdnsthread.start();
-        
-
-        ServerThread server = new ServerThread();
-        if (isServer) server.start();
-
-        ui.takeover();
-
-        // UI shuts down, we shut down.        
-        if (isServer) server.stopListening();
-        mDNSUtil.closeInterfaces();
-        System.exit(0);
     }
-
 }

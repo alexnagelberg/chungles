@@ -12,6 +12,11 @@ public class ConsoleUI implements UI
 	private Hashtable<String, String> ips, compnames;
 	private Client client;
 	
+	public boolean takeoverWaitsForInterfaces()
+	{
+		return true;
+	}
+	
 	public void takeover()
 	{
 		String input="";

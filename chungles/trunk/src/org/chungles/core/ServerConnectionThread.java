@@ -249,13 +249,13 @@ public class ServerConnectionThread extends Thread
 		try
 		{
 			String path=bin.readLine();
-			String directory=bin.readLine();
+			String directory=bin.readLine();            
 			String share=path.substring(1, path.substring(1).indexOf('/')+1);
 			
 			path=Configuration.getSharePath(share)+path.substring(share.length()+2)+directory;
 			
 			File file=new File(path);
-			if (file.isDirectory() || file.mkdirs())
+			if ((file.isDirectory() && !file.isFile()) || file.mkdirs())
 				out.write(OK);
 			else
 				out.write(NO);			

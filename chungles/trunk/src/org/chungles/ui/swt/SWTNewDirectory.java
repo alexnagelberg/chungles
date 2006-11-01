@@ -94,8 +94,6 @@ public class SWTNewDirectory implements SelectionListener
     
     private boolean remoteCreateDirectory(String IP, String path, String directory)
     {
-    	System.out.println("D: " + directory);
-    	System.out.println("P: " + path);
         Client client=new Client(IP);
         boolean status=client.mkdir(path, directory);
         client.close();

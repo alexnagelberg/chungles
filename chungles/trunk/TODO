@@ -1,7 +1,5 @@
 bugs:
 *abort functionality
-*node hashtable woes
-*need cleaner method of handling exceptions (debug system with fault taulerance)
 *needs to handle disconnects in the middle of file transfer
 *keep a hash table of interfaces available and handle changes in interfaces showing up/going down
 
@@ -10,9 +8,6 @@ features:
 *(optional) gzip compression on line (default: no)
 *(optional) ssl encryption (default: no)
 *user authentication
-*coolbar with operation buttons
-*more file operations (del,move,copy,etc)
 *file resuming
 *search feature
 *integrate stateless
-*multi-thread interface init

@@ -109,13 +109,13 @@ public class ConsoleUI implements UI
 				System.out.println("Syntax: mkdir <path>");
 		}
 		else
-			System.out.println("Unrecognized command.");
+			printHelp();
 		System.out.println();
 	}
 	
 	private void printHelp()
 	{
-		
+		System.out.println("Commands are: get, put, cd, rm, mkdir");
 	}
 	
 	private void listPath()

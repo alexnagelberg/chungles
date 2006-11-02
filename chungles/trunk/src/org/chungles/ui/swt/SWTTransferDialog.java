@@ -107,11 +107,17 @@ public class SWTTransferDialog
 	                {
 	                    public void run()
 	                    {
-                            fileProgressBar.setSelection(fileprogress);
-                            filesProgressBar.setSelection(filesprogress);
+	                    	if (fileProgressBar.isDisposed() || filesProgressBar.isDisposed())
+	                    		filesprogress=100;
+	                    	else
+	                    	{
+	                    		fileProgressBar.setSelection(fileprogress);
+	                    		filesProgressBar.setSelection(filesprogress);
+	                    	}
                         }
                     });
                 }
+	            filesprogress=0;
 	        }
 	    }.start();
 	}

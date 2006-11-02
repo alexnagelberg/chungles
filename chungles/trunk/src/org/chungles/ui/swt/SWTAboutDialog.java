@@ -42,7 +42,7 @@ public class SWTAboutDialog
 		shell.setImage(chunglesGif);
 		shell.layout();
 		shell.pack();
-		shell.setSize(520,300);
+		shell.setSize(580,300);
 		
 		Label picture = new Label(shell, SWT.NONE);
 		picture.setImage(chunglesGif);
@@ -58,7 +58,7 @@ public class SWTAboutDialog
 		Font newFont = new Font(display, fontData);
 		label.setFont(newFont);
 		label.setText("Chungles " + Configuration.getVersion());
-		label.setBounds(245, 115, 300, 50);
+		label.setBounds(245, 115, 350, 50);
 		
 		label=new Label(shell, SWT.CENTER);
 		label.setText("Tastes like chicken.");

@@ -48,7 +48,7 @@ public class SWTUtil implements SelectionListener
 	    in=ClassLoader.getSystemResourceAsStream("images/upload.png");
 	    uploadToolItem.setImage(new Image(display, in));
         uploadToolItem.setToolTipText("Upload file");
-        downloadToolItem.addSelectionListener(new TransferToNode());
+        uploadToolItem.addSelectionListener(new TransferToNode());
         uploadToolItem.setEnabled(false);
         
 	    // Delete Button

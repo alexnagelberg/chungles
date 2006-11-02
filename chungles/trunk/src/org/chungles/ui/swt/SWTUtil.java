@@ -16,9 +16,9 @@ public class SWTUtil implements SelectionListener
 	private Shell shell;
 	private boolean isActive;	
 	private static SWTUtil instance;
-	private MenuItem getFile, putFile;
+	private MenuItem getFileMenuItem, putFileMenuItem, newdirMenuItem, deleteMenuItem;
     private ToolBar toolBar;
-    private ToolItem downloaditem, uploaditem, deleteitem, newdiritem, preferencesitem, quititem;
+    private ToolItem downloadToolItem, uploadToolItem, deleteToolItem, newdirToolItem, preferencesToolItem, quitToolItem;
     private TreeEditor treeeditor;
     
 	private SWTUtil()
@@ -36,54 +36,54 @@ public class SWTUtil implements SelectionListener
 	    toolBar.setBounds(0, 0, area.width, 33);
         
 	    // Download Button
-	    downloaditem=new ToolItem(toolBar, SWT.PUSH);
+	    downloadToolItem=new ToolItem(toolBar, SWT.PUSH);
 	    in=ClassLoader.getSystemResourceAsStream("images/download.png");	    
-	    downloaditem.setImage(new Image(display, in));
-        downloaditem.setToolTipText("Download file");
-        downloaditem.addSelectionListener(new TransferFromNode());
-        downloaditem.setEnabled(false);
+	    downloadToolItem.setImage(new Image(display, in));
+        downloadToolItem.setToolTipText("Download file");
+        downloadToolItem.addSelectionListener(new TransferFromNode());
+        downloadToolItem.setEnabled(false);
 	    
 	    // Upload Button
-	    uploaditem=new ToolItem(toolBar, SWT.PUSH);
+	    uploadToolItem=new ToolItem(toolBar, SWT.PUSH);
 	    in=ClassLoader.getSystemResourceAsStream("images/upload.png");
-	    uploaditem.setImage(new Image(display, in));
-        uploaditem.setToolTipText("Upload file");
-        downloaditem.addSelectionListener(new TransferToNode());
-        uploaditem.setEnabled(false);
+	    uploadToolItem.setImage(new Image(display, in));
+        uploadToolItem.setToolTipText("Upload file");
+        downloadToolItem.addSelectionListener(new TransferToNode());
+        uploadToolItem.setEnabled(false);
         
 	    // Delete Button
-	    deleteitem=new ToolItem(toolBar, SWT.PUSH);
+	    deleteToolItem=new ToolItem(toolBar, SWT.PUSH);
 	    in=ClassLoader.getSystemResourceAsStream("images/delete.png");
-	    deleteitem.setImage(new Image(display, in));
-        deleteitem.setToolTipText("Delete file");
-        deleteitem.addSelectionListener(new SWTDeleteSelection());
-        deleteitem.setEnabled(false);
+	    deleteToolItem.setImage(new Image(display, in));
+        deleteToolItem.setToolTipText("Delete file");
+        deleteToolItem.addSelectionListener(new SWTDeleteSelection());
+        deleteToolItem.setEnabled(false);
         
 	    // New Directory Button
-	    newdiritem=new ToolItem(toolBar, SWT.PUSH);
+	    newdirToolItem=new ToolItem(toolBar, SWT.PUSH);
 	    in=ClassLoader.getSystemResourceAsStream("images/newdirectory.png");
-	    newdiritem.setImage(new Image(display, in));
-        newdiritem.setToolTipText("Create new directory");
-        newdiritem.addSelectionListener(new SWTNewDirectory());        
-	    newdiritem.setEnabled(false);
+	    newdirToolItem.setImage(new Image(display, in));
+        newdirToolItem.setToolTipText("Create new directory");
+        newdirToolItem.addSelectionListener(new SWTNewDirectory());        
+	    newdirToolItem.setEnabled(false);
         
 	    // Spacer
 	    ToolItem toolitem=new ToolItem(toolBar, SWT.SEPARATOR);
 	    toolitem.setWidth(20);
 	    
 	    // Preferences Button
-	    preferencesitem=new ToolItem(toolBar, SWT.PUSH);	    
+	    preferencesToolItem=new ToolItem(toolBar, SWT.PUSH);	    
 	    in=ClassLoader.getSystemResourceAsStream("images/preferences.png");
-	    preferencesitem.setImage(new Image(display, in));
-        preferencesitem.addSelectionListener(this);
-        preferencesitem.setToolTipText("Preferences");
+	    preferencesToolItem.setImage(new Image(display, in));
+        preferencesToolItem.addSelectionListener(this);
+        preferencesToolItem.setToolTipText("Preferences");
 	    
 	    // Quit Button    	    	
-	    quititem=new ToolItem(toolBar, SWT.PUSH);
+	    quitToolItem=new ToolItem(toolBar, SWT.PUSH);
 	    in=ClassLoader.getSystemResourceAsStream("images/quit.png");
-	    quititem.setImage(new Image(display, in));
-        quititem.addSelectionListener(this);
-        quititem.setToolTipText("Quit");
+	    quitToolItem.setImage(new Image(display, in));
+        quitToolItem.addSelectionListener(this);
+        quitToolItem.setToolTipText("Quit");
 	    
 	    // Add tree
 	    tree=new Tree(shell, SWT.MULTI | SWT.BORDER);
@@ -99,27 +99,31 @@ public class SWTUtil implements SelectionListener
                 {
                     public void handleEvent(Event e) // Adds pop-up menu items as needed
                     {                        
-                        getFile.setEnabled(false);
-                        putFile.setEnabled(false);
-                        downloaditem.setEnabled(false);
-                        uploaditem.setEnabled(false);
-                        deleteitem.setEnabled(false);
-                        newdiritem.setEnabled(false);
-                        
+                        getFileMenuItem.setEnabled(false);
+                        putFileMenuItem.setEnabled(false);
+                        downloadToolItem.setEnabled(false);
+                        uploadToolItem.setEnabled(false);
+                        deleteToolItem.setEnabled(false);
+                        newdirToolItem.setEnabled(false);
+                        deleteMenuItem.setEnabled(false);
+                    	newdirMenuItem.setEnabled(false);
+                    	
                         TreeItem items[]=tree.getSelection();
                         int i;
                         for (i=0; i<items.length; i++)
                         {
                             if (items[i].getParentItem()!=null)
                             {
-                                getFile.setEnabled(true);
-                                downloaditem.setEnabled(true);
-                                deleteitem.setEnabled(true);
+                                getFileMenuItem.setEnabled(true);
+                                downloadToolItem.setEnabled(true);
+                                deleteToolItem.setEnabled(true);
+                                deleteMenuItem.setEnabled(true);
                                 if (items[i].getItemCount()>0 && items.length==1)
                                 {
-                                    putFile.setEnabled(true);
-                                    uploaditem.setEnabled(true);
-                                    newdiritem.setEnabled(true);
+                                    putFileMenuItem.setEnabled(true);
+                                    uploadToolItem.setEnabled(true);
+                                    newdirToolItem.setEnabled(true);
+                                    newdirMenuItem.setEnabled(true);
                                 }
                                 break;
                             }
@@ -135,14 +139,22 @@ public class SWTUtil implements SelectionListener
         // Pop-up menu
         Menu popup=new Menu(shell, SWT.POP_UP);
         tree.setMenu(popup);
-        getFile=new MenuItem(popup, SWT.PUSH);
-        getFile.setText("Get File(s)");
-        getFile.setEnabled(false);
-        getFile.addSelectionListener(new TransferFromNode());
-        putFile=new MenuItem(popup, SWT.PUSH);
-        putFile.setText("Send file(s) to...");
-        putFile.setEnabled(false);        
-	    putFile.addSelectionListener(new TransferToNode());
+        getFileMenuItem=new MenuItem(popup, SWT.PUSH);
+        getFileMenuItem.setText("Get File(s)");
+        getFileMenuItem.setEnabled(false);
+        getFileMenuItem.addSelectionListener(new TransferFromNode());
+        putFileMenuItem=new MenuItem(popup, SWT.PUSH);
+        putFileMenuItem.setText("Send file(s) to...");
+        putFileMenuItem.setEnabled(false);        
+	    putFileMenuItem.addSelectionListener(new TransferToNode());
+	    newdirMenuItem=new MenuItem(popup, SWT.PUSH);
+	    newdirMenuItem.setText("Create new directory in...");
+	    newdirMenuItem.setEnabled(false);
+	    newdirMenuItem.addSelectionListener(new SWTNewDirectory());
+	    deleteMenuItem=new MenuItem(popup, SWT.PUSH);
+	    deleteMenuItem.setText("Delete file(s)");
+	    deleteMenuItem.setEnabled(false);
+	    deleteMenuItem.addSelectionListener(new SWTDeleteSelection());
         
 	    // Create menu
 	    Menu bar=new Menu(shell, SWT.BAR | SWT.LEFT_TO_RIGHT);
@@ -288,11 +300,11 @@ public class SWTUtil implements SelectionListener
     
     public void widgetSelected(SelectionEvent e)
     {
-        if (e.getSource()==quititem)
+        if (e.getSource()==quitToolItem)
         {
             shell.dispose();
         }
-        else if (e.getSource()==preferencesitem)
+        else if (e.getSource()==preferencesToolItem)
         {
             openPreferencesDialog();
         }        
@@ -301,9 +313,13 @@ public class SWTUtil implements SelectionListener
     public void deselectAllInTree()
     {
     	tree.deselectAll();
-    	downloaditem.setEnabled(false);
-    	uploaditem.setEnabled(false);
-    	deleteitem.setEnabled(false);
-    	newdiritem.setEnabled(false);
+    	downloadToolItem.setEnabled(false);
+    	uploadToolItem.setEnabled(false);
+    	deleteToolItem.setEnabled(false);
+    	newdirToolItem.setEnabled(false);
+    	getFileMenuItem.setEnabled(false);
+    	putFileMenuItem.setEnabled(false);
+    	deleteMenuItem.setEnabled(false);
+    	newdirMenuItem.setEnabled(false);
     }
 }

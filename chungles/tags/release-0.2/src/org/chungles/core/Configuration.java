@@ -6,7 +6,6 @@ public class Configuration
 {
 	private static Hashtable<String, String> shares;
 	private static String computerName;
-	private static String REV=" ";
 	
 	public static void init()
 	{
@@ -16,7 +15,7 @@ public class Configuration
 	
 	public static String getVersion()
 	{
-		return "r"+REV;
+		return "0.2";
 	}
 	
 	public static String getSharePath(String name)

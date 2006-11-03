@@ -29,29 +29,14 @@
 		<mkdir dir="${doc.dir}"/>
 	</target>
 
-	<target name="setversion">
-		<exec executable="svnversion" outputproperty="chungles.version">
-			<arg line="-n ."/>
-		</exec>
-		<replaceregexp file="${basedir}/src/org/chungles/core/Configuration.java"
-			match='REV="(.*)"'
-			replace='REV="${chungles.version}"'/>
-	</target>
-	
-	<target name="unsetversion">
-		<replaceregexp file="${basedir}/src/org/chungles/core/Configuration.java"
-			match='REV="(.*)"'
-			replace='REV=" "'/>
-	</target>
-	
-	<target name="compile" depends="prepare,setversion">
+	<target name="compile" depends="prepare">
 		<javac srcdir="${src.dir}"
 			destdir="${bin.dir}">
 			<classpath refid="compile.path"/>
 		</javac>
 	</target>
 
-	<target name="jar" depends="prepare,setversion,compile">
+	<target name="jar" depends="prepare,compile">
 		<jar jarfile="${lib.dir}/chungles.jar">
 			<fileset dir="${basedir}">
 				<filename name="**/images/*"/>				
@@ -88,7 +73,7 @@
 		<chmod dir="${basedir}" perm="a+x" includes="**/run*.sh"/>
 	</target>
 
-	<target name="run" depends="prepare,setversion,compile">
+	<target name="run" depends="prepare,compile">
 		<java classname="org.chungles.application.Main" fork="yes">
 			<sysproperty key="java.library.path" value="${lib.dir}"/>
 			<classpath refid="compile.path"/>
@@ -97,9 +82,9 @@
 		</java>
 	</target>
 
-	<target name="all" depends="prepare,setversion,compile,javadoc,jar,generate-scripts"/>
+	<target name="all" depends="prepare,compile,javadoc,jar,generate-scripts"/>
 
-	<target name="clean" depends="unsetversion">
+	<target name="clean">
 		<delete dir="${bin.dir}"/>
 		<delete dir="${doc.dir}"/>
 		<delete file="${lib.dir}/chungles.jar"/>

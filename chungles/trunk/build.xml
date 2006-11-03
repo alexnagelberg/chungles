@@ -51,14 +51,14 @@
 		</javac>
 	</target>
 
-	<target name="jar" depends="compile">
+	<target name="jar" depends="prepare,setversion,compile">
 		<jar jarfile="${lib.dir}/chungles.jar">
 			<fileset dir="${basedir}">
 				<filename name="**/images/*"/>				
 			</fileset>
 			<fileset dir="${basedir}/bin"/>
 			<manifest>
-				
+				<attribute name="Class-Path" value="swt.jar jmdns.jar"/>
 				<attribute name="Main-Class" value="org.chungles.application.Main"/>
 			</manifest>
 		</jar>
@@ -73,19 +73,22 @@
 	</target>
 
 	<target name="generate-scripts" depends="jar">
-		<echo file="${basedir}/run-console.sh">java -classpath ${jmdns.jar}:${lib.dir}/chungles.jar org.chungles.application.Main --ui=console
+		<echo file="${basedir}/run-console.sh">java -classpath ${jmdns.jar} -jar ${lib.dir}/chungles.jar --ui=console
 		</echo>
 		
-		<echo file="${basedir}/run.sh">java -classpath ${swt.jar}:${jmdns.jar}:${lib.dir}/chungles.jar -Djava.library.path=${lib.dir} org.chungles.application.Main --ui=swt
+		<echo file="${basedir}/run.sh">java -classpath ${swt.jar}:${jmdns.jar} -Djava.library.path=${lib.dir} -jar ${lib.dir}/chungles.jar --ui=swt
 		</echo>
 		
-		<echo file="${basedir}/run-dummy.sh">java -classpath ${jmdns.jar}:${lib.dir}/chungles.jar org.chungles.application.Main --ui=null
+		<echo file="${basedir}/run-dummy.sh">java -classpath ${jmdns.jar} -jar ${lib.dir}/chungles.jar --ui=null
 		</echo>
 		
+		<echo file="${basedir}/run.bat">java -classpath ${swt.jar};${jmdns.jar} -Djava.library.path=${lib.dir} -jar ${lib.dir}/chungles.jar --ui=swt
+		</echo>
+			
 		<chmod dir="${basedir}" perm="a+x" includes="**/run*.sh"/>
 	</target>
 
-	<target name="run" depends="compile">
+	<target name="run" depends="prepare,setversion,compile">
 		<java classname="org.chungles.application.Main" fork="yes">
 			<sysproperty key="java.library.path" value="${lib.dir}"/>
 			<classpath refid="compile.path"/>

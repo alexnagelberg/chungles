@@ -47,6 +47,10 @@ public class ConfigurationParser extends DefaultHandler
 		{
 		    Configuration.setComputerName(attrs.getValue("name"));
 		}
+        else if (qualifiedName.equals("mcastshare"))
+        {
+            Configuration.setMCastShare(attrs.getValue("name"));
+        }
 	}
 	
 	private static void createConfig(File file)
@@ -54,6 +58,7 @@ public class ConfigurationParser extends DefaultHandler
 		try
 		{
 			new File(System.getProperty("user.home")+"/.chungles/").mkdir();
+            new File(System.getProperty("user.home")+"/.chungles/mcast").mkdir();
 			file.createNewFile();
 		}
 		catch (Exception e)
@@ -87,6 +92,9 @@ public class ConfigurationParser extends DefaultHandler
 			// Computer Name
 			out.println("<computer name=\"" + Configuration.getComputerName() + "\"/>");
 			
+            // Multicast Share
+            out.println("<mcastshare name=\"" + Configuration.getMCastShare() + "\"/>");
+            
 			// Closing
 			out.println("</chungles>");
 			out.close();

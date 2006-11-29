@@ -6,12 +6,14 @@ public class Configuration
 {
 	private static Hashtable<String, String> shares;
 	private static String computerName;
-	private static String REV=" ";
+	private static String mCastShare;
+    private static String REV="131:132M";
 	
 	public static void init()
 	{
 		shares=new Hashtable<String, String>();
 		computerName="Chungles Node";
+        mCastShare=System.getProperty("user.home")+"/.chungles/mcast";
 	}
 	
 	public static String getVersion()
@@ -48,4 +50,14 @@ public class Configuration
 	{
 	    computerName=name;
 	}
+    
+    public static String getMCastShare()
+    {
+        return mCastShare;
+    }
+    
+    public static void setMCastShare(String name)
+    {
+        mCastShare=name;
+    }
 }

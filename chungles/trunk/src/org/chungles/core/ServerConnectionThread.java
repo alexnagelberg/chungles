@@ -20,14 +20,16 @@ public class ServerConnectionThread extends Thread
 	public final static int PATH_EXISTS=7;
 	public final static int CHECK_PROTOCOL_VERSION=8;
 	public final static int REQUEST_DELETE=9;
+	public final static int BEGIN_MULTICAST=10;
+	public final static int RECOVER_PACKETS=11;	
 	
 	public final static char IS_FILE='F';
 	public final static char IS_DIRECTORY='D';
 	
-	public final static Version PROTOCOL_VERSION=new Version(0,2,0);
+	public final static Version PROTOCOL_VERSION=new Version(0,3,0);
 	
     private InputStream in;
-    private OutputStream out;
+    private OutputStream out;    
     
 	public ServerConnectionThread(Socket socket)
 	{

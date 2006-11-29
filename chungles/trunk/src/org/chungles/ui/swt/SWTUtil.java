@@ -18,7 +18,8 @@ public class SWTUtil implements SelectionListener
 	private static SWTUtil instance;
 	private MenuItem getFileMenuItem, putFileMenuItem, newdirMenuItem, deleteMenuItem;
     private ToolBar toolBar;
-    private ToolItem downloadToolItem, uploadToolItem, deleteToolItem, newdirToolItem, preferencesToolItem, quitToolItem;
+    private ToolItem downloadToolItem, uploadToolItem, deleteToolItem, newdirToolItem;
+    private ToolItem preferencesToolItem, quitToolItem, mcastToolItem;
     private TreeEditor treeeditor;
     private TrayItem trayitem;
     private boolean visible=true;
@@ -45,6 +46,13 @@ public class SWTUtil implements SelectionListener
 	    toolBar = new ToolBar (shell, SWT.HORIZONTAL);
 	    toolBar.setBounds(0, 0, area.width, 33);
         
+	    // Multicast Button
+        mcastToolItem=new ToolItem(toolBar, SWT.PUSH);
+        in=ClassLoader.getSystemResourceAsStream("images/mcast.png");
+        mcastToolItem.setImage(new Image(display, in));
+        mcastToolItem.setToolTipText("Multicast file");
+        mcastToolItem.addSelectionListener(new MulticastTransfer());
+        
 	    // Download Button
 	    downloadToolItem=new ToolItem(toolBar, SWT.PUSH);
 	    in=ClassLoader.getSystemResourceAsStream("images/download.png");	    
@@ -59,7 +67,7 @@ public class SWTUtil implements SelectionListener
 	    uploadToolItem.setImage(new Image(display, in));
         uploadToolItem.setToolTipText("Upload file");
         uploadToolItem.addSelectionListener(new TransferToNode());
-        uploadToolItem.setEnabled(false);
+        uploadToolItem.setEnabled(false);                
         
 	    // Delete Button
 	    deleteToolItem=new ToolItem(toolBar, SWT.PUSH);
@@ -75,7 +83,7 @@ public class SWTUtil implements SelectionListener
 	    newdirToolItem.setImage(new Image(display, in));
         newdirToolItem.setToolTipText("Create new directory");
         newdirToolItem.addSelectionListener(new SWTNewDirectory());        
-	    newdirToolItem.setEnabled(false);
+	    newdirToolItem.setEnabled(false);	    	    
         
 	    // Spacer
 	    ToolItem toolitem=new ToolItem(toolBar, SWT.SEPARATOR);

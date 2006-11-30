@@ -413,5 +413,6 @@ public class ServerConnectionThread extends Thread
             int length=fin.read(outbuf, 0, PACKET_SIZE);
             out.write(outbuf, 0, length);
         }
+        fin.close();
     }
 }

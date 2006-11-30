@@ -51,12 +51,32 @@ public class Main
         
 
         ServerThread server = new ServerThread();
-        if (isServer) server.start();
+        mClient mclient=new mClient(new FinishNotification()
+        {
+        	public void finished(boolean successfully)
+        	{
+        		if (successfully)
+        			ui.finishnotification(true, "Received Multicast file.");
+        		else
+        			ui.finishnotification(false, "Error receiving incoming Multicast");
+        	}
+        });
+        
+        if (isServer)
+        {
+            server.start();
+            mclient.start();
+        }
 
         ui.takeover();
 
         // UI shuts down, we shut down.        
-        if (isServer) server.stopListening();
+        if (isServer)
+        {
+            server.stopListening();
+            mclient.stopListening();
+        }
+        
         mDNSUtil.closeInterfaces();
         System.exit(0);
     }

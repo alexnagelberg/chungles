@@ -38,4 +38,9 @@ public class NullUI implements UI
 	{
 		
 	}
+	
+	public void finishnotification(boolean success, String message)
+	{
+		
+	}
 }

@@ -26,6 +26,8 @@ public class ServerConnectionThread extends Thread
 	public final static char IS_FILE='F';
 	public final static char IS_DIRECTORY='D';
 	
+    private final static int PACKET_SIZE=1024;
+    
 	public final static Version PROTOCOL_VERSION=new Version(0,3,0);
 	
     private InputStream in;
@@ -113,6 +115,12 @@ public class ServerConnectionThread extends Thread
 					deleteFile();
 					break;
 				}
+                case RECOVER_PACKETS:
+                {
+                    if (mServer.isFallbackEnabled())
+                        recoverPackets();
+                    break;
+                }
 			}
 		}
 		catch (Exception e)
@@ -387,4 +395,23 @@ public class ServerConnectionThread extends Thread
 		}
 		return true;
 	}
+    
+    private void recoverPackets() throws IOException
+    {
+        byte[] buf=new byte[4];
+        in.read(buf, 0, 4);
+        int numPackets=Util.byteToInt(buf);
+        FileInputStream fin=new FileInputStream(mServer.getFileName());
+        
+        for (int i=0; i<numPackets; i++)
+        {
+            buf=new byte[8];
+            byte[] outbuf=new byte[PACKET_SIZE];
+            in.read(buf, 0, 8);
+            long offset=Util.byteToLong(buf);
+            fin.getChannel().position(offset);
+            int length=fin.read(outbuf, 0, PACKET_SIZE);
+            out.write(outbuf, 0, length);
+        }
+    }
 }

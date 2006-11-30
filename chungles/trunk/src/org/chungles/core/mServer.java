@@ -4,17 +4,21 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class mServer extends Thread
+public class mServer
 {
 	private final static int PACKET_SIZE=1024;
 	private static boolean fallbackEnabled=false;
-	private static String localfile;
-    private String remotefile;
-    private SendProgressListener progress;
+	private static String localfile;        
     
-    public void run()
-    {
-        try
+	private mServer()
+	{
+		
+	}
+	
+	public mServer(String localfile, String remotefile, SendProgressListener progress)
+	{
+		mServer.localfile=localfile;
+		try
         {                                               
             InetAddress group = InetAddress.getByName("224.3.2.1");
             MulticastSocket s = new MulticastSocket();                      
@@ -78,18 +82,6 @@ public class mServer extends Thread
         {
             e.printStackTrace();
         }
-    }
-    
-	private mServer()
-	{
-		
-	}
-	
-	public mServer(String localfile, String remotefile, SendProgressListener progress)
-	{
-		mServer.localfile=localfile;
-        this.remotefile=remotefile;
-        this.progress=progress;
 	}
 	
 	public static boolean isFallbackEnabled()

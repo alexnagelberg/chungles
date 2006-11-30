@@ -25,8 +25,7 @@ public class mClient extends Thread
 		try
 		{
 			InetAddress group = InetAddress.getByName("224.3.2.1");
-			MulticastSocket s = new MulticastSocket(6565);
-			s.setSoTimeout(10000); // 10 seconds allowed between receiving packets before exception
+			MulticastSocket s = new MulticastSocket(6565);			
 			s.joinGroup(group);
 			
 			
@@ -38,6 +37,8 @@ public class mClient extends Thread
 				
 				if (buf[0]==ServerConnectionThread.BEGIN_MULTICAST)
 				{
+					s.setSoTimeout(10000); // 10 seconds allowed between receiving packets before exception
+					
 					Hashtable<Long, Boolean> unreceivedpackets=new Hashtable<Long, Boolean>();
 					byte filesizebuf[]=new byte[8];
 					byte strlengthbuf[]=new byte[4];
@@ -142,8 +143,10 @@ public class mClient extends Thread
 		            {
 		            	// When fallback fails, file fails
 		            	finishnotification.finished(false);
-		            }	                	                	                	                	     
+		            }
+		            s.setSoTimeout(0);
 				}
+				
 			}
 		}
 		catch (Exception e)

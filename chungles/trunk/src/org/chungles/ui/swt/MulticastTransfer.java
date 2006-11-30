@@ -25,13 +25,13 @@ public class MulticastTransfer implements SelectionListener
         final long filesize=new File(file).length();
         final String remotefile=file.substring(file.lastIndexOf(separator)+1);
         
+        Display display=SWTUtil.getInstance().getShell().getDisplay();
+        final SWTTransferDialog dialog=SWTTransferDialog.getInstance(display);
+        dialog.openDialog();
         Thread thread=new Thread()
         {
         	public void run()
         	{
-        		Display display=SWTUtil.getInstance().getShell().getDisplay();
-                final SWTTransferDialog dialog=SWTTransferDialog.getInstance(display);
-                
                 dialog.progressThread();
                 dialog.updateLables(file, 1, 1);
                 mServer mserver=new mServer(file, remotefile, new SendProgressListener()
@@ -41,7 +41,8 @@ public class MulticastTransfer implements SelectionListener
                 		dialog.updateProgress(bytesSent, filesize, bytesSent, filesize);
                 	}
                 });
-                mserver.start();
+                
+                dialog.closeDialog();
         	}
         };
         thread.start();

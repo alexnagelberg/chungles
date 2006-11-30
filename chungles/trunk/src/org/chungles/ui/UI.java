@@ -45,4 +45,12 @@ public interface UI
 	 * @return true if takeover should be called after interfaces are up, false if during.
 	 */
 	public boolean takeoverWaitsForInterfaces();
+	
+	/**
+	 * Alerts UI of a successful completion of a task with a given message.
+	 * 
+	 * @param success True if operation was successful, false otherwise
+	 * @param message Message to display upon completion of task
+	 */
+	public void finishnotification(boolean success, String message);
 }

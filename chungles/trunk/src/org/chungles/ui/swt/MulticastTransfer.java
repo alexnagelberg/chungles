@@ -4,6 +4,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.widgets.*;
 
+import java.io.*;
+import org.chungles.core.*;
+
 public class MulticastTransfer implements SelectionListener
 {
 
@@ -18,9 +21,30 @@ public class MulticastTransfer implements SelectionListener
             return;
         
         String separator=System.getProperty("file.separator");
-        String file=fileDialog.getFilterPath()+separator+fileDialog.getFileNames()[0];
+        final String file=fileDialog.getFilterPath()+separator+fileDialog.getFileNames()[0];
+        final long filesize=new File(file).length();
+        final String remotefile=file.substring(file.lastIndexOf(separator)+1);
         
-        
+        Thread thread=new Thread()
+        {
+        	public void run()
+        	{
+        		Display display=SWTUtil.getInstance().getShell().getDisplay();
+                final SWTTransferDialog dialog=SWTTransferDialog.getInstance(display);
+                
+                dialog.progressThread();
+                dialog.updateLables(file, 1, 1);
+                mServer mserver=new mServer(file, remotefile, new SendProgressListener()
+                {        	
+                	public void progressUpdate(long bytesSent)
+                	{        		
+                		dialog.updateProgress(bytesSent, filesize, bytesSent, filesize);
+                	}
+                });
+                mserver.start();
+        	}
+        };
+        thread.start();
         
     }
 }

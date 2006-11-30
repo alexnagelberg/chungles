@@ -382,4 +382,12 @@ public class ConsoleUI implements UI
 		
 		client=new Client(ips.get(compname));		
 	}
+	
+	public void finishnotification(boolean success, String message)
+	{
+		if (success)
+			System.out.println("Info: " + message);
+		else
+			System.out.println("Err: " + message);
+	}
 }

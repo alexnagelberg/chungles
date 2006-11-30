@@ -78,4 +78,9 @@ public class SWTUI implements UI
 		SWTPreferencesDialog dialog=SWTPreferencesDialog.getInstance(swtutil.getShell().getDisplay());
 		dialog.openDialog();
 	}
+	
+	public void finishnotification(boolean success, String message)
+	{
+		
+	}
 }

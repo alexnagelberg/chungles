@@ -3,6 +3,7 @@ package org.chungles.ui.swt;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
+
 import java.io.*;
 import java.util.Hashtable;
 
@@ -79,8 +80,28 @@ public class SWTUI implements UI
 		dialog.openDialog();
 	}
 	
-	public void finishnotification(boolean success, String message)
-	{
-		
+	public void finishnotification(final boolean success, final String message)
+	{        
+	    final Shell shell=SWTUtil.getInstance().getShell();
+        Display display=shell.getDisplay();
+        
+        display.syncExec(new Runnable()
+        {
+            public void run()
+            {
+        	    if (success)
+                {
+                    MessageBox box=new MessageBox(shell, SWT.ICON_INFORMATION | SWT.OK);
+                    box.setMessage(message);
+                    box.open();
+                }
+                else
+                {
+                    MessageBox box=new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+                    box.setMessage(message);
+                    box.open();
+                }
+            }
+        });
 	}
 }

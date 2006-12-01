@@ -19,7 +19,7 @@ public class SWTPreferencesDialog
     private Shell shell;
     private TableEditor editor;
     private Table table;
-    private Text compname, tempdir;
+    private Text compname, mcastshare;
     private static SWTPreferencesDialog dialog;
 
     public static SWTPreferencesDialog getInstance(Display display)
@@ -49,7 +49,7 @@ public class SWTPreferencesDialog
         InputStream in=ClassLoader.getSystemResourceAsStream("images/chungles.png");	
         shell.setImage(new Image(display, in));
         shell.setLayout(null);
-
+        shell.setBounds(50, 50, 640, 480);
         CTabFolder folder = new CTabFolder(shell, SWT.FLAT | SWT.TOP);        
 
         //PRETTIES!
@@ -62,6 +62,7 @@ public class SWTPreferencesDialog
         folder.setBounds(0, 0, 630, 400);
         folder.setBorderVisible(true);
 
+        // Shares Tab
         CTabItem tabItem = new CTabItem(folder, SWT.NONE);
         tabItem.setText("Shares");
 
@@ -82,7 +83,7 @@ public class SWTPreferencesDialog
         column = new TableColumn(table, SWT.LEFT);
         column.setText("Path");
         column.setWidth(380);
-        table.setBounds(5, 5, 485, 345);
+        table.setBounds(5, 5, 485, 340);
         table.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
@@ -143,7 +144,30 @@ public class SWTPreferencesDialog
         
         compname = new Text(composite, SWT.BORDER);
         compname.setText(Configuration.getComputerName());
-        compname.setBounds(115, 355, 375, 20);                
+        compname.setBounds(115, 350, 375, 25);                
+
+        // Multicast tab
+        tabItem = new CTabItem(folder, SWT.NONE);
+        tabItem.setText("Multicast");
+        
+        composite = new Composite(folder, SWT.NONE);
+        tabItem.setControl(composite);
+        composite.setLayout(null);
+        
+        label=new Label(composite, SWT.NONE);
+        label.setText("Multicast Share: ");
+        label.setBounds(5, 10, 110, 20);
+        
+        mcastshare=new Text(composite, SWT.BORDER);
+        mcastshare.setText(Configuration.getMCastShare());
+        mcastshare.setBounds(115, 5, 375, 25);
+        
+        Button browse=new Button(composite, SWT.PUSH | SWT.CENTER);        
+        browse.setText("&Browse");
+        browse.setBounds(495, 5, 100, 25);
+        browse.addSelectionListener(listener);
+        
+        // End of Tabs
         
         Button okbutton = new Button(shell, SWT.PUSH | SWT.CENTER);
         okbutton.setText("&Ok");
@@ -156,7 +180,8 @@ public class SWTPreferencesDialog
         cancelbutton.setBounds(400, 410, 100, 30);
 
         shell.open();
-        shell.setBounds(50, 50, 640, 480);
+        
+        
     }
 
     private void populateList()
@@ -199,6 +224,9 @@ public class SWTPreferencesDialog
                 // set computer's name
                 Configuration.setComputerName(compname.getText());
                 
+                // set multicast share path
+                Configuration.setMCastShare(mcastshare.getText());
+                
                 ConfigurationParser.saveConfig();
                 shell.dispose();
             }
@@ -221,13 +249,15 @@ public class SWTPreferencesDialog
                 	                        { "changeme", path });
                 }
             }
-            else if (button.getText().equals("..."))
+            else if (button.getText().equals("&Browse"))
             {
-                DirectoryDialog openDialog=new DirectoryDialog(shell);
-                openDialog.setMessage("Select temp folder");
-                openDialog.open();
-                String path=openDialog.getFilterPath();
-                tempdir.setText(path);
+                DirectoryDialog openDialog = new DirectoryDialog(shell);
+                openDialog.setMessage("Select multicast share path");                
+                String path = openDialog.open(); 
+                if (path!=null && !path.equals(""))
+                {
+                    mcastshare.setText(path);
+                }                
             }
         }
 

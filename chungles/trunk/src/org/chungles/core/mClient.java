@@ -114,7 +114,7 @@ public class mClient extends Thread
 	                }
 	                
 					// Recover packets with TCP connection
-					Socket sock=new Socket(pack.getAddress(), 6565);
+					Socket sock=new Socket(host, 6565);
 					sock.setSoTimeout(30000); // 30 seconds allowed between receiving packets before exception
 					OutputStream sout=sock.getOutputStream();
 	                InputStream sin=sock.getInputStream();	                	                

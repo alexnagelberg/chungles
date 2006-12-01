@@ -104,4 +104,21 @@ public class ConfigurationParser extends DefaultHandler
 			e.printStackTrace();
 		}		
 	}
+    
+    public void endDocument()
+    {
+        File mshare=new File(Configuration.getMCastShare());
+        if (!mshare.exists())
+            mshare.mkdir();
+    }
+    
+    public void fatalError(SAXParseException e)
+    {
+        System.out.println("Fatal error parsing configuration file, overwriting file with settings.");
+        saveConfig();
+        
+        File mshare=new File(Configuration.getMCastShare());
+        if (!mshare.exists())
+            mshare.mkdir();
+    }
 }

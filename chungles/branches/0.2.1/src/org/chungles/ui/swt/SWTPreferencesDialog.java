@@ -19,7 +19,7 @@ public class SWTPreferencesDialog
     private Shell shell;
     private TableEditor editor;
     private Table table;
-    private Text compname, tempdir;
+    private Text compname;
     private static SWTPreferencesDialog dialog;
 
     public static SWTPreferencesDialog getInstance(Display display)
@@ -49,7 +49,7 @@ public class SWTPreferencesDialog
         InputStream in=ClassLoader.getSystemResourceAsStream("images/chungles.png");	
         shell.setImage(new Image(display, in));
         shell.setLayout(null);
-
+        shell.setBounds(50, 50, 640, 480);
         CTabFolder folder = new CTabFolder(shell, SWT.FLAT | SWT.TOP);        
 
         //PRETTIES!
@@ -62,6 +62,7 @@ public class SWTPreferencesDialog
         folder.setBounds(0, 0, 630, 400);
         folder.setBorderVisible(true);
 
+        // Shares Tab
         CTabItem tabItem = new CTabItem(folder, SWT.NONE);
         tabItem.setText("Shares");
 
@@ -82,7 +83,7 @@ public class SWTPreferencesDialog
         column = new TableColumn(table, SWT.LEFT);
         column.setText("Path");
         column.setWidth(380);
-        table.setBounds(5, 5, 485, 345);
+        table.setBounds(5, 5, 485, 340);
         table.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
@@ -130,12 +131,12 @@ public class SWTPreferencesDialog
         Button addbutton = new Button(composite, SWT.PUSH | SWT.CENTER);
         addbutton.setText("&Add Share");
         addbutton.addSelectionListener(listener);
-        addbutton.setBounds(500, 5, 115, 30);
+        addbutton.setBounds(500, 5, 120, 30);
 
         Button removeshare = new Button(composite, SWT.PUSH | SWT.CENTER);
         removeshare.setText("&Remove Share");
         removeshare.addSelectionListener(listener);
-        removeshare.setBounds(500, 50, 115, 30);
+        removeshare.setBounds(500, 50, 120, 30);
 
         Label label=new Label(composite, SWT.NONE);
         label.setText("Computer name: ");
@@ -143,20 +144,23 @@ public class SWTPreferencesDialog
         
         compname = new Text(composite, SWT.BORDER);
         compname.setText(Configuration.getComputerName());
-        compname.setBounds(115, 355, 375, 20);                
+        compname.setBounds(115, 350, 375, 25);                                        
+        
+        // End of Tabs
         
         Button okbutton = new Button(shell, SWT.PUSH | SWT.CENTER);
         okbutton.setText("&Ok");
         okbutton.addSelectionListener(listener);
-        okbutton.setBounds(520, 410, 100, 30);
+        okbutton.setBounds(520, 415, 100, 30);
 
         Button cancelbutton = new Button(shell, SWT.PUSH | SWT.CENTER);
         cancelbutton.setText("&Cancel");
         cancelbutton.addSelectionListener(listener);
-        cancelbutton.setBounds(400, 410, 100, 30);
+        cancelbutton.setBounds(400, 415, 100, 30);
 
         shell.open();
-        shell.setBounds(50, 50, 640, 480);
+        
+        
     }
 
     private void populateList()
@@ -201,6 +205,14 @@ public class SWTPreferencesDialog
                 
                 ConfigurationParser.saveConfig();
                 shell.dispose();
+                try
+                {
+                    mDNSUtil.reloadInterfaces();
+                }
+                catch (Exception ex)
+                {
+                    
+                }
             }
             else if (button.getText().equals("&Remove Share"))
             {
@@ -220,15 +232,7 @@ public class SWTPreferencesDialog
                 	item.setText(new String[]
                 	                        { "changeme", path });
                 }
-            }
-            else if (button.getText().equals("..."))
-            {
-                DirectoryDialog openDialog=new DirectoryDialog(shell);
-                openDialog.setMessage("Select temp folder");
-                openDialog.open();
-                String path=openDialog.getFilterPath();
-                tempdir.setText(path);
-            }
+            }            
         }
 
         public void widgetDefaultSelected(SelectionEvent e)

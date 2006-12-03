@@ -10,12 +10,14 @@ import javax.jmdns.*;
 public class mDNSUtil
 {
 	private static Hashtable<String, JmDNS> mdnslist;		
-	
+    private static Hashtable<JmDNS, ServiceInfo> servicelist;
+    
 	public static void bindNewInterface(InetAddress ip, ServiceListener nodeDetector, boolean isServing) throws IOException
 	{
-		if (mdnslist==null)
+		if (mdnslist==null || servicelist==null)
 		{
 			mdnslist=new Hashtable<String, JmDNS>();
+            servicelist=new Hashtable<JmDNS, ServiceInfo>();
 		}
 		
 		System.out.println("Listening on " + ip.getHostAddress());
@@ -30,6 +32,7 @@ public class mDNSUtil
     			ServiceInfo service=new ServiceInfo("_chungles._tcp.local.", 
     		        mdns.getInterface().getHostAddress()+"._chungles._tcp.local.", 6565, 0, 0,
     		        Configuration.getComputerName());
+                servicelist.put(mdns, service);
     			mdns.registerService(service);
     		}
         }
@@ -50,7 +53,24 @@ public class mDNSUtil
 			JmDNS mdns=enumerator.nextElement();
 			System.out.println("Shutting down " + mdns.getInterface().getHostAddress());
 			mdns.close();			
-		}		
+		}
+        servicelist.clear();
 	}
+    
+    public static void reloadInterfaces() throws IOException
+    {
+        Enumeration<JmDNS> enumerator=mdnslist.elements();
+        while (enumerator.hasMoreElements())
+        {
+            JmDNS mdns=enumerator.nextElement();            
+            mdns.unregisterService(servicelist.get(mdns));
+            servicelist.remove(mdns);
+            ServiceInfo service=new ServiceInfo("_chungles._tcp.local.", 
+                    mdns.getInterface().getHostAddress()+"._chungles._tcp.local.", 6565, 0, 0,
+                    Configuration.getComputerName());
+            mdns.registerService(service);
+            servicelist.put(mdns, service);
+        }
+    }
 	
 }

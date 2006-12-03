@@ -131,12 +131,12 @@ public class SWTPreferencesDialog
         Button addbutton = new Button(composite, SWT.PUSH | SWT.CENTER);
         addbutton.setText("&Add Share");
         addbutton.addSelectionListener(listener);
-        addbutton.setBounds(500, 5, 115, 30);
+        addbutton.setBounds(500, 5, 120, 30);
 
         Button removeshare = new Button(composite, SWT.PUSH | SWT.CENTER);
         removeshare.setText("&Remove Share");
         removeshare.addSelectionListener(listener);
-        removeshare.setBounds(500, 50, 115, 30);
+        removeshare.setBounds(500, 50, 120, 30);
 
         Label label=new Label(composite, SWT.NONE);
         label.setText("Computer name: ");
@@ -172,12 +172,12 @@ public class SWTPreferencesDialog
         Button okbutton = new Button(shell, SWT.PUSH | SWT.CENTER);
         okbutton.setText("&Ok");
         okbutton.addSelectionListener(listener);
-        okbutton.setBounds(520, 410, 100, 30);
+        okbutton.setBounds(520, 415, 100, 30);
 
         Button cancelbutton = new Button(shell, SWT.PUSH | SWT.CENTER);
         cancelbutton.setText("&Cancel");
         cancelbutton.addSelectionListener(listener);
-        cancelbutton.setBounds(400, 410, 100, 30);
+        cancelbutton.setBounds(400, 415, 100, 30);
 
         shell.open();
         
@@ -229,6 +229,14 @@ public class SWTPreferencesDialog
                 
                 ConfigurationParser.saveConfig();
                 shell.dispose();
+                try
+                {
+                    mDNSUtil.reloadInterfaces();
+                }
+                catch (Exception ex)
+                {
+                    
+                }
             }
             else if (button.getText().equals("&Remove Share"))
             {

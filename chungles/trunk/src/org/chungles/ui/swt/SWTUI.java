@@ -82,7 +82,7 @@ public class SWTUI implements UI
 	
 	public void finishnotification(final boolean success, final String message)
 	{        
-	    final Shell shell=SWTUtil.getInstance().getShell();
+	    final Shell shell=swtutil.getShell();
         Display display=shell.getDisplay();
         
         display.syncExec(new Runnable()

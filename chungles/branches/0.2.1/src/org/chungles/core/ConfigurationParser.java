@@ -96,4 +96,10 @@ public class ConfigurationParser extends DefaultHandler
 			e.printStackTrace();
 		}		
 	}
+
+    public void fatalError(SAXParseException e)
+    {
+        System.out.println("Fatal error parsing configuration file, overwriting file with settings.");
+        saveConfig();        
+    }
 }

@@ -15,7 +15,7 @@ public class Configuration
 	
 	public static String getVersion()
 	{
-		return "0.2";
+		return "0.2.1";
 	}
 	
 	public static String getSharePath(String name)

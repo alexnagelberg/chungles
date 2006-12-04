@@ -50,6 +50,7 @@ public class SWTPreferencesDialog
         shell.setImage(new Image(display, in));
         shell.setLayout(null);
         shell.setBounds(50, 50, 640, 480);
+                
         CTabFolder folder = new CTabFolder(shell, SWT.FLAT | SWT.TOP);        
 
         //PRETTIES!
@@ -151,13 +152,13 @@ public class SWTPreferencesDialog
         Button okbutton = new Button(shell, SWT.PUSH | SWT.CENTER);
         okbutton.setText("&Ok");
         okbutton.addSelectionListener(listener);
-        okbutton.setBounds(520, 415, 100, 30);
+        okbutton.setBounds(520, 410, 100, 30);
 
         Button cancelbutton = new Button(shell, SWT.PUSH | SWT.CENTER);
         cancelbutton.setText("&Cancel");
         cancelbutton.addSelectionListener(listener);
-        cancelbutton.setBounds(400, 415, 100, 30);
-
+        cancelbutton.setBounds(400, 410, 100, 30);
+        shell.pack();
         shell.open();
         
         

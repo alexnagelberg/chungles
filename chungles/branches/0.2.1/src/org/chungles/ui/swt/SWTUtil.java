@@ -20,6 +20,8 @@ public class SWTUtil implements SelectionListener
     private ToolBar toolBar;
     private ToolItem downloadToolItem, uploadToolItem, deleteToolItem, newdirToolItem, preferencesToolItem, quitToolItem;
     private TreeEditor treeeditor;
+    private TrayItem trayitem;
+    private boolean visible=true;
     
 	private SWTUtil()
 	{
@@ -30,6 +32,14 @@ public class SWTUtil implements SelectionListener
 	    InputStream in=ClassLoader.getSystemResourceAsStream("images/chungles.png");	  	    	   
 	    shell.setImage(new Image(display, in));	    
 	    Rectangle area=shell.getClientArea();		
+	    
+	    // Set system tray icon
+	    in=ClassLoader.getSystemResourceAsStream("images/chungles-16.png");
+	    Tray tray=display.getSystemTray();
+	    trayitem=new TrayItem(tray, SWT.NONE);
+	    trayitem.setImage(new Image(display, in));
+	    trayitem.addSelectionListener(this);
+	    trayitem.setToolTipText("Chungles");
 	    
 	    // Add Toolbar
 	    toolBar = new ToolBar (shell, SWT.HORIZONTAL);
@@ -307,7 +317,12 @@ public class SWTUtil implements SelectionListener
         else if (e.getSource()==preferencesToolItem)
         {
             openPreferencesDialog();
-        }        
+        }
+        else if (e.getSource()==trayitem)
+        {
+        	visible=!visible;
+        	shell.setVisible(visible);
+        }
     }
     
     public void deselectAllInTree()

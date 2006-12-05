@@ -172,13 +172,13 @@ public class SWTPreferencesDialog
         Button okbutton = new Button(shell, SWT.PUSH | SWT.CENTER);
         okbutton.setText("&Ok");
         okbutton.addSelectionListener(listener);
-        okbutton.setBounds(520, 415, 100, 30);
+        okbutton.setBounds(520, 410, 100, 30);
 
         Button cancelbutton = new Button(shell, SWT.PUSH | SWT.CENTER);
         cancelbutton.setText("&Cancel");
         cancelbutton.addSelectionListener(listener);
-        cancelbutton.setBounds(400, 415, 100, 30);
-
+        cancelbutton.setBounds(400, 410, 100, 30);
+        shell.pack();
         shell.open();
         
         

@@ -72,5 +72,24 @@ public class mDNSUtil
             servicelist.put(mdns, service);
         }
     }
+    
+    public static boolean isBound(InetAddress addr)
+    {
+    	Enumeration<JmDNS> enumerator=mdnslist.elements();
+        while (enumerator.hasMoreElements())
+        {
+        	JmDNS mdns=enumerator.nextElement();
+        	try
+        	{
+        		if (mdns.getInterface().equals(addr))
+        			return true;
+        	}
+        	catch (Exception e)
+        	{
+        		e.printStackTrace();
+        	}
+        }
+        return false;
+    }
 	
 }

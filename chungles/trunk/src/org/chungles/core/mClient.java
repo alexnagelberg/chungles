@@ -35,7 +35,7 @@ public class mClient extends Thread
 				DatagramPacket pack = new DatagramPacket(buf, buf.length);
 				s.receive(pack);
 				
-				if (buf[0]==ServerConnectionThread.BEGIN_MULTICAST)
+				if (buf[0]==ServerConnectionThread.BEGIN_MULTICAST && !mDNSUtil.isBound(pack.getAddress()))
 				{
 					s.setSoTimeout(10000); // 10 seconds allowed between receiving packets before exception
 					

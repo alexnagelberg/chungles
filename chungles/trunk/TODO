@@ -4,7 +4,6 @@ bugs:
 *keep a hash table of interfaces available and handle changes in interfaces showing up/going down
 
 features:
-*(optional) multicast transfers
 *(optional) gzip compression on line (default: no)
 *(optional) ssl encryption (default: no)
 *user authentication

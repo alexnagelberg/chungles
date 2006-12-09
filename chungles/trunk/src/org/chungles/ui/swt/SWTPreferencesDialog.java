@@ -19,7 +19,8 @@ public class SWTPreferencesDialog
     private Shell shell;
     private TableEditor editor;
     private Table table;
-    private Text compname, mcastshare;
+    private Text compname, mcastshare, mcastspeed;
+    private Button mcastflow;
     private static SWTPreferencesDialog dialog;
 
     public static SWTPreferencesDialog getInstance(Display display)
@@ -167,6 +168,30 @@ public class SWTPreferencesDialog
         browse.setBounds(495, 5, 100, 25);
         browse.addSelectionListener(listener);
         
+        mcastflow=new Button(composite, SWT.CHECK);
+        mcastflow.setText("Enable multicast flow control (limiting speed can greatly reduce packet loss)");
+        mcastflow.setBounds(5, 35, 600, 25);
+        mcastflow.addSelectionListener(listener);
+        
+        label=new Label(composite, SWT.NONE);
+        label.setText("Speed: ");
+        label.setBounds(15, 70, 50, 25);
+        
+        mcastspeed=new Text(composite, SWT.BORDER);
+        mcastspeed.setText(""+Configuration.getMCastKBPSSpeed());
+        mcastspeed.setBounds(65, 65, 60, 25);
+        
+        label=new Label(composite, SWT.NONE);
+        label.setText("KB/s");
+        label.setBounds(130, 70, 50, 25);
+        
+        if (Configuration.isMCastThrottled())
+        {
+            mcastflow.setSelection(true);
+        }
+        else
+            mcastspeed.setEnabled(false);
+        
         // End of Tabs
         
         Button okbutton = new Button(shell, SWT.PUSH | SWT.CENTER);
@@ -227,6 +252,10 @@ public class SWTPreferencesDialog
                 // set multicast share path
                 Configuration.setMCastShare(mcastshare.getText());
                 
+                // set multicast flow control settings
+                Configuration.setMCastThrottled(mcastflow.getSelection());
+                Configuration.setMCastKBPSSpeed(Integer.parseInt(mcastspeed.getText()));
+                
                 ConfigurationParser.saveConfig();
                 shell.dispose();
                 try
@@ -266,6 +295,13 @@ public class SWTPreferencesDialog
                 {
                     mcastshare.setText(path);
                 }                
+            }
+            else if (button.equals(mcastflow))
+            {
+                if (button.getSelection())
+                    mcastspeed.setEnabled(true);
+                else
+                    mcastspeed.setEnabled(false);
             }
         }
 

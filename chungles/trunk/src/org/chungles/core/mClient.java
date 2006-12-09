@@ -62,7 +62,7 @@ public class mClient extends Thread
 	                		Configuration.getMCastShare()+"/"+filename, "rw");
 	                
 	                // Receive Multicast packets till 'finished' command arrives	                
-	                long lastoffset=-1024;
+	                long lastoffset=-PACKET_SIZE;
 	                try
 	                {
 						do
@@ -110,7 +110,20 @@ public class mClient extends Thread
 	                }
 	                catch (SocketTimeoutException e)
 	                {
-	                	// Do nothing, this is ok, we have fallback!
+                        for (long i=lastoffset+PACKET_SIZE; i<filesize; i+=PACKET_SIZE)
+                        {
+                            unreceivedpackets.put(i, true);
+                            if (filesize-i>=PACKET_SIZE)
+                            {
+                                byte[] zeros=new byte[PACKET_SIZE];
+                                fout.write(zeros, 0, PACKET_SIZE);
+                            }
+                            else
+                            {
+                                byte[] zeros=new byte[(int)(filesize-i)];
+                                fout.write(zeros, 0, (int)(filesize-i));
+                            }
+                        }
 	                }
 	                
 					// Recover packets with TCP connection

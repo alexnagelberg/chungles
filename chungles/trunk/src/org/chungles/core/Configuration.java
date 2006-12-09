@@ -7,13 +7,17 @@ public class Configuration
 	private static Hashtable<String, String> shares;
 	private static String computerName;
 	private static String mCastShare;
-    private static String REV="131:132M";
+    private static boolean mCastThrottled;
+    private static int mCastKBPSSpeed;
+    private static String REV="154:157M";
 	
 	public static void init()
 	{
 		shares=new Hashtable<String, String>();
 		computerName="Chungles Node";
         mCastShare=System.getProperty("user.home")+"/.chungles/mcast";
+        mCastThrottled=true;
+        mCastKBPSSpeed=1000;
 	}
 	
 	public static String getVersion()
@@ -59,5 +63,25 @@ public class Configuration
     public static void setMCastShare(String name)
     {
         mCastShare=name;
+    }
+    
+    public static boolean isMCastThrottled()
+    {
+        return mCastThrottled;
+    }
+    
+    public static void setMCastThrottled(boolean isThrottled)
+    {
+        mCastThrottled=isThrottled;
+    }
+    
+    public static int getMCastKBPSSpeed()
+    {
+        return mCastKBPSSpeed;
+    }
+    
+    public static void setMCastKBPSSpeed(int speed)
+    {
+        mCastKBPSSpeed=speed;
     }
 }

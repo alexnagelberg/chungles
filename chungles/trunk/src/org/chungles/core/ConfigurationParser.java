@@ -51,6 +51,19 @@ public class ConfigurationParser extends DefaultHandler
         {
             Configuration.setMCastShare(attrs.getValue("name"));
         }
+        else if (qualifiedName.equals("mcastflow"))
+        {
+            String enabled=attrs.getValue("enabled");
+            String speed=attrs.getValue("speed");
+            if (enabled.equalsIgnoreCase("true"))
+            {
+                Configuration.setMCastThrottled(true);
+                if (!speed.equals(""))
+                    Configuration.setMCastKBPSSpeed(Integer.parseInt(speed));
+            }
+            else
+                Configuration.setMCastThrottled(false);                        
+        }
 	}
 	
 	private static void createConfig(File file)
@@ -94,6 +107,10 @@ public class ConfigurationParser extends DefaultHandler
 			
             // Multicast Share
             out.println("<mcastshare name=\"" + Configuration.getMCastShare() + "\"/>");
+            
+            // Multicast Flow Control
+            out.println("<mcastflow enabled=\"" + Configuration.isMCastThrottled() + "\" speed=\"" + 
+                    Configuration.getMCastKBPSSpeed() + "\"/>");
             
 			// Closing
 			out.println("</chungles>");

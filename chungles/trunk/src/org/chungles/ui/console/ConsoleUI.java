@@ -87,6 +87,13 @@ public class ConsoleUI implements UI
 			else
 				System.out.println("Syntax: put <file>");
 		}
+        else if (firstTok.equals("mcast"))
+        {
+            if (numTokens>=2)
+                mcastFile(tok.nextToken("\n").trim());
+            else
+                System.out.println("Syntax: mcast <file>");
+        }
 		else if (firstTok.equals("cd"))
 		{
 			if (numTokens>=2)
@@ -115,7 +122,7 @@ public class ConsoleUI implements UI
 	
 	private void printHelp()
 	{
-		System.out.println("Commands are: get, put, cd, rm, mkdir");
+		System.out.println("Commands are: get, put, cd, rm, mkdir, mcast");
 	}
 	
 	private void listPath()
@@ -321,6 +328,27 @@ public class ConsoleUI implements UI
 			System.out.println("You're not in a chungles share.");
 		}
 	}
+    
+    private void mcastFile(String localfile)
+    {
+        if (localfile==null || localfile.equals(""))
+        {
+            System.out.println("Syntax: mcast <file>");
+            return;
+        }
+        
+        String separator=System.getProperty("file.separator");
+        String remotefile=localfile.substring(localfile.lastIndexOf(separator)+1);
+        mServer mserver=new mServer(localfile, remotefile, new SendProgressListener()
+        {            
+            public void progressUpdate(long bytesSent)
+            {               
+                if (bytesSent%102400==0)
+                    System.out.println(bytesSent/1024 + "K");
+            }
+        });
+        System.out.println("Sent.");
+    }
 	
 	private void deleteFile(String file)
 	{		

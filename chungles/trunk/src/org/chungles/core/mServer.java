@@ -21,7 +21,7 @@ public class mServer
 		mServer.localfile=localfile;
 		try
         {                                               
-            InetAddress group = InetAddress.getByName("224.3.2.1");
+            InetAddress group = InetAddress.getByName("224.0.0.3");
             s = new MulticastSocket();                      
             s.setLoopbackMode(true);
             s.setTimeToLive(1);
@@ -97,7 +97,7 @@ public class mServer
                         System.arraycopy(Util.intToBytes(length), 0, outbuf, 8, 4);
                         System.arraycopy(filebuf, 0, outbuf, 12, length);
                         
-                        InetAddress group = InetAddress.getByName("224.3.2.1");
+                        InetAddress group = InetAddress.getByName("224.0.0.3");
                         DatagramPacket pack = new DatagramPacket(outbuf, PACKET_SIZE+12, group, 6565);
                         s.send(pack);
                         
@@ -137,7 +137,7 @@ public class mServer
                     System.arraycopy(Util.intToBytes(length), 0, outbuf, 8, 4);
                     System.arraycopy(filebuf, 0, outbuf, 12, length);
                        
-                    InetAddress group = InetAddress.getByName("224.3.2.1");
+                    InetAddress group = InetAddress.getByName("224.0.0.3");
                     DatagramPacket pack = new DatagramPacket(outbuf, PACKET_SIZE+12, group, 6565);
                     s.send(pack);
                       

@@ -24,7 +24,7 @@ public class mClient extends Thread
 	{
 		try
 		{
-			InetAddress group = InetAddress.getByName("224.3.2.1");
+			InetAddress group = InetAddress.getByName("224.0.0.3");
 			MulticastSocket s = new MulticastSocket(6565);			
 			s.joinGroup(group);
 			
@@ -137,11 +137,12 @@ public class mClient extends Thread
 	                
 	                fout.seek(0);
 	                Enumeration<Long> en=unreceivedpackets.keys();
+                    long i=0;
 	                try
 	                {
 		                while (en.hasMoreElements())				
 						{
-							long i=en.nextElement();
+							i=en.nextElement();
 		                    sout.write(Util.longToBytes(i), 0, 8);                        
 		                    buf=new byte[PACKET_SIZE];
 		                    int length=sin.read(buf, 0, PACKET_SIZE);

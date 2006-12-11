@@ -16,7 +16,7 @@ public class SWTUtil implements SelectionListener
 	private Shell shell;
 	private boolean isActive;	
 	private static SWTUtil instance;
-	private MenuItem getFileMenuItem, putFileMenuItem, newdirMenuItem, deleteMenuItem;
+	private MenuItem getFileMenuItem, putFileMenuItem, newdirMenuItem, deleteMenuItem, quitMenuItem;
     private ToolBar toolBar;
     private ToolItem downloadToolItem, uploadToolItem, deleteToolItem, newdirToolItem;
     private ToolItem preferencesToolItem, quitToolItem, mcastToolItem;
@@ -41,7 +41,20 @@ public class SWTUtil implements SelectionListener
 	    trayitem.setImage(new Image(display, in));
 	    trayitem.addSelectionListener(this);
 	    trayitem.setToolTipText("Chungles");
-	    
+        
+        // Add tray menu
+        final Menu traymenu=new Menu(shell, SWT.POP_UP);
+	    quitMenuItem=new MenuItem(traymenu, SWT.PUSH);
+        quitMenuItem.setText("&Quit");
+        quitMenuItem.addSelectionListener(this);
+        trayitem.addListener(SWT.MenuDetect, new Listener()
+        {
+            public void handleEvent (Event event)
+            {
+                traymenu.setVisible(true);
+            }
+        });
+        
 	    // Add Toolbar
 	    toolBar = new ToolBar (shell, SWT.HORIZONTAL);
 	    toolBar.setBounds(0, 0, area.width, 33);
@@ -318,7 +331,7 @@ public class SWTUtil implements SelectionListener
     
     public void widgetSelected(SelectionEvent e)
     {
-        if (e.getSource()==quitToolItem)
+        if (e.getSource()==quitToolItem || e.getSource()==quitMenuItem)
         {
             shell.dispose();
         }

@@ -110,7 +110,7 @@ public class Client
 			byte[] buffer=new byte[1024];
 			int read;
 			long sent=0;
-			while ((read = filein.read(buffer)) != -1)
+			while ((read = filein.read(buffer)) != -1 && !socket.isClosed())
 			{
 				out.write(buffer, 0, read);				
 				sent+=read;
@@ -168,7 +168,7 @@ public class Client
 			long totalread=0;			            
             long size=file.getSize();
             
-            while (totalread<size)
+            while (totalread<size && !socket.isClosed())
             {
                 byte[] buffer=new byte[1024];
                 int read;
@@ -188,6 +188,9 @@ public class Client
             fileout.close();
 			
 		}
+        catch (SocketException e)
+        {            
+        }
 		catch (Exception e)
 		{
 		    e.printStackTrace();

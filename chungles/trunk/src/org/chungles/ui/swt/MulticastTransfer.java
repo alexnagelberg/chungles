@@ -27,7 +27,13 @@ public class MulticastTransfer implements SelectionListener
         
         Display display=SWTUtil.getInstance().getShell().getDisplay();
         final SWTTransferDialog dialog=SWTTransferDialog.getInstance(display);
-        dialog.openDialog();
+        dialog.openDialog(new AbortListener()
+        {
+            public void abort()
+            {
+                
+            }
+        });
         Thread thread=new Thread()
         {
         	public void run()

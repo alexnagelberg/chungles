@@ -3,6 +3,7 @@ package org.chungles.ui.swt;
 import java.io.InputStream;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
 
@@ -28,7 +29,7 @@ public class SWTTransferDialog
 		return instance;
 	}
 	
-	public void openDialog()
+	public void openDialog(final AbortListener listener)
 	{
 		if (!(shell==null || shell.isDisposed()))
 			return;
@@ -62,7 +63,17 @@ public class SWTTransferDialog
 		Button abortButton = new Button(shell, SWT.PUSH | SWT.CENTER);
 		abortButton.setText("&Abort");
 		abortButton.setBounds(525, 200, 100, 30);
-		
+		abortButton.addSelectionListener(new SelectionListener()
+        {
+            public void widgetSelected(SelectionEvent e)
+            {
+                closeDialog();
+                listener.abort();
+            }
+            
+            public void widgetDefaultSelected(SelectionEvent e) {}
+        });
+        
 		shell.open();
 	}
 	

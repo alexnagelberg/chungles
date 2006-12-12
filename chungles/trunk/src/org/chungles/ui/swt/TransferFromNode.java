@@ -8,7 +8,8 @@ import org.chungles.core.*;
 public class TransferFromNode implements SelectionListener
 {
     private static long totalReceived;
-
+    private Client client;
+    
     public void widgetDefaultSelected(SelectionEvent e)
     {
     }
@@ -46,7 +47,13 @@ public class TransferFromNode implements SelectionListener
         // Open retrieve dialog
         Display display = SWTUtil.getInstance().getShell().getDisplay();
         SWTTransferDialog dialog = SWTTransferDialog.getInstance(display);
-        dialog.openDialog();
+        dialog.openDialog(new AbortListener()
+        {
+            public void abort()
+            {
+                client.close();
+            }
+        });
 
         getFiles(lists, IPs, numFiles, totalSize, savepath);
     }
@@ -68,7 +75,7 @@ public class TransferFromNode implements SelectionListener
                 for (i = 0; i < lists.length; i++)
                 {
                     FileList list = lists[i];
-                    Client client = new Client(IPs[i]);
+                    client = new Client(IPs[i]);
                     int offset = list.getRemotePath().lastIndexOf('/') + 1;
                     String separator = System.getProperty("file.separator");
                     while (list.getRemotePath() != null)

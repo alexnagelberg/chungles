@@ -10,7 +10,8 @@ import org.chungles.core.*;
 public class TransferToNode extends DropTargetAdapter implements SelectionListener
 {	
 	private static long totalSent;
-
+	private Client client;
+    
     public void widgetDefaultSelected(SelectionEvent e) {}
     
     public void widgetSelected(SelectionEvent e)
@@ -30,7 +31,13 @@ public class TransferToNode extends DropTargetAdapter implements SelectionListen
         }
         
         SWTTransferDialog dialog=SWTTransferDialog.getInstance(SWTUtil.getInstance().getShell().getDisplay());
-        dialog.openDialog();
+        dialog.openDialog(new AbortListener()
+        {
+            public void abort()
+            {
+                client.close();
+            }
+        });
         
         TreeItem item=SWTUtil.getInstance().getTree().getSelection()[0];
         String path=ShareLister.getPath(item);
@@ -48,7 +55,13 @@ public class TransferToNode extends DropTargetAdapter implements SelectionListen
     		String path=ShareLister.getPath(item);
     		String ip=ShareLister.getIP(item);
     		SWTTransferDialog dialog=SWTTransferDialog.getInstance(SWTUtil.getInstance().getShell().getDisplay());
-    		dialog.openDialog();
+    		dialog.openDialog(new AbortListener()
+            {
+                public void abort()
+                {
+                    client.close();
+                }
+            });
     		sendFiles(ip, path, droppedFiles);    		    		
     	}    	    	    	
     }
@@ -62,7 +75,7 @@ public class TransferToNode extends DropTargetAdapter implements SelectionListen
     		{
     			Display display=SWTUtil.getInstance().getShell().getDisplay();
     			final SWTTransferDialog dialog=SWTTransferDialog.getInstance(display);
-		    	Client client=new Client(ip);		    	
+		    	client=new Client(ip);		    	
 		    	int i=0;
 		    	FileList list=FileList.recurseFiles(files);
 		    	dialog.progressThread();

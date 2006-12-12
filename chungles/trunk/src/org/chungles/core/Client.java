@@ -118,6 +118,9 @@ public class Client
 			}
 			filein.close();
 		}
+		catch (SocketException e)
+		{
+		}
 		catch (Exception e)
 		{
 		    e.printStackTrace();

@@ -9,7 +9,6 @@ public class Configuration
 	private static String mCastShare;
     private static boolean mCastThrottled;
     private static int mCastKBPSSpeed;
-    private static String REV="154:157M";
 	
 	public static void init()
 	{
@@ -22,7 +21,7 @@ public class Configuration
 	
 	public static String getVersion()
 	{
-		return "r"+REV;
+		return "0.3";
 	}
 	
 	public static String getSharePath(String name)

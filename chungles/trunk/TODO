@@ -1,6 +1,4 @@
 bugs:
-*abort functionality
-*needs to handle disconnects in the middle of file transfer
 *keep a hash table of interfaces available and handle changes in interfaces showing up/going down
 
 features:

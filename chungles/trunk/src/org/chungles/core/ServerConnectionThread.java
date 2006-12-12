@@ -197,11 +197,15 @@ public class ServerConnectionThread extends Thread
                 DataInputStream filein=new DataInputStream(new FileInputStream(path));
                 byte[] buffer=new byte[1024];
                 int read;
-                while ((read = filein.read(buffer)) != -1)
+                while ((read = filein.read(buffer)) != -1 && socket.isConnected())
                 {
                     out.write(buffer, 0, read);
                 }
                 filein.close();
+            }
+            catch (SocketException e)
+            {
+                
             }
             catch (Exception e)
             {
@@ -238,7 +242,7 @@ public class ServerConnectionThread extends Thread
 				return;
 			}
 						
-			while (totalread<size)
+			while (totalread<size && !socket.isClosed())
 			{
 				byte[] buffer=new byte[1024];
 				int read;
@@ -251,12 +255,20 @@ public class ServerConnectionThread extends Thread
 				{
 					read=in.read(buffer);
 				}
-				fileout.write(buffer, 0, read);
-				totalread+=read;
+                
+                if (read>0)
+                {
+    				fileout.write(buffer, 0, read);
+    				totalread+=read;
+                }
 			}
 			fileout.close();
 			
 		}
+        catch (SocketException e)
+        {
+            
+        }
 		catch (Exception e)
 		{
 			e.printStackTrace();

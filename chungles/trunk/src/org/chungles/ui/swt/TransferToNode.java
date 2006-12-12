@@ -33,6 +33,11 @@ public class TransferToNode extends DropTargetAdapter implements SelectionListen
         SWTTransferDialog dialog=SWTTransferDialog.getInstance(SWTUtil.getInstance().getShell().getDisplay());
         dialog.openDialog(new AbortListener()
         {
+            public boolean shouldCloseDialog()
+            {
+                return true;
+            }
+            
             public void abort()
             {
                 client.close();
@@ -57,6 +62,11 @@ public class TransferToNode extends DropTargetAdapter implements SelectionListen
     		SWTTransferDialog dialog=SWTTransferDialog.getInstance(SWTUtil.getInstance().getShell().getDisplay());
     		dialog.openDialog(new AbortListener()
             {
+                public boolean shouldCloseDialog()
+                {
+                    return true;
+                }
+                
                 public void abort()
                 {
                     client.close();

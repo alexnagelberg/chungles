@@ -49,6 +49,11 @@ public class TransferFromNode implements SelectionListener
         SWTTransferDialog dialog = SWTTransferDialog.getInstance(display);
         dialog.openDialog(new AbortListener()
         {
+            public boolean shouldCloseDialog()
+            {
+                return true;
+            }
+            
             public void abort()
             {
                 client.close();

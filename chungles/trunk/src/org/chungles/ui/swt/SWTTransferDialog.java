@@ -67,7 +67,8 @@ public class SWTTransferDialog
         {
             public void widgetSelected(SelectionEvent e)
             {
-                closeDialog();
+                if (listener.shouldCloseDialog())
+                    closeDialog();
                 listener.abort();
             }
             

@@ -4,31 +4,20 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import org.chungles.ui.UI;
-import org.chungles.ui.swt.*;
-import org.chungles.ui.dummy.*;
-import org.chungles.ui.console.*;
 import org.chungles.core.*;
+import org.chungles.plugin.*;
 
 public class Main
 {
-	public static UI ui;
+	
 	private static boolean isServer;
     
     public static void main(String[] args) throws IOException
-    {
-    	ArgumentParser argparse=new ArgumentParser(args);
-    	
-    	String uitype=argparse.getUI();
-    	if (uitype.equals("swt"))
-    		ui=new SWTUI();
-    	else if (uitype.equals("console"))
-    		ui=new ConsoleUI();
-    	else // daemon
-    		ui=new NullUI();
+    {    	
+        PluginAction.loadPlugins();
     	
         if (!ConfigurationParser.parse())
-        		ui.openPreferencesDialog();
+        	PluginAction.openPreferencesDialog();
 
         File lockfile=new File(System.getProperty("user.home")+"/.chungles/.lock");
         isServer=!lockfile.exists();
@@ -44,11 +33,11 @@ public class Main
         	lockfile.deleteOnExit();
         }
         
-        if (ui.takeoverWaitsForInterfaces())
+        /*if (ui.takeoverWaitsForInterfaces())
         	blockingmDNSBind();
         else
-        	threadedmDNSBind();     
-        
+        	threadedmDNSBind();*/     
+        threadedmDNSBind();
 
         ServerThread server = new ServerThread();
         mClient mclient=new mClient(new FinishNotification()
@@ -56,9 +45,9 @@ public class Main
         	public void finished(boolean successfully)
         	{
         		if (successfully)
-        			ui.finishnotification(true, "Received Multicast file.");
+        			PluginAction.finishnotification(true, "Received Multicast file.");
         		else
-        			ui.finishnotification(false, "Error receiving incoming Multicast");
+        			PluginAction.finishnotification(false, "Error receiving incoming Multicast");
         	}
         });
         
@@ -68,7 +57,7 @@ public class Main
             mclient.start();
         }
 
-        ui.takeover();
+        PluginAction.mainloop();
 
         // UI shuts down, we shut down.        
         if (isServer)
@@ -81,7 +70,7 @@ public class Main
         System.exit(0);
     }
 
-    private static void blockingmDNSBind()
+    /*private static void blockingmDNSBind()
     {
     	try
         {
@@ -104,7 +93,7 @@ public class Main
         {
             e.printStackTrace();
         }
-    }
+    }*/
     
     private static void threadedmDNSBind()
     {
@@ -137,4 +126,6 @@ public class Main
         };
         mdnsthread.start();
     }
+    
+    
 }

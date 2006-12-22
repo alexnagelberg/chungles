@@ -2,11 +2,12 @@ package org.chungles.application;
 
 import java.util.*;
 import javax.jmdns.*;
+import org.chungles.plugin.*;
 
 public class NodeDetect implements ServiceListener
 {
-	private static Hashtable<String, String> ips;
-	private static Hashtable<String, String> compnames; // provides reverse lookup
+	public static Hashtable<String, String> ips;
+	public static Hashtable<String, String> compnames; // provides reverse lookup
 	
 	public static void addNode(final String ip, final String compname)
 	{
@@ -16,7 +17,13 @@ public class NodeDetect implements ServiceListener
 			compnames=new Hashtable<String, String>();
 		}
 
-	    Main.ui.addNode(ip, compname, ips, compnames);
+        if (!compnames.contains(compname))
+        {
+            ips.put(compname, ip);
+            compnames.put(ip, compname);
+            PluginAction.addNode(ip, compname);
+        }
+	    
 	    
 	}
 	
@@ -39,8 +46,13 @@ public class NodeDetect implements ServiceListener
 			ips=new Hashtable<String, String>();
 			compnames=new Hashtable<String, String>();
 		}
-		
-		Main.ui.removeNode(ip, compname, ips, compnames);
+		if (name==null)
+            return;
+        
+        compnames.remove(name);
+        ips.remove(name);
+        
+		PluginAction.removeNode(ip, compname);
 	}
 
 	public void resolveService(JmDNS mdns, String type, String name, ServiceInfo service)

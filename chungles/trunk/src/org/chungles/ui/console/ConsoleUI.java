@@ -1,23 +1,39 @@
 package org.chungles.ui.console;
 
-import org.chungles.ui.UI;
+import org.chungles.plugin.*;
 import org.chungles.core.*;
 
 import java.io.*;
 import java.util.*;
 
-public class ConsoleUI implements UI
+public class ConsoleUI implements UIPlugin
 {	
 	private String workingpath="/";
 	private Hashtable<String, String> ips, compnames;
 	private Client client;
-	
-	public boolean takeoverWaitsForInterfaces()
-	{
-		return true;
-	}
-	
-	public void takeover()
+	private boolean done=false;
+    
+    public String getAuthor()
+    {
+        return "Alex Nagelberg";
+    }
+    
+    public String getName()
+    {
+        return "Console UI";
+    }
+    
+    public String getVersion()
+    {
+        return "0.3";
+    }
+    
+    public boolean isDone()
+    {
+        return done;
+    }
+    
+	public void init()
 	{
 		String input="";
 		while (!input.equals("quit"))
@@ -33,28 +49,35 @@ public class ConsoleUI implements UI
 				e.printStackTrace();
 			}
 		}
+        done=true;
 	}
 	
-	public void addNode(String IP, String compname, Hashtable<String, String> ips, Hashtable<String, String> compnames)
+    public void shutdown()
+    {
+        
+    }
+    
+	public void addNode(String IP, String compname)
 	{
-		if (!ips.containsKey(compname))
-		{
-		    ips.put(compname, IP);
-    		compnames.put(IP, compname);
-    		this.ips=ips;
-    		this.compnames=compnames;
-		}		
+		if (ips==null || compnames==null)
+        {
+		    ips=new Hashtable<String,String>();
+            compnames=new Hashtable<String,String>();
+        }
+        
+        ips.put(compname, IP);
+        compnames.put(IP, compname);
 	}
 	
-	public void removeNode(String IP, String compname, Hashtable<String, String> ips, Hashtable<String, String> compnames)
+	public void removeNode(String IP, String compname)
 	{
-		if (compname==null)
-			return;
-		
+        if (ips==null || compnames==null)
+        {
+            ips=new Hashtable<String,String>();
+            compnames=new Hashtable<String,String>();
+        }
 		ips.remove(compname);
-		compnames.remove(compname);
-		this.ips=ips;
-		this.compnames=compnames;
+        compnames.remove(compname);
 	}
 	
 	public void openPreferencesDialog()

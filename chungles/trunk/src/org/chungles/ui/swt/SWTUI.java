@@ -7,68 +7,75 @@ import org.eclipse.swt.widgets.*;
 import java.io.*;
 import java.util.Hashtable;
 
-import org.chungles.ui.UI;
+import org.chungles.plugin.*;
 
-
-public class SWTUI implements UI
+public class SWTUI implements UIPlugin
 {
 	private SWTUtil swtutil;
 	private static Hashtable<String, TreeItem> nodes;
+	private boolean done=false;    	
+    
+	public String getAuthor()
+    {
+	    return "Alex Nagelberg";
+    }
+    
+    public String getName()
+    {
+        return "SWT UI";
+    }
+    
+    public String getVersion()
+    {
+        return "0.3";
+    }
+    
+    public boolean isDone()
+    {
+        return done;
+    }
 	
-	public SWTUI()
-	{		
-		swtutil=SWTUtil.getInstance();
-		nodes=new Hashtable<String, TreeItem>();
-	}
-	
-	public boolean takeoverWaitsForInterfaces()
+	public void init()
 	{
-		return false;
+        swtutil=SWTUtil.getInstance();
+        nodes=new Hashtable<String, TreeItem>();
+        swtutil.mainLoop();
+        done=true;        		
 	}
 	
-	public void takeover()
-	{		
-		swtutil.mainLoop();
-	}
-	
-	public void addNode(final String IP, final String compname, final Hashtable<String, String> ips, final Hashtable<String, String> compnames)
+    public void shutdown()
+    {
+        
+    }
+    
+	public void addNode(final String IP, final String compname)
 	{
         final Tree tree=swtutil.getTree();
-		swtutil.getShell().getDisplay().syncExec(new Runnable()
+		swtutil.getShell().getDisplay().asyncExec(new Runnable()
 		{			
 			public void run()
 			{
-				if (!nodes.containsKey(compname))
-				{
-					TreeItem node=new TreeItem(tree, SWT.NONE);
-					node.setText(compname);
-					new TreeItem(node, SWT.NONE);
-					InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/node.gif");	  	    	   
-				    node.setImage(new Image(swtutil.getShell().getDisplay(), in));
-				    nodes.put(compname, node);
-				    ips.put(compname, IP);
-		    		compnames.put(IP, compname);
-				}
+				TreeItem node=new TreeItem(tree, SWT.NONE);
+				node.setText(compname);
+				new TreeItem(node, SWT.NONE);
+				InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/node.gif");	  	    	   
+				node.setImage(new Image(swtutil.getShell().getDisplay(), in));
+				nodes.put(compname, node);								
 			}
 		});
 	}
 	
-	public void removeNode(final String IP, final String compname, final Hashtable<String, String> ips, final Hashtable<String, String> compnames)
+	public void removeNode(final String IP, final String compname)
 	{		
-		swtutil.getShell().getDisplay().syncExec(new Runnable()
+		swtutil.getShell().getDisplay().asyncExec(new Runnable()
 		{
 			public void run()
-			{
-                if (compname==null)
-                    return;
-                
+			{                
 				final TreeItem node=nodes.get(compname);
 				if (node!=null)
 				{
 					node.dispose();
-					nodes.remove(compname);
-					ips.remove(compname);
-					compnames.remove(IP);
+					nodes.remove(compname);					
 				}
 			}
 		});

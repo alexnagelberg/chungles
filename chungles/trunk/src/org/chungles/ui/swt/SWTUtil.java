@@ -295,7 +295,7 @@ public class SWTUtil implements SelectionListener
 	}
 	
 	public void mainLoop()
-	{
+	{        
 		Display display=shell.getDisplay();
 		while (!shell.isDisposed())
 	    {

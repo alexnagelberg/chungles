@@ -1,7 +1,5 @@
 package org.chungles.ui;
 
-import java.util.*;
-
 public interface UI
 {
 	/**
@@ -19,7 +17,7 @@ public interface UI
 	 * @param ips Hash table of IPs with computer name for keys
 	 * @param compnames Hash table of computer names with IPs for keys
 	 */
-	public void addNode(String IP, String compname, Hashtable<String, String> ips, Hashtable<String, String> compnames);
+	public void addNode(String IP, String compname);
 	
 	/**
 	 * Called when a node is no longer on the network. Sometimes sends duplicates so
@@ -30,7 +28,7 @@ public interface UI
 	 * @param ips Hash table of IPs with computer name for keys
 	 * @param compnames Hash table of computer names with IPs for keys
 	 */
-	public void removeNode(String IP, String compname, Hashtable<String, String> ips, Hashtable<String, String> compnames);
+	public void removeNode(String IP, String compname);
 	
 	/**
 	 * Should open a preferences dialog

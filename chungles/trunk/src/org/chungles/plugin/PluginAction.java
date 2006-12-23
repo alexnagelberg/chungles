@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.jar.*;
 import java.io.*;
 import java.lang.reflect.*;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
@@ -24,20 +26,17 @@ public class PluginAction
             XPath xpath=XPathFactory.newInstance().newXPath();
             String type=((Node)xpath.evaluate("/plugin/class/@type", doc, XPathConstants.NODE)).getNodeValue();
             String main=((Node)xpath.evaluate("/plugin/class/@main", doc, XPathConstants.NODE)).getNodeValue();
-            in.close();
-            String classpath=main.replace('.', '/')+".class";
-            in=jar.getInputStream(jar.getEntry(classpath));
-            byte buf[]=new byte[100024];
-            int read=in.read(buf, 0, 100024);
-            in.close();
+            in.close();            
             
-            // Hack around protected method
-            Class[] parameters = new Class[]{String.class, byte[].class, int.class, int.class};
-            Method method = ClassLoader.class.getDeclaredMethod("defineClass",parameters);
+            Class[] parameters = new Class[]{URL.class};
+            URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+            Class<URLClassLoader> sysclass = URLClassLoader.class;
+            
+            Method method = sysclass.getDeclaredMethod("addURL",parameters);
             method.setAccessible(true);
-            Class c=(Class)method.invoke(ClassLoader.getSystemClassLoader(),new Object[]{ main, buf, 0, read });
+            method.invoke(sysloader,new Object[]{ new File(path).toURI().toURL() });
             
-            final StandardPlugin p=(StandardPlugin)c.newInstance();
+            final StandardPlugin p=(StandardPlugin)Class.forName(main).newInstance();
             new Thread()
             {
                 public void run()

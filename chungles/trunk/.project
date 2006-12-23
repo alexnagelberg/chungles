@@ -10,7 +10,7 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/Set Chungles version to SVN revision hack.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/Ant Hack.launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>

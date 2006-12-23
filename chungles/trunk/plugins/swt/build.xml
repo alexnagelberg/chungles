@@ -1,0 +1,31 @@
+<project name="swtui" default="all">
+	<target name="all" depends="mkbin,compile,jar"/>
+	
+	<target name="compile">
+		<javac destdir="${plugins.dir}/swt/bin" srcdir="${plugins.dir}/swt">
+			<classpath refid="compile.path"/>
+			<classpath path="${bin.dir}"/>
+		</javac>
+	</target>
+	
+	<target name="jar">
+		<jar jarfile="${basedir}/lib/chungles-swt.jar">
+			<fileset dir="${plugins.dir}/swt/bin"/>
+			<fileset dir="${plugins.dir}/swt/">
+				<filename name="**/images/*"/>
+			</fileset>
+			<fileset dir="${plugins.dir}/swt/">				
+				<filename name="**/config.xml"/>
+			</fileset>
+		</jar>
+	</target>
+		
+	<target name="mkbin">
+		<mkdir dir="${plugins.dir}/swt/bin"/>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${plugins.dir}/swt/bin"/>
+		<delete file="${basedir}/lib/chungles-swt.jar"/>
+	</target>
+</project>

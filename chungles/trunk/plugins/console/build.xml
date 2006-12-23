@@ -1,0 +1,28 @@
+<project name="consoleui" default="all">
+	<target name="all" depends="mkbin,compile,jar"/>
+	
+	<target name="compile">
+		<javac destdir="${plugins.dir}/console/bin" srcdir="${plugins.dir}/console">
+			<classpath refid="compile.path"/>
+			<classpath path="${bin.dir}"/>
+		</javac>
+	</target>
+	
+	<target name="jar">
+		<jar jarfile="${basedir}/lib/chungles-console.jar">
+			<fileset dir="${plugins.dir}/console/bin"/>
+			<fileset dir="${plugins.dir}/console/">
+				<filename name="**/config.xml"/>
+			</fileset>
+		</jar>
+	</target>
+		
+	<target name="mkbin">
+		<mkdir dir="${plugins.dir}/console/bin"/>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${plugins.dir}/console/bin"/>
+		<delete file="${basedir}/lib/chungles-console.jar"/>
+	</target>
+</project>

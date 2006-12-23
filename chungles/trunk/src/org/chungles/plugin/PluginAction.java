@@ -11,11 +11,10 @@ import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import javax.xml.xpath.*;
 
+import org.chungles.core.*;
+
 public class PluginAction
 {
-    private static LinkedList<UIPlugin> UIs;
-    private static LinkedList<StandardPlugin> others;
-    
     public static void loadPlugin(String path)
     {
         try
@@ -27,6 +26,10 @@ public class PluginAction
             String type=((Node)xpath.evaluate("/plugin/class/@type", doc, XPathConstants.NODE)).getNodeValue();
             String main=((Node)xpath.evaluate("/plugin/class/@main", doc, XPathConstants.NODE)).getNodeValue();
             in.close();            
+            
+            PluginInfo pluginInfo=new PluginInfo<Object>(main, path, null);
+            if (Configuration.UIplugins.contains(pluginInfo) || Configuration.otherplugins.contains(pluginInfo))
+                return;
             
             Class[] parameters = new Class[]{URL.class};
             URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
@@ -44,17 +47,14 @@ public class PluginAction
                     p.init();
                 }
             }.start();
-            
-            if (UIs==null || others==null)
-            {
-                UIs=new LinkedList<UIPlugin>();
-                others=new LinkedList<StandardPlugin>();
-            }
+                        
             
             if (type.compareToIgnoreCase("ui")==0)
-                UIs.add((UIPlugin)p);
+            {
+                Configuration.UIplugins.add(new PluginInfo<UIPlugin>(main, path, (UIPlugin)p));
+            }
             else
-                others.add(p);                        
+                Configuration.otherplugins.add(new PluginInfo<StandardPlugin>(main, path, p));
         }        
         catch (Exception e)
         {
@@ -64,20 +64,18 @@ public class PluginAction
     
     public static void unloadPlugins()
     {
-        Iterator<UIPlugin> iter1=UIs.iterator();
+        Iterator<PluginInfo<UIPlugin>> iter1=Configuration.UIplugins.iterator();
         while (iter1.hasNext())
         {
-            UIPlugin p=iter1.next();
+            UIPlugin p=iter1.next().getPlugin();
             p.shutdown();
-            UIs.remove(p);
         }
         
-        Iterator<StandardPlugin> iter2=others.descendingIterator();
+        Iterator<PluginInfo<StandardPlugin>> iter2=Configuration.otherplugins.iterator();
         while (iter2.hasNext())
         {
-            StandardPlugin p=iter2.next();
+            StandardPlugin p=iter2.next().getPlugin();
             p.shutdown();
-            others.remove(p);
         }
     }
     
@@ -95,19 +93,19 @@ public class PluginAction
     
     public static void openPreferencesDialog()
     {
-        Iterator<UIPlugin> iter=UIs.iterator();
+        Iterator<PluginInfo<UIPlugin>> iter=Configuration.UIplugins.iterator();
         while (iter.hasNext())
         {
-            iter.next().openPreferencesDialog();
+            iter.next().getPlugin().openPreferencesDialog();
         }
     }
     
     public static void finishnotification(boolean success, String message)
     {
-        Iterator<UIPlugin> iter=UIs.iterator();
+        Iterator<PluginInfo<UIPlugin>> iter=Configuration.UIplugins.iterator();
         while (iter.hasNext())
         {
-            iter.next().finishnotification(success, message);
+            iter.next().getPlugin().finishnotification(success, message);
         }
     }
     
@@ -116,10 +114,10 @@ public class PluginAction
         boolean done=false;
         while (!done)
         {
-            Iterator<UIPlugin> iter=UIs.iterator();
+            Iterator<PluginInfo<UIPlugin>> iter=Configuration.UIplugins.iterator();
             while (iter.hasNext() && !done)
             {
-                done=iter.next().isDone();
+                done=iter.next().getPlugin().isDone();
             }
             try
             {
@@ -132,28 +130,28 @@ public class PluginAction
         }
         
         // shutdown
-        Iterator<UIPlugin> iter=UIs.iterator();
+        Iterator<PluginInfo<UIPlugin>> iter=Configuration.UIplugins.iterator();
         while (iter.hasNext())
         {
-            iter.next().shutdown();
+            iter.next().getPlugin().shutdown();
         }
     }
     
     public static void addNode(String IP, String compname)
     {
-        Iterator<UIPlugin> iter=UIs.iterator();
+        Iterator<PluginInfo<UIPlugin>> iter=Configuration.UIplugins.iterator();
         while (iter.hasNext())
         {
-            iter.next().addNode(IP, compname);
+            iter.next().getPlugin().addNode(IP, compname);
         }
     }
     
     public static void removeNode(String IP, String compname)
     {
-        Iterator<UIPlugin> iter=UIs.iterator();
+        Iterator<PluginInfo<UIPlugin>> iter=Configuration.UIplugins.iterator();
         while (iter.hasNext())
         {
-            iter.next().removeNode(IP, compname);
+            iter.next().getPlugin().removeNode(IP, compname);
         }
     }
     

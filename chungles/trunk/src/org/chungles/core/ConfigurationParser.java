@@ -8,6 +8,8 @@ import javax.xml.parsers.*;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
+import org.chungles.plugin.*;
+
 public class ConfigurationParser extends DefaultHandler
 {
 	public static boolean parse()
@@ -64,6 +66,11 @@ public class ConfigurationParser extends DefaultHandler
             else
                 Configuration.setMCastThrottled(false);                        
         }
+        else if (qualifiedName.equals("plugin"))
+        {
+            String path=attrs.getValue("jar");
+            PluginAction.loadPlugin(path);
+        }
 	}
 	
 	private static void createConfig(File file)
@@ -112,6 +119,19 @@ public class ConfigurationParser extends DefaultHandler
             out.println("<mcastflow enabled=\"" + Configuration.isMCastThrottled() + "\" speed=\"" + 
                     Configuration.getMCastKBPSSpeed() + "\"/>");
             
+            // Plugins
+            Iterator<PluginInfo<UIPlugin>> iter1=Configuration.UIplugins.iterator();
+            while (iter1.hasNext())
+            {
+                out.println("<plugin jar=\""+iter1.next().getJARPath()+"\"/>");
+            }
+            
+            Iterator<PluginInfo<StandardPlugin>> iter2=Configuration.otherplugins.iterator();
+            while (iter2.hasNext())
+            {
+                out.println("<plugin jar=\""+iter1.next().getJARPath()+"\"/>");
+            }
+            
 			// Closing
 			out.println("</chungles>");
 			out.close();
@@ -127,6 +147,7 @@ public class ConfigurationParser extends DefaultHandler
         File mshare=new File(Configuration.getMCastShare());
         if (!mshare.exists())
             mshare.mkdir();
+        saveConfig();
     }
     
     public void fatalError(SAXParseException e)

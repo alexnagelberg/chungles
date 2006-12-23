@@ -2,6 +2,10 @@ package org.chungles.core;
 
 import java.util.*;
 
+import org.chungles.plugin.PluginInfo;
+import org.chungles.plugin.StandardPlugin;
+import org.chungles.plugin.UIPlugin;
+
 public class Configuration
 {
 	private static Hashtable<String, String> shares;
@@ -9,7 +13,9 @@ public class Configuration
 	private static String mCastShare;
     private static boolean mCastThrottled;
     private static int mCastKBPSSpeed;
-    private static String REV="154:157M";
+    public static LinkedList<PluginInfo<UIPlugin>> UIplugins=new LinkedList<PluginInfo<UIPlugin>>();
+    public static LinkedList<PluginInfo<StandardPlugin>> otherplugins=new LinkedList<PluginInfo<StandardPlugin>>();
+    private static String REV="188:190M";    
 	
 	public static void init()
 	{
@@ -17,7 +23,7 @@ public class Configuration
 		computerName="Chungles Node";
         mCastShare=System.getProperty("user.home")+"/.chungles/mcast";
         mCastThrottled=true;
-        mCastKBPSSpeed=1000;
+        mCastKBPSSpeed=1000;        
 	}
 	
 	public static String getVersion()

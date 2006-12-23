@@ -20,7 +20,6 @@ public class mDNSUtil
             servicelist=new Hashtable<JmDNS, ServiceInfo>();
 		}
 		
-		System.out.println("Listening on " + ip.getHostAddress());
 		try
         {
     		JmDNS mdns=new JmDNS(ip);		

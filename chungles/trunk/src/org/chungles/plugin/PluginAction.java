@@ -25,19 +25,19 @@ public class PluginAction
             XPath xpath=XPathFactory.newInstance().newXPath();
             String type=((Node)xpath.evaluate("/plugin/class/@type", doc, XPathConstants.NODE)).getNodeValue();
             String main=((Node)xpath.evaluate("/plugin/class/@main", doc, XPathConstants.NODE)).getNodeValue();
+            NodeList classpaths=(NodeList)xpath.evaluate("/plugin/classpath", doc, XPathConstants.NODESET);
             in.close();            
             
             PluginInfo pluginInfo=new PluginInfo<Object>(main, path, null);
             if (Configuration.UIplugins.contains(pluginInfo) || Configuration.otherplugins.contains(pluginInfo))
                 return;
             
-            Class[] parameters = new Class[]{URL.class};
-            URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
-            Class<URLClassLoader> sysclass = URLClassLoader.class;
+            addClasspath(path);
             
-            Method method = sysclass.getDeclaredMethod("addURL",parameters);
-            method.setAccessible(true);
-            method.invoke(sysloader,new Object[]{ new File(path).toURI().toURL() });
+            for (int i=0;i<classpaths.getLength(); i++)
+            {
+                addClasspath(((Node)xpath.evaluate("./@value", classpaths.item(i), XPathConstants.NODE)).getNodeValue());
+            }
             
             final StandardPlugin p=(StandardPlugin)Class.forName(main).newInstance();
             new Thread()
@@ -155,8 +155,20 @@ public class PluginAction
         }
     }
     
-    public static void main(String[] args)
+    private static void addClasspath(String path)
     {
-        loadPlugin("/home/alex/test.jar");
+        try
+        {
+            Class[] parameters = new Class[]{URL.class};
+            URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
+            Class<URLClassLoader> sysclass = URLClassLoader.class;
+            
+            Method method = sysclass.getDeclaredMethod("addURL",parameters);
+            method.setAccessible(true);
+            method.invoke(sysloader,new Object[]{ new File(path).toURI().toURL() });
+        }
+        catch (Exception e)
+        {
+        }
     }
 }

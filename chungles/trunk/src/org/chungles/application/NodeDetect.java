@@ -37,7 +37,10 @@ public class NodeDetect implements ServiceListener
 	}
 
 	public void removeService(JmDNS mdns, String type, String name)
-	{		    
+	{		  
+		if (name==null)
+            return;
+		
 		final String ip=name.substring(0, name.length() - (type.length() + 1));
 		final String compname=(String)compnames.get(ip);
 				
@@ -46,8 +49,7 @@ public class NodeDetect implements ServiceListener
 			ips=new Hashtable<String, String>();
 			compnames=new Hashtable<String, String>();
 		}
-		if (name==null)
-            return;
+		
         
 		if (compnames.containsKey(ip))
 		{

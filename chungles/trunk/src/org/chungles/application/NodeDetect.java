@@ -49,10 +49,12 @@ public class NodeDetect implements ServiceListener
 		if (name==null)
             return;
         
-        compnames.remove(name);
-        ips.remove(name);
-        
-		PluginAction.removeNode(ip, compname);
+		if (compnames.containsKey(ip))
+		{
+	        compnames.remove(ip);
+	        ips.remove(compname);
+	        PluginAction.removeNode(ip, compname);
+		}
 	}
 
 	public void resolveService(JmDNS mdns, String type, String name, ServiceInfo service)
@@ -62,5 +64,5 @@ public class NodeDetect implements ServiceListener
 	public static String getIP(String compname)
 	{
 	    return ips.get(compname);
-	}
+	}	
 }

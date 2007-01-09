@@ -35,13 +35,14 @@ public class PluginAction
             	String classpath=((Node)xpath.evaluate("./@value", classpaths.item(i-1), XPathConstants.NODE)).getNodeValue();
             	// If required classpath is relative, and plugin is absolute, set to same directory
             	// as plugin
-            	if (classpath.indexOf(File.pathSeparatorChar)<0)
+            	if (classpath.indexOf(File.separatorChar)<0)
             	{
-            		int offset=path.lastIndexOf(File.pathSeparatorChar);
+            		int offset=path.lastIndexOf(File.separatorChar);
             		if (offset>=0)
-            			classpath=path.substring(0,offset)+classpath;            			
+            			classpath=path.substring(0,offset+1)+classpath;            			
             	}
-            	classes[i]=classpath;           	
+            	classes[i]=classpath;
+            	System.out.println(classpath);
             }            
             JARClassLoader loader=new JARClassLoader(classes);
             

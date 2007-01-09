@@ -59,10 +59,23 @@ public class FileSystem
         {
             client.close();
             client=null;
-        }
+        }                
         
         if (path.length()>1)
         {
+            Enumeration<String> compnames=NodeDetect.compnames.elements();
+            boolean sharematch=false;
+            while (compnames.hasMoreElements())
+            {
+                String compname1=compnames.nextElement();
+                StringTokenizer tok=new StringTokenizer(path, "/");            
+                String compname2=tok.nextToken();
+                if (compname1.equals(compname2))
+                    sharematch=true;
+            }
+            
+            if (!sharematch)
+                throw new PathNotExistException();
             
             StringTokenizer tok=new StringTokenizer(path.substring(1),"/");                     
             String compname=tok.nextToken();                
@@ -119,4 +132,10 @@ public class FileSystem
                 return null;
         }
     }
+    
+    public String getWorkingDirectory()
+    {
+        return workingdirectory;
+    }
+    
 }

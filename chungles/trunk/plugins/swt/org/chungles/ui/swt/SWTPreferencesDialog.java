@@ -1,7 +1,7 @@
 package org.chungles.ui.swt;
 
 import java.io.InputStream;
-import java.util.Iterator;
+import java.util.*;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.*;
@@ -11,6 +11,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
 
 import org.chungles.core.*;
+import org.chungles.plugin.*;
 
 // Singleton
 public class SWTPreferencesDialog
@@ -18,16 +19,17 @@ public class SWTPreferencesDialog
     private Display display;
     private Shell shell;
     private TableEditor editor;
-    private Table table;
+    private Table sharetable, pluginstable;
     private Text compname, mcastshare, mcastspeed;
-    private Button mcastflow;
+    private Button mcastflow;    
+    private LinkedList<PluginInfo> pluginsToRemove, pluginsToAdd, pluginsToDisable, pluginsToEnable;    
     private static SWTPreferencesDialog dialog;
 
     public static SWTPreferencesDialog getInstance(Display display)
     {
         if (dialog == null)
         {
-            dialog = new SWTPreferencesDialog(display);
+            dialog = new SWTPreferencesDialog(display);            
         }
 
         return dialog;
@@ -36,6 +38,10 @@ public class SWTPreferencesDialog
     private SWTPreferencesDialog(Display display)
     {
         this.display = display;
+        pluginsToRemove=new LinkedList<PluginInfo>();
+        pluginsToAdd=new LinkedList<PluginInfo>();
+        pluginsToDisable=new LinkedList<PluginInfo>();
+        pluginsToEnable=new LinkedList<PluginInfo>();
     }
 
     public void openDialog()
@@ -47,7 +53,7 @@ public class SWTPreferencesDialog
 
         shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
         shell.setText("Chungles Preferences");
-        InputStream in=ClassLoader.getSystemResourceAsStream("images/chungles.png");	
+        InputStream in=getClass().getClassLoader().getResourceAsStream("images/chungles.png");	
         shell.setImage(new Image(display, in));
         shell.setLayout(null);
         shell.setBounds(50, 50, 640, 480);
@@ -71,21 +77,21 @@ public class SWTPreferencesDialog
         tabItem.setControl(composite);
         composite.setLayout(null);
 
-        table = new Table(composite, SWT.BORDER | SWT.SINGLE);
-        editor = new TableEditor(table);
+        sharetable = new Table(composite, SWT.BORDER | SWT.SINGLE);
+        editor = new TableEditor(sharetable);
         editor.horizontalAlignment = SWT.LEFT;
         editor.grabHorizontal = true;
         editor.minimumWidth = 50;
-        table.setHeaderVisible(true);
-        table.setLinesVisible(false);
-        TableColumn column = new TableColumn(table, SWT.LEFT);
+        sharetable.setHeaderVisible(true);
+        sharetable.setLinesVisible(false);
+        TableColumn column = new TableColumn(sharetable, SWT.LEFT);
         column.setText("Name");
         column.setWidth(100);
-        column = new TableColumn(table, SWT.LEFT);
+        column = new TableColumn(sharetable, SWT.LEFT);
         column.setText("Path");
         column.setWidth(380);
-        table.setBounds(5, 5, 485, 340);
-        table.addSelectionListener(new SelectionAdapter()
+        sharetable.setBounds(5, 5, 485, 340);
+        sharetable.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
             {
@@ -99,7 +105,7 @@ public class SWTPreferencesDialog
                 if (item == null)
                     return;
 
-                Text newEditor = new Text(table, SWT.BORDER);
+                Text newEditor = new Text(sharetable, SWT.BORDER);
                 newEditor.setText(item.getText(0));
                 newEditor.addKeyListener(new KeyListener()
                 {
@@ -192,6 +198,37 @@ public class SWTPreferencesDialog
         else
             mcastspeed.setEnabled(false);
         
+        // Plugins Tab
+        
+        tabItem = new CTabItem(folder, SWT.NONE);
+        tabItem.setText("Plugins");
+        
+        composite = new Composite(folder, SWT.NONE);
+        tabItem.setControl(composite);
+        composite.setLayout(null);
+        
+        pluginstable = new Table(composite, SWT.BORDER | SWT.SINGLE | SWT.CHECK);
+        pluginstable.setHeaderVisible(true);
+        pluginstable.setLinesVisible(false);
+        column = new TableColumn(pluginstable, SWT.LEFT);
+        column.setText("Name");
+        column.setWidth(300);
+        column = new TableColumn(pluginstable, SWT.LEFT);
+        column.setText("Type");
+        column.setWidth(180);
+        pluginstable.setBounds(5, 5, 485, 340);
+        populatePlugins();
+        
+        addbutton = new Button(composite, SWT.PUSH | SWT.CENTER);
+        addbutton.setText("&Add Plugin");
+        addbutton.addSelectionListener(listener);
+        addbutton.setBounds(500, 5, 120, 30);
+
+        removeshare = new Button(composite, SWT.PUSH | SWT.CENTER);
+        removeshare.setText("&Remove Plugin");
+        removeshare.addSelectionListener(listener);
+        removeshare.setBounds(500, 50, 120, 30);
+        
         // End of Tabs
         
         Button okbutton = new Button(shell, SWT.PUSH | SWT.CENTER);
@@ -216,10 +253,67 @@ public class SWTPreferencesDialog
         {
             String share = iterator.next();
             String map = Configuration.getSharePath(share);
-            TableItem item = new TableItem(table, SWT.NONE);
+            TableItem item = new TableItem(sharetable, SWT.NONE);
             item.setText(new String[]
             { share, map });
         }
+    }
+    
+    private void populatePlugins()
+    {    	
+        Iterator<PluginInfo<UIPlugin>> iter1=Configuration.UIplugins.iterator();
+        while (iter1.hasNext())
+        {        	
+            PluginInfo<UIPlugin> p=iter1.next();
+            TableItem item=new TableItem(pluginstable, SWT.NONE);
+            item.setText(new String[] {p.getMainClass(), "UI"});
+            item.setChecked(p.isEnabled());  
+            if (p.getMainClass().equals("org.chungles.ui.swt.SWTUI"))
+            {
+            	item.setGrayed(true);
+            }
+        }
+        
+        Iterator<PluginInfo<StandardPlugin>> iter2=Configuration.otherplugins.iterator();
+        while (iter2.hasNext())
+        {
+            PluginInfo<StandardPlugin> p=iter2.next();
+            TableItem item=new TableItem(pluginstable, SWT.NONE);
+            item.setText(new String[] {p.getMainClass(), "Other"});
+            item.setChecked(p.isEnabled());
+        }
+        
+        pluginstable.addSelectionListener(new SelectionListener()
+        {
+           public void widgetSelected(SelectionEvent e)
+           {
+               if (e.detail==SWT.CHECK)
+               {
+                   TableItem item=pluginstable.getSelection()[0];
+                   PluginInfo p=PluginAction.findPlugin(item.getText());
+                   if (item.getChecked())
+                   {
+                	   //PluginAction.initPlugin(item.getText());
+                	   if (pluginsToDisable.contains(p))
+                		   pluginsToDisable.remove(p);
+                	   else
+                		   pluginsToEnable.add(p);
+                   }
+	               else
+	               {
+	            	   // PluginAction.shutdownPlugin(item.getText());
+	            	   if (pluginsToEnable.contains(p))
+	            		   pluginsToEnable.remove(p);
+	            	   else
+	            		   pluginsToDisable.add(p);
+	               }
+               }
+           }
+           
+           public void widgetDefaultSelected(SelectionEvent e)
+           {               
+           }
+        });
     }
 
     class ButtonListener implements SelectionListener
@@ -229,12 +323,16 @@ public class SWTPreferencesDialog
             Button button = (Button) e.getSource();
             if (button.getText().equals("&Cancel"))
             {
+            	pluginsToAdd.clear();
+                pluginsToRemove.clear();
+                pluginsToDisable.clear();
+                pluginsToEnable.clear();
                 shell.dispose();
             }
 
             else if (button.getText().equals("&Ok"))
             {
-                TableItem[] items = table.getItems();
+                TableItem[] items = sharetable.getItems();
                 int i;
 
                 Configuration.clearShares(); // clear share list
@@ -256,23 +354,44 @@ public class SWTPreferencesDialog
                 Configuration.setMCastThrottled(mcastflow.getSelection());
                 Configuration.setMCastKBPSSpeed(Integer.parseInt(mcastspeed.getText()));
                 
+                // Disable/Enable Plugins
+                Iterator<PluginInfo> iter=pluginsToDisable.iterator();
+                while (iter.hasNext())
+                {
+                	PluginInfo p=iter.next();
+                	PluginAction.shutdownPlugin(p.getMainClass());
+                }
+                
+                iter=pluginsToEnable.iterator();
+                while (iter.hasNext())
+                {
+                	PluginInfo p=iter.next();
+                	PluginAction.initPlugin(p.getMainClass());
+                }
+                
+                pluginsToAdd.clear();
+                pluginsToRemove.clear();
+                pluginsToDisable.clear();
+                pluginsToEnable.clear();
+                
+                // Save config and close
                 ConfigurationParser.saveConfig();
                 shell.dispose();
                 try
-                {
+                {                	
                     mDNSUtil.reloadInterfaces();
                 }
                 catch (Exception ex)
                 {
-                    
+                    ex.printStackTrace();
                 }
             }
             else if (button.getText().equals("&Remove Share"))
             {
-                int[] selection = table.getSelectionIndices();
+                int[] selection = sharetable.getSelectionIndices();
 
                 editor.getEditor().dispose();
-                table.remove(selection);
+                sharetable.remove(selection);
             }
             else if (button.getText().equals("&Add Share"))
             {
@@ -281,7 +400,7 @@ public class SWTPreferencesDialog
                 String path = openDialog.open(); 
                 if (path!=null && !path.equals(""))
                 {
-                	TableItem item = new TableItem(table, SWT.NONE);
+                	TableItem item = new TableItem(sharetable, SWT.NONE);
                 	item.setText(new String[]
                 	                        { "changeme", path });
                 }
@@ -302,6 +421,47 @@ public class SWTPreferencesDialog
                     mcastspeed.setEnabled(true);
                 else
                     mcastspeed.setEnabled(false);
+            }
+            else if (button.getText().equals("&Add Plugin"))
+            {
+            	FileDialog openDialog = new FileDialog(shell);
+                openDialog.setText("Select Plugin");
+                openDialog.setFilterExtensions(new String[] {"*.jar"});
+                String path = openDialog.open(); 
+                if (path!=null && !path.equals(""))
+                {
+                	PluginInfo p=PluginAction.PeekInJAR(path);
+                	if (PluginAction.JARConflicts(path) && !pluginsToRemove.contains(p))
+                	{
+                		MessageBox box=new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+                		box.setMessage("Plugin conflicts with existing plugin");
+                		box.open();
+                	}
+                	else
+                	{
+                		if (pluginsToRemove.contains(p))
+                			pluginsToRemove.remove(p);
+                		else
+                			pluginsToAdd.add(p);
+                		TableItem item=new TableItem(pluginstable, SWT.NONE);
+                		if (p.getType()==PluginInfo.UI)
+                			item.setText(new String[] {p.getMainClass(), "UI"});
+                		else
+                			item.setText(new String[] {p.getMainClass(), "Other"});
+                		item.setChecked(true);
+                	}
+                }
+            }
+            else if (button.getText().equals("&Remove Plugin"))
+            {
+            	String mainClass=pluginstable.getSelection()[0].getText();            	
+            	pluginstable.remove(pluginstable.getSelectionIndex());
+            	
+            	PluginInfo p=PluginAction.findPlugin(mainClass);
+            	if (pluginsToAdd.contains(p))
+            		pluginsToAdd.remove(p);
+            	else
+            		pluginsToRemove.add(p);
             }
         }
 

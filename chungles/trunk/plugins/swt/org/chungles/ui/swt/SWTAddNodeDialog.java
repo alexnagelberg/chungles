@@ -39,7 +39,7 @@ public class SWTAddNodeDialog
 
         shell = new Shell(display, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
         shell.setText("Add Chungles Node");
-        InputStream in=ClassLoader.getSystemResourceAsStream("images/chungles.png");	
+        InputStream in=getClass().getClassLoader().getResourceAsStream("images/chungles.png");	
         shell.setImage(new Image(display, in));
         shell.setLayout(null);
         

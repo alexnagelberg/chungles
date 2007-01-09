@@ -25,7 +25,7 @@ public class SWTNewDirectory implements SelectionListener
         final String path=ShareLister.getPath(items[0]);
         
     	final TreeItem child=new TreeItem(items[0], SWT.NONE);   
-    	InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/folder.gif");	  	    	   			    
+    	InputStream in=getClass().getClassLoader().getResourceAsStream("images/folder.gif");	  	    	   			    
 		child.setImage(new Image(SWTUtil.getInstance().getShell().getDisplay(), in));
 		new TreeItem(child, SWT.NONE);
         tree.setSelection(child);

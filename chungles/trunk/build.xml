@@ -12,12 +12,10 @@
 	
 	<!-- paths to external jars. can be overwritten via build.properties-->
 	<property name="jmdns.jar" value="${lib.dir}/jmdns.jar"/>
-	<property name="swt.jar" value="${lib.dir}/swt.jar"/>
 
 	<!-- classpath for compilation (external jars) -->
 	<path id="compile.path">
 		<pathelement location="${jmdns.jar}"/>
-		<pathelement location="${swt.jar}"/>
 	</path>
 
 	<!-- classpath for the project -->
@@ -65,7 +63,7 @@
 		<jar jarfile="${lib.dir}/chungles.jar">			
 			<fileset dir="${basedir}/bin"/>
 			<manifest>
-				<attribute name="Class-Path" value="swt.jar jmdns.jar"/>
+				<attribute name="Class-Path" value="jmdns.jar"/>
 				<attribute name="Main-Class" value="org.chungles.application.Main"/>
 			</manifest>
 		</jar>
@@ -83,13 +81,13 @@
 		<echo file="${basedir}/run-console.sh">java -classpath ${jmdns.jar} -jar ${lib.dir}/chungles.jar --ui=console
 		</echo>
 		
-		<echo file="${basedir}/run.sh">java -classpath ${swt.jar}:${jmdns.jar} -Djava.library.path=${lib.dir} -jar ${lib.dir}/chungles.jar --ui=swt
+		<echo file="${basedir}/run.sh">java -classpath ${jmdns.jar} -jar ${lib.dir}/chungles.jar --ui=swt
 		</echo>
 		
 		<echo file="${basedir}/run-dummy.sh">java -classpath ${jmdns.jar} -jar ${lib.dir}/chungles.jar --ui=null
 		</echo>
 		
-		<echo file="${basedir}/run.bat">java -classpath ${swt.jar};${jmdns.jar} -Djava.library.path=${lib.dir} -jar ${lib.dir}/chungles.jar --ui=swt
+		<echo file="${basedir}/run.bat">java -classpath ${jmdns.jar} -jar ${lib.dir}/chungles.jar --ui=swt
 		</echo>
 			
 		<chmod dir="${basedir}" perm="a+x" includes="**/run*.sh"/>

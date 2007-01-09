@@ -69,7 +69,11 @@ public class ConfigurationParser extends DefaultHandler
         else if (qualifiedName.equals("plugin"))
         {
             String path=attrs.getValue("jar");
-            PluginAction.loadPlugin(path);
+            String enabledstr=attrs.getValue("enabled");
+            boolean enabled=false;
+            if (enabledstr==null || enabledstr.compareToIgnoreCase("true")==0)
+                enabled=true;            
+            PluginAction.loadPlugin(path, enabled);
         }
 	}
 	
@@ -123,13 +127,15 @@ public class ConfigurationParser extends DefaultHandler
             Iterator<PluginInfo<UIPlugin>> iter1=Configuration.UIplugins.iterator();
             while (iter1.hasNext())
             {
-                out.println("<plugin jar=\""+iter1.next().getJARPath()+"\"/>");
+                PluginInfo<UIPlugin> p=iter1.next();
+                out.println("<plugin jar=\""+p.getJARPath()+"\" enabled=\""+p.isEnabled()+"\"/>");
             }
             
             Iterator<PluginInfo<StandardPlugin>> iter2=Configuration.otherplugins.iterator();
             while (iter2.hasNext())
             {
-                out.println("<plugin jar=\""+iter1.next().getJARPath()+"\"/>");
+                PluginInfo<StandardPlugin> p=iter2.next();
+                out.println("<plugin jar=\""+p.getJARPath()+"\" enabled=\""+p.isEnabled()+"\"/>");
             }
             
 			// Closing

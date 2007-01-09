@@ -4,12 +4,19 @@ public class PluginInfo<T>
 {   
     private String mainClass, JARPath;
     private T plugin;
+    private boolean enabled=false;
+    private int type;
     
-    public PluginInfo(String mainClass, String JARPath, T plugin)
+    public final static int UI=0;
+    public final static int OTHER=1;
+    
+    public PluginInfo(String mainClass, String JARPath, T plugin, boolean enabled, int type)
     {
         this.mainClass=mainClass;
         this.JARPath=JARPath;
         this.plugin=plugin;
+        this.enabled=enabled;
+        this.type=type;
     }
     
     public String getMainClass()
@@ -52,5 +59,25 @@ public class PluginInfo<T>
             return true;
         else
             return false;
+    }
+    
+    public void setEnabled(boolean isEnabled)
+    {
+        enabled=isEnabled;
+    }
+    
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+    
+    public int getType()
+    {
+    	return type;
+    }
+    
+    public void setType(int type)
+    {
+    	this.type=type;
     }
 }

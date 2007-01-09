@@ -58,7 +58,7 @@ public class SWTUI implements UIPlugin
 				TreeItem node=new TreeItem(tree, SWT.NONE);
 				node.setText(compname);
 				new TreeItem(node, SWT.NONE);
-				InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/node.gif");	  	    	   
+				InputStream in=getClass().getClassLoader().getResourceAsStream("images/node.gif");	  	    	   
 				node.setImage(new Image(swtutil.getShell().getDisplay(), in));
 				nodes.put(compname, node);								
 			}

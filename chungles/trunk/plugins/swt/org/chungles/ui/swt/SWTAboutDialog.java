@@ -37,7 +37,7 @@ public class SWTAboutDialog
 		
 		shell.setLayout(null);
 		shell.setText("About");
-		InputStream in=ClassLoader.getSystemResourceAsStream("images/chungles.png");	
+		InputStream in=getClass().getClassLoader().getResourceAsStream("images/chungles.png");	
 		Image chunglesGif=new Image(display, in);
 		shell.setImage(chunglesGif);
 		shell.layout();

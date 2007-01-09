@@ -33,13 +33,13 @@ public class ShareLister implements Listener
 			child.setText(name.substring(1));
 			if (name.charAt(0)==ServerConnectionThread.IS_DIRECTORY)
 			{
-			    InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/folder.gif");	  	    	   			    
+			    InputStream in=getClass().getClassLoader().getResourceAsStream("images/folder.gif");	  	    	   			    
 				child.setImage(new Image(SWTUtil.getInstance().getShell().getDisplay(), in));
 				new TreeItem(child, SWT.NONE);
 			}
 			else
 			{
-			    InputStream in=ClassLoader.getSystemClassLoader().getResourceAsStream("images/file.gif");	
+			    InputStream in=getClass().getClassLoader().getResourceAsStream("images/file.gif");	
 				child.setImage(new Image(SWTUtil.getInstance().getShell().getDisplay(), in));
 			}
 		}

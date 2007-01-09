@@ -30,12 +30,12 @@ public class SWTUtil implements SelectionListener
 	    shell = new Shell(display);	    
 	    shell.setText("Chungles");	    
 	    shell.setLayout(null);
-	    InputStream in=ClassLoader.getSystemResourceAsStream("images/chungles.png");
+	    InputStream in=getClass().getClassLoader().getResourceAsStream("images/chungles.png");
 	    shell.setImage(new Image(display, in));
 	    Rectangle area=shell.getClientArea();
 	    
 	    // Set system tray icon
-	    in=ClassLoader.getSystemResourceAsStream("images/chungles-16.png");
+	    in=getClass().getClassLoader().getResourceAsStream("images/chungles-16.png");
 	    Tray tray=display.getSystemTray();
 	    trayitem=new TrayItem(tray, SWT.NONE);
 	    trayitem.setImage(new Image(display, in));
@@ -61,14 +61,14 @@ public class SWTUtil implements SelectionListener
         
 	    // Multicast Button
         mcastToolItem=new ToolItem(toolBar, SWT.PUSH);
-        in=ClassLoader.getSystemResourceAsStream("images/mcast.png");
+        in=getClass().getClassLoader().getResourceAsStream("images/mcast.png");
         mcastToolItem.setImage(new Image(display, in));
         mcastToolItem.setToolTipText("Multicast file");
         mcastToolItem.addSelectionListener(new MulticastTransfer());
         
 	    // Download Button
 	    downloadToolItem=new ToolItem(toolBar, SWT.PUSH);
-	    in=ClassLoader.getSystemResourceAsStream("images/download.png");	    
+	    in=getClass().getClassLoader().getResourceAsStream("images/download.png");	    
 	    downloadToolItem.setImage(new Image(display, in));
         downloadToolItem.setToolTipText("Download file");
         downloadToolItem.addSelectionListener(new TransferFromNode());
@@ -76,7 +76,7 @@ public class SWTUtil implements SelectionListener
 	    
 	    // Upload Button
 	    uploadToolItem=new ToolItem(toolBar, SWT.PUSH);
-	    in=ClassLoader.getSystemResourceAsStream("images/upload.png");
+	    in=getClass().getClassLoader().getResourceAsStream("images/upload.png");
 	    uploadToolItem.setImage(new Image(display, in));
         uploadToolItem.setToolTipText("Upload file");
         uploadToolItem.addSelectionListener(new TransferToNode());
@@ -84,7 +84,7 @@ public class SWTUtil implements SelectionListener
         
 	    // Delete Button
 	    deleteToolItem=new ToolItem(toolBar, SWT.PUSH);
-	    in=ClassLoader.getSystemResourceAsStream("images/delete.png");
+	    in=getClass().getClassLoader().getResourceAsStream("images/delete.png");
 	    deleteToolItem.setImage(new Image(display, in));
         deleteToolItem.setToolTipText("Delete file");
         deleteToolItem.addSelectionListener(new SWTDeleteSelection());
@@ -92,7 +92,7 @@ public class SWTUtil implements SelectionListener
         
 	    // New Directory Button
 	    newdirToolItem=new ToolItem(toolBar, SWT.PUSH);
-	    in=ClassLoader.getSystemResourceAsStream("images/newdirectory.png");
+	    in=getClass().getClassLoader().getResourceAsStream("images/newdirectory.png");
 	    newdirToolItem.setImage(new Image(display, in));
         newdirToolItem.setToolTipText("Create new directory");
         newdirToolItem.addSelectionListener(new SWTNewDirectory());        
@@ -104,14 +104,14 @@ public class SWTUtil implements SelectionListener
 	    
 	    // Preferences Button
 	    preferencesToolItem=new ToolItem(toolBar, SWT.PUSH);	    
-	    in=ClassLoader.getSystemResourceAsStream("images/preferences.png");
+	    in=getClass().getClassLoader().getResourceAsStream("images/preferences.png");
 	    preferencesToolItem.setImage(new Image(display, in));
         preferencesToolItem.addSelectionListener(this);
         preferencesToolItem.setToolTipText("Preferences");
 	    
 	    // Quit Button    	    	
 	    quitToolItem=new ToolItem(toolBar, SWT.PUSH);
-	    in=ClassLoader.getSystemResourceAsStream("images/quit.png");
+	    in=getClass().getClassLoader().getResourceAsStream("images/quit.png");
 	    quitToolItem.setImage(new Image(display, in));
         quitToolItem.addSelectionListener(this);
         quitToolItem.setToolTipText("Quit");

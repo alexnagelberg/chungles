@@ -1,31 +1,31 @@
-<project name="swtui" default="all">
+<project name="swtui" default="all" basedir=".">
 	<target name="all" depends="mkbin,compile,jar"/>
 	
 	<target name="compile">
-		<javac destdir="${plugins.dir}/swt/bin" srcdir="${plugins.dir}/swt">
+		<javac destdir="${basedir}/bin" srcdir="${basedir}/src">
 			<classpath refid="compile.path"/>
-			<classpath path="${bin.dir}"/>
+			<classpath path="${chungles.dir}/bin"/>
 		</javac>
 	</target>
 	
 	<target name="jar">
-		<jar jarfile="${basedir}/lib/chungles-swt.jar">
-			<fileset dir="${plugins.dir}/swt/bin"/>
-			<fileset dir="${plugins.dir}/swt/">
-				<filename name="**/images/*"/>
-			</fileset>
-			<fileset dir="${plugins.dir}/swt/">				
+		<jar jarfile="${basedir}/chungles-swt.jar">
+			<fileset dir="${basedir}/bin"/>
+			<fileset dir="${basedir}">
 				<filename name="**/config.xml"/>
+			</fileset>
+			<fileset dir="${basedir}">
+				<filename name="**/images/*"/>
 			</fileset>
 		</jar>
 	</target>
 		
 	<target name="mkbin">
-		<mkdir dir="${plugins.dir}/swt/bin"/>
+		<mkdir dir="${basedir}/bin"/>
 	</target>
 	
 	<target name="clean">
-		<delete dir="${plugins.dir}/swt/bin"/>
-		<delete file="${basedir}/lib/chungles-swt.jar"/>
+		<delete dir="${basedir}/bin"/>
+		<delete file="${basedir}/chungles-swt.jar"/>
 	</target>
 </project>

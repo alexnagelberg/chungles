@@ -353,20 +353,31 @@ public class SWTPreferencesDialog
                 // set multicast flow control settings
                 Configuration.setMCastThrottled(mcastflow.getSelection());
                 Configuration.setMCastKBPSSpeed(Integer.parseInt(mcastspeed.getText()));
-                
-                // Disable/Enable Plugins
-                Iterator<PluginInfo> iter=pluginsToDisable.iterator();
+                                
+                // Add, remove, enable, disable plugins                                 
+                Iterator<PluginInfo> iter=pluginsToRemove.iterator();
                 while (iter.hasNext())
                 {
                 	PluginInfo p=iter.next();
-                	PluginAction.shutdownPlugin(p.getMainClass());
+                	if (p.isEnabled())
+                		PluginAction.shutdownPlugin(p.getMainClass());
+                	PluginAction.removePlugin(p.getMainClass());
+                }
+                
+                iter=pluginsToDisable.iterator();
+                while (iter.hasNext())
+                {
+                	PluginInfo p=iter.next();
+                	if (p!=null)
+                		PluginAction.shutdownPlugin(p.getMainClass());
                 }
                 
                 iter=pluginsToEnable.iterator();
                 while (iter.hasNext())
                 {
                 	PluginInfo p=iter.next();
-                	PluginAction.initPlugin(p.getMainClass());
+                	if (!pluginsToRemove.contains(p))
+                		PluginAction.initPlugin(p.getMainClass());
                 }
                 
                 pluginsToAdd.clear();
@@ -449,6 +460,8 @@ public class SWTPreferencesDialog
                 		else
                 			item.setText(new String[] {p.getMainClass(), "Other"});
                 		item.setChecked(true);
+                		PluginAction.loadPlugin(p.getJARPath(), false);
+                		pluginsToEnable.add(p);                		
                 	}
                 }
             }
@@ -459,7 +472,10 @@ public class SWTPreferencesDialog
             	
             	PluginInfo p=PluginAction.findPlugin(mainClass);
             	if (pluginsToAdd.contains(p))
+            	{
             		pluginsToAdd.remove(p);
+            		PluginAction.removePlugin(p.getMainClass());
+            	}
             	else
             		pluginsToRemove.add(p);
             }

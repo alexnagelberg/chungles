@@ -42,7 +42,6 @@ public class PluginAction
             			classpath=path.substring(0,offset+1)+classpath;            			
             	}
             	classes[i]=classpath;
-            	System.out.println(classpath);
             }            
             JARClassLoader loader=new JARClassLoader(classes);
             
@@ -228,6 +227,16 @@ public class PluginAction
             p.setEnabled(false);
             ((StandardPlugin)p.getPlugin()).shutdown();
         }
+    }
+    
+    public static void removePlugin(String main)
+    {
+    	PluginInfo p=findPlugin(main);        
+        
+        if (Configuration.UIplugins.contains(p))
+        	Configuration.UIplugins.remove(p);
+        else
+        	Configuration.otherplugins.remove(p);
     }
     
     public static PluginInfo findPlugin(String main)

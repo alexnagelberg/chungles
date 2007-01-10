@@ -1,14 +1,15 @@
 package org.chungles.ui.webdav;
 
-import java.io.IOException;
-import java.net.ServerSocket;
+import java.net.InetSocketAddress;
 
+import com.sun.net.httpserver.*;
 import org.chungles.plugin.*;
 
 public class WebDAVUI implements UIPlugin
 {
     public boolean done=false;
     int port=6566;
+    HttpServer server;
     
     public void addNode(String IP, String compname)
     {
@@ -52,26 +53,24 @@ public class WebDAVUI implements UIPlugin
 
     public void init()
     {
-        ServerSocket serverSocket = null;
+    	try
+    	{    		
+    		server=HttpServer.create(new InetSocketAddress(port), 10);
+    		server.createContext("/", new HTTPConnection());
+    		server.start();
+    		System.out.println("Chungles-DAV: Listening on port: " + port);
+    	}
+    	catch (Exception e)
+    	{
+    		e.printStackTrace();    		
+    	}
         
-        try
-        {
-            serverSocket = new ServerSocket(port);
-            while (!done)
-            {
-                new HTTPConnection(serverSocket.accept()).start();
-            }
-            serverSocket.close();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }   
     }
 
     public void shutdown()
     {
         done=true;
+        server.stop(0);
     }
 
 }

@@ -14,6 +14,9 @@
 			<fileset dir="${basedir}">
 				<filename name="**/config.xml"/>
 			</fileset>
+			<fileset dir="${basedir}">
+				<filename name="**/images/*"/>
+			</fileset>
 		</jar>
 	</target>
 		

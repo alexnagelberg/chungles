@@ -8,7 +8,6 @@
 	<property name="img.dir" value="${basedir}/images"/>
 	<property name="bin.dir" value="${basedir}/bin"/>	
 	<property name="doc.dir" value="${basedir}/doc"/>
-	<property name="plugins.dir" value="${basedir}/plugins"/>
 	
 	<!-- paths to external jars. can be overwritten via build.properties-->
 	<property name="jmdns.jar" value="${lib.dir}/jmdns.jar"/>
@@ -47,17 +46,8 @@
 		<javac srcdir="${src.dir}"
 			destdir="${bin.dir}">
 			<classpath refid="compile.path"/>
-		</javac>				
-		<!--<javac srcdir="${plugins.dir}" destdir="${bin.dir}">
-			<classpath refid="compile.path"/>
-			<classpath path="${bin.dir}"/>
-		</javac>-->
-		
-	</target>
-	
-	<target name="plugins">
-		<ant antfile="${plugins.dir}/build.xml" inheritrefs="true"/>
-	</target>
+		</javac>								
+	</target>	
 
 	<target name="jar" depends="prepare,setversion,compile">
 		<jar jarfile="${lib.dir}/chungles.jar">			
@@ -102,7 +92,7 @@
 		</java>
 	</target>
 
-	<target name="all" depends="prepare,setversion,compile,javadoc,jar,plugins,generate-scripts"/>
+	<target name="all" depends="prepare,setversion,compile,javadoc,jar,generate-scripts"/>
 
 	<target name="clean" depends="unsetversion">
 		<delete dir="${bin.dir}"/>
@@ -111,7 +101,6 @@
 		<delete file="${basedir}/run-console.sh"/>
 		<delete file="${basedir}/run-dummy.sh"/>
 		<delete file="${basedir}/run.sh"/>
-		<ant antfile="${plugins.dir}/build.xml" inheritrefs="true" target="clean"/>
 	</target>
 
 </project>

@@ -3,7 +3,7 @@
 <booleanAttribute key="org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND" value="false"/>
 <booleanAttribute key="org.eclipse.ant.ui.DEFAULT_VM_INSTALL" value="false"/>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="true"/>
-<stringAttribute key="org.eclipse.ant.ui.ATTR_ANT_AFTER_CLEAN_TARGETS" value="jar,"/>
+<stringAttribute key="org.eclipse.ant.ui.ATTR_ANT_AFTER_CLEAN_TARGETS" value="setoptions,jar,"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
 </listAttribute>
@@ -13,8 +13,16 @@
 <booleanAttribute key="org.eclipse.ui.externaltools.ATTR_TRIGGERS_CONFIGURED" value="true"/>
 <booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.ant.ui.AntClasspathProvider"/>
-<stringAttribute key="org.eclipse.ant.ui.ATTR_ANT_MANUAL_TARGETS" value="jar,"/>
-<stringAttribute key="org.eclipse.ant.ui.ATTR_ANT_AUTO_TARGETS" value="jar,"/>
+<stringAttribute key="org.eclipse.ant.ui.ATTR_ANT_MANUAL_TARGETS" value="setoptions,jar,"/>
+<stringAttribute key="org.eclipse.ant.ui.ATTR_ANT_AUTO_TARGETS" value="setoptions,jar,"/>
+<mapAttribute key="org.eclipse.ui.externaltools.ATTR_ANT_PROPERTIES">
+<mapEntry key="eclipse.pdebuild.scripts" value="/usr/lib/eclipse-3.2/plugins/org.eclipse.pde.build_3.2.0.v20060603/scripts/"/>
+<mapEntry key="eclipse.running" value="true"/>
+<mapEntry key="eclipse.pdebuild.home" value="/usr/lib/eclipse-3.2/plugins/org.eclipse.pde.build_3.2.0.v20060603/./"/>
+<mapEntry key="eclipse.home" value="/usr/lib/eclipse-3.2"/>
+<mapEntry key="swt.lib" value="${workspace_loc:/org.eclipse.swt}/swt.jar"/>
+<mapEntry key="eclipse.pdebuild.templates" value="/usr/lib/eclipse-3.2/plugins/org.eclipse.pde.build_3.2.0.v20060603/templates/"/>
+</mapAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="chungles-swt"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/chungles-swt/build.xml"/>

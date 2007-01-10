@@ -8,8 +8,9 @@
 		</javac>
 	</target>
 	
-	<target name="jar">
+	<target name="jar">			
 		<jar jarfile="${basedir}/chungles-swt.jar">
+			
 			<fileset dir="${basedir}/bin"/>
 			<fileset dir="${basedir}">
 				<filename name="**/config.xml"/>
@@ -27,5 +28,13 @@
 	<target name="clean">
 		<delete dir="${basedir}/bin"/>
 		<delete file="${basedir}/chungles-swt.jar"/>
+	</target>
+	
+	<target name="setoptions">
+		<echo file="config.xml"><![CDATA[<?xml version='1.0'?>
+<plugin>
+	<class type="ui" main="org.chungles.ui.swt.SWTUI"/>
+	<classpath value="${swt.lib}"/>
+</plugin>]]></echo>
 	</target>
 </project>

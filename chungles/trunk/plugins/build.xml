@@ -1,9 +1,0 @@
-<project name="plugins" default="all">
-	<target name="all">
-		<ant antfile="${plugins.dir}/console/build.xml" inheritrefs="true"/>	
-	</target>
-	
-	<target name="clean">
-		<ant antfile="${plugins.dir}/console/build.xml" inheritrefs="true" target="clean"/>
-	</target>
-</project>

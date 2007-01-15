@@ -35,7 +35,7 @@ public class PluginAction
             	String classpath=((Node)xpath.evaluate("./@value", classpaths.item(i-1), XPathConstants.NODE)).getNodeValue();
             	// If required classpath is relative, and plugin is absolute, set to same directory
             	// as plugin
-            	if (classpath.indexOf(File.separatorChar)<0)
+            	if (!new File(classpath).exists())
             	{
             		int offset=path.lastIndexOf(File.separatorChar);
             		if (offset>=0)

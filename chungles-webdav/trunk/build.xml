@@ -9,7 +9,7 @@
 	</target>
 	
 	<target name="jar">
-		<jar jarfile="${basedir}/chungles-webdav.jar">
+		<jar jarfile="${basedir}/lib/chungles-webdav.jar">
 			<fileset dir="${basedir}/bin"/>
 			<fileset dir="${basedir}">
 				<filename name="**/config.xml"/>
@@ -26,6 +26,6 @@
 	
 	<target name="clean">
 		<delete dir="${basedir}/bin"/>
-		<delete file="${basedir}/chungles-webdav.jar"/>
+		<delete file="${basedir}/lib/chungles-webdav.jar"/>
 	</target>
 </project>

@@ -1,4 +1,7 @@
 <?xml version='1.0'?>
 <plugin>
 	<class type="ui" main="org.chungles.ui.webdav.WebDAVUI"/>
+	<classpath value="servlet-api-2.5.jar"/>
+	<classpath value="jetty-util-6.1.0.jar"/>
+	<classpath value="jetty-6.1.0.jar"/>
 </plugin>

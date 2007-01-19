@@ -11,6 +11,10 @@ import javax.servlet.http.*;
 import org.mortbay.jetty.*;
 import org.mortbay.jetty.handler.AbstractHandler;
 
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import javax.xml.xpath.*;
+
 public class HTTPConnection extends AbstractHandler
 {
     private void NOTFOUND(HttpServletRequest req, HttpServletResponse res) throws ServletException,IOException
@@ -93,180 +97,69 @@ public class HTTPConnection extends AbstractHandler
     
     public void doOptions(HttpServletRequest req, HttpServletResponse res) throws ServletException,IOException
     {
-        res.setHeader("DAV", "1");
+        res.setHeader("DAV", "1,2");
         res.setHeader("Allow", "OPTIONS,GET,HEAD,POST,DELETE,TRACE,PROPFIND,PROPPATCH,COPY,MOVE,LOCK,UNLOCK");
     }
     
     public void doPropFind(HttpServletRequest req, HttpServletResponse res) throws ServletException,IOException
     {
-        try
-        {
-            int depth=Integer.parseInt(req.getHeader("Depth"));
+    	try
+    	{
+    		int depth=Integer.parseInt(req.getHeader("Depth"));
             if (depth!=0 && depth!=1)
             {
                 FORBIDDEN(req, res);
                 return;
             }
-            
-            String xml="";
-            
-            FileSystem fs=new FileSystem();
-            try
-            {
-                String path=new URI(req.getRequestURI()).getPath();
-                fs.changeDirectory(path);            
-                String workingdir=fs.getWorkingDirectory();                                
-                
-                
-                res.setContentType("text/xml; charset=\"utf-8\"");
-                
-                xml+="<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-                xml+="<D:multistatus xmlns:D=\"DAV:\">\n";
-                
-                
-                if (depth==1)
-                {                    
-                        String[] list=fs.listPath();
-                        for (int i=0; i<list.length; i++)
-                        {
-                            xml+="<D:response xmlns:lp1=\"DAV:\">\n";
-                            String name=list[i].substring(1);
-                            String encoded=new URI(null, null, workingdir+name, null).getRawPath();
-                            xml+="<D:href>\n"+encoded+"\n</D:href>\n";
-                            xml+="<D:propstat>\n";
-                            xml+="<D:prop>\n";                            
-                            
-                            if (list[i].substring(0,1).equals("D"))
-                            {
-                                xml+="<lp1:resourcetype>\n";
-                                xml+="<D:collection/>\n";
-                                xml+="</lp1:resourcetype>\n";
-                            }
-                            else
-                            {
-                                xml+="<lp1:resourcetype>\n";                            
-                                xml+="application/unknown";
-                                xml+="</lp1:resourcetype>\n";                                
-                            }                            
-                            xml+="</D:prop>\n";
-                            xml+="<D:status>\n";
-                            xml+="HTTP/1.1 200 OK\n";
-                            xml+="</D:status>\n";
-                            xml+="</D:propstat>\n";                                                       
-                            
-                            if (list[i].substring(0, 1).equals("D"))
-                            {
-                                xml+="<D:propstat>\n";
-                                xml+="<D:prop>\n";
-                                xml+="<D:getcontentlength/>";
-                                xml+="</D:prop>\n";
-                                xml+="<D:status>HTTP/1.1 404 Not Found</D:status>\n";
-                                xml+="</D:propstat>\n";
-                            }
-                            else
-                            {
-                                xml+="<D:propstat>\n";
-                                xml+="<D:prop>\n";
-                                xml+="<lp1:getcontentlength>0</lp1:getcontentlength>\n";
-                                xml+="</D:prop>\n";
-                                xml+="<D:status>\n";
-                                xml+="HTTP/1.1 200 OK\n";
-                                xml+="</D:status>\n";
-                                xml+="</D:propstat>\n";
-                            }                                                       
-                            
-                            xml+="<D:propstat>\n";
-                            xml+="<D:prop>\n";
-                            xml+="<lp1:getlastmodified>Thu, 28 Dec 2006 00:00:00 GMT</lp1:getlastmodified>\n";
-                            xml+="</D:prop>\n";
-                            xml+="<D:status>\n";
-                            xml+="HTTP/1.1 200 OK\n";
-                            xml+="</D:status>\n";
-                            xml+="</D:propstat>\n";
-                            
-                            xml+="<D:propstat>\n";
-                            xml+="<D:prop>\n";
-                            xml+="<lp1:quota/>";
-                            xml+="</D:prop>\n";
-                            xml+="<D:status>HTTP/1.1 404 Not Found</D:status>\n";
-                            xml+="</D:propstat>\n";
-                            
-                            xml+="<D:propstat>\n";
-                            xml+="<D:prop>\n";
-                            xml+="<lp1:quotaused/>";
-                            xml+="</D:prop>\n";
-                            xml+="<D:status>HTTP/1.1 404 Not Found</D:status>\n";
-                            xml+="</D:propstat>\n";
-                            xml+="</D:response>\n";
-                        }                
-                }
-                else if (depth==0)
-                {
-                    xml+="<D:response xmlns:lp1=\"DAV:\">\n";
-                    String encoded=new URI(null, null, workingdir, null).getRawPath();
-                    xml+="<D:href>\n"+encoded+"\n</D:href>\n";
-                    
-                    xml+="<D:propstat>\n";
-                    xml+="<D:prop>\n";
-                    xml+="<lp1:getlastmodified>Thu, 28 Dec 2006 00:00:00 GMT</lp1:getlastmodified>\n";
-                    xml+="</D:prop>\n";
-                    xml+="<D:status>\n";
-                    xml+="HTTP/1.1 200 OK\n";
-                    xml+="</D:status>\n";
-                    xml+="</D:propstat>\n";
-                    
-                    xml+="<D:propstat>\n";
-                    xml+="<D:prop>\n";
-                    xml+="<lp1:resourcetype>\n";
-                    xml+="<D:collection/>\n";
-                    xml+="</lp1:resourcetype>\n";
-                    xml+="</D:prop>\n";
-                    xml+="<D:status>\n";
-                    xml+="HTTP/1.1 200 OK\n";
-                    xml+="</D:status>\n";
-                    xml+="</D:propstat>\n";
-                    
-                    xml+="<D:propstat>\n";
-                    xml+="<D:prop>\n";
-                    xml+="<lp1:getcontentlength/>";
-                    xml+="</D:prop>\n";
-                    xml+="<D:status>HTTP/1.1 404 Not Found</D:status>\n";
-                    xml+="</D:propstat>\n";
-                    
-                    xml+="<D:propstat>\n";
-                    xml+="<D:prop>\n";
-                    xml+="<lp1:quota/>";
-                    xml+="</D:prop>\n";
-                    xml+="<D:status>HTTP/1.1 404 Not Found</D:status>\n";
-                    xml+="</D:propstat>\n";
-                    
-                    xml+="<D:propstat>\n";
-                    xml+="<D:prop>\n";
-                    xml+="<lp1:quotaused/>";
-                    xml+="</D:prop>\n";
-                    xml+="<D:status>HTTP/1.1 404 Not Found</D:status>\n";
-                    xml+="</D:propstat>\n";
-                    xml+="</D:response>\n";
-                    
-                }                
-                xml+="</D:multistatus>\n";                
-                res.setStatus(207);
-                res.getWriter().write(xml);
-            }
-            catch (PathNotExistException e)
-            {
-                NOTFOUND(req, res);             
-            }
-                        
-        }
-        catch (URISyntaxException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+    		
+	    	String responseBody="";
+	    	String path=new URI(req.getRequestURI()).getPath();
+	    	if (req.getContentLength()<=0)
+	    	{
+	    		responseBody=DAVPropFind.getAllProperties(path, depth);	    		
+	    	}
+	    	else
+	    	{
+	    		InputStream in=req.getInputStream();
+	    		Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
+				XPath xpath=XPathFactory.newInstance().newXPath();
+				Node papa=((Node)xpath.evaluate("/propfind", doc, XPathConstants.NODE));
+				if (papa==null)
+				{
+					responseBody=DAVPropFind.getAllProperties(path, depth);					
+				}
+				else
+				{
+					NodeList list=papa.getChildNodes();
+					for (int i=0; i<list.getLength(); i++)
+					{
+						Node item=list.item(i);
+						if (item.getNodeType()==Node.ELEMENT_NODE)
+						{
+							if (item.getNodeName().indexOf("prop")>=0)
+								responseBody=DAVPropFind.getProperties(item.getChildNodes(), path, depth);
+							else if (item.getNodeName().indexOf("allprop")>=0)
+								responseBody=DAVPropFind.getAllProperties(path, depth);
+							else if (item.getNodeName().indexOf("propname")>=0)
+								responseBody=DAVPropFind.getPropertyNames(item.getChildNodes(), path, depth);
+							i=list.getLength();
+						}						
+					}
+				}								
+	    	}
+	    	if (responseBody==null || responseBody.equals(""))
+	    		NOTFOUND(req, res);
+	    	else
+	    	{
+	    		res.setStatus(207);
+				res.setContentType("text/xml");
+				res.getWriter().write(responseBody);
+	    	}
+    	}
+    	catch (Exception e)
+    	{
+    		e.printStackTrace();
+    	}
     }
     
     public void handle(String target, HttpServletRequest req, HttpServletResponse res, int dispatch) throws IOException, ServletException

@@ -25,7 +25,7 @@ public class DAVPropFind
                 	xml+="<D:response>\n";
                 	String name=list[i].substring(1);
                     String encoded=new URI(null, null, workingdir+name, null).getRawPath();
-                    xml+="<D:href>\n"+encoded+"\n</D:href>\n";
+                    xml+="<D:href>"+encoded+"</D:href>\n";
                     xml+="<D:propstat>\n";
                     xml+="<D:prop>\n";
                     
@@ -54,7 +54,7 @@ public class DAVPropFind
 			{
 				xml+="<D:response>\n";
                 String encoded=new URI(null, null, workingdir, null).getRawPath();
-                xml+="<D:href>\n"+encoded+"\n</D:href>\n";
+                xml+="<D:href>"+encoded+"</D:href>\n";
                 
                 xml+="<D:propstat>\n";
                 xml+="<D:prop>\n";
@@ -66,7 +66,8 @@ public class DAVPropFind
                 xml+="<D:status>HTTP/1.1 200 OK</D:status>\n";
                 xml+="</D:propstat>\n";
                 xml+="</D:response>\n";
-			}			
+			}
+            xml+="</D:multistatus>\n";
 		}
 		catch (Exception e)
 		{

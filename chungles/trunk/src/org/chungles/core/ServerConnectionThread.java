@@ -440,7 +440,23 @@ public class ServerConnectionThread extends Thread
         DataOutputStream dout=new DataOutputStream(out);
         
 	    String path=bin.readLine();
-		String share=path.substring(1, path.substring(1).indexOf('/')+1);			
+	    int offset=path.substring(1).indexOf('/');
+	    if (offset<0)
+	    {
+	    	if (Configuration.getSharePath(path.substring(1))!=null)
+	    	{
+	    		dout.write(OK);
+	    		dout.writeBytes(path.substring(1)+"\n");
+	    		dout.writeBytes(FileList.DIRECTORY+"\n");
+	    		dout.writeBytes(0 + "\n");
+	    		return;
+	    	}
+	    	else
+	    		dout.write(NO);
+	    }
+	    else
+	    	offset+=1;
+		String share=path.substring(1, offset);			
 		path=Configuration.getSharePath(share)+"/"+path.substring(share.length()+2);
 		if (!validPath(path))
 		{

@@ -318,4 +318,37 @@ public class Client
             return false;
         }
     }
+    
+    public FileList getPathInfo(String path)
+    {
+    	DataOutputStream dout=new DataOutputStream(out);
+        BufferedReader bin=new BufferedReader(new InputStreamReader(in));
+        try
+	    {
+        	Version ver=getVersion();
+			if (ver.getMinor()<4)
+			{
+				System.out.println("Sorry, chungles client is using protocol: " + ver);
+				return null;
+			}
+			
+		    dout.write(ServerConnectionThread.FILE_INFO);
+		    dout.writeBytes(path+"\n");
+		    FileList list=new FileList();
+		    if (in.read()==ServerConnectionThread.NO)
+		    	return null;
+		    
+		    list.setRemotePath(bin.readLine());
+	        list.setFileType(Integer.parseInt(bin.readLine()));
+	        list.setSize(Long.parseLong(bin.readLine()));
+	        return list;
+	    }
+        catch (Exception e)
+        {
+        	e.printStackTrace();
+        	return null;
+        }
+	}
+    
+    
 }

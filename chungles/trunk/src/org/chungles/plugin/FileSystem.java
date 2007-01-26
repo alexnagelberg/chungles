@@ -80,7 +80,9 @@ public class FileSystem
             StringTokenizer tok=new StringTokenizer(path.substring(1),"/");                     
             String compname=tok.nextToken();                
             client=new Client(NodeDetect.ips.get(compname));
-            if (!tok.hasMoreElements() || client.pathExists(path.substring(compname.length()+1)))
+            if (!tok.hasMoreElements() || (client.pathExists(path.substring(compname.length()+1)))
+            		&& (client.getPathInfo(path.substring(compname.length()+1)).getFileType()==
+            			FileList.DIRECTORY) )
             {
                 workingdirectory=path;
             }
@@ -138,4 +140,63 @@ public class FileSystem
         return workingdirectory;
     }
     
+    public boolean isPathFile(String path)
+    {
+    	String daspath=workingdirectory;
+    	if (daspath.substring(daspath.length()-1).equals("/"))
+    		daspath+=path;
+    	else
+    		daspath+="/"+path;
+    	
+    	if (path.substring(0, 1).equals("/"))
+    	{
+    		if (path.length()==1)
+    			return false;
+    		
+    		daspath=path;
+    	}
+    	
+    	StringTokenizer tok=new StringTokenizer(path,"/");                     
+        String compname=tok.nextToken();                
+        client=new Client(NodeDetect.ips.get(compname));
+        
+        if (!tok.hasMoreTokens())
+        	return false; //root
+        
+        if (client.pathExists(path.substring(compname.length()+1))
+            && (client.getPathInfo(path.substring(compname.length()+1)).getFileType()==FileList.FILE) )
+            return true;
+        else
+        	return false;
+    }
+    
+    public boolean isPathDirectory(String path)
+    {
+    	String daspath=workingdirectory;
+    	if (daspath.substring(daspath.length()-1).equals("/"))
+    		daspath+=path;
+    	else
+    		daspath+="/"+path;
+    	
+    	if (path.substring(0, 1).equals("/"))
+    	{
+    		if (path.length()==1)
+    			return true;
+    		
+    		daspath=path;
+    	}
+    	
+    	StringTokenizer tok=new StringTokenizer(path,"/");                     
+        String compname=tok.nextToken();                
+        client=new Client(NodeDetect.ips.get(compname));
+        
+        if (!tok.hasMoreTokens())
+        	return true; //root
+        
+        if (client.pathExists(path.substring(compname.length()+1))
+            && (client.getPathInfo(path.substring(compname.length()+1)).getFileType()==FileList.DIRECTORY) )
+            return true;
+        else
+        	return false;
+    }
 }

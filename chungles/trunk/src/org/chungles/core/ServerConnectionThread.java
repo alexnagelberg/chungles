@@ -22,13 +22,14 @@ public class ServerConnectionThread extends Thread
 	public final static int REQUEST_DELETE=9;
 	public final static int BEGIN_MULTICAST=10;
 	public final static int RECOVER_PACKETS=11;	
+	public final static int FILE_INFO=12;
 	
 	public final static char IS_FILE='F';
 	public final static char IS_DIRECTORY='D';
 	
     private final static int PACKET_SIZE=1024;
     
-	public final static Version PROTOCOL_VERSION=new Version(0,3,0);
+	public final static Version PROTOCOL_VERSION=new Version(0,4,0);
 	
     private InputStream in;
     private OutputStream out;    
@@ -120,6 +121,11 @@ public class ServerConnectionThread extends Thread
                     if (mServer.isFallbackEnabled())
                         recoverPackets();
                     break;
+                }
+                case FILE_INFO:
+                {
+                	fileInfo();
+                	break;
                 }
 			}
 		}
@@ -426,5 +432,40 @@ public class ServerConnectionThread extends Thread
             out.write(outbuf, 0, length);
         }
         fin.close();
+    }
+    
+    private void fileInfo() throws IOException
+    {
+    	BufferedReader bin=new BufferedReader(new InputStreamReader(in));
+        DataOutputStream dout=new DataOutputStream(out);
+        
+	    String path=bin.readLine();
+		String share=path.substring(1, path.substring(1).indexOf('/')+1);			
+		path=Configuration.getSharePath(share)+"/"+path.substring(share.length()+2);
+		if (!validPath(path))
+		{
+			dout.write(NO);
+			return;
+		}
+		
+		File file=new File(path);
+		if (!file.exists())
+		{
+			dout.write(NO);
+			return;
+		}
+		
+		dout.write(OK);
+		
+		String localPath=file.getAbsolutePath();
+	    if (File.separatorChar!='/')
+	    	localPath=localPath.replace(File.separatorChar, '/');
+		dout.writeBytes("/"+share+localPath.
+	            substring(Configuration.getSharePath(share).length())+"\n");
+		if (file.isDirectory())
+			dout.writeBytes(FileList.DIRECTORY+"\n");
+		else
+			dout.writeBytes(FileList.FILE+"\n");
+	    dout.writeBytes(file.length()+"\n");
     }
 }

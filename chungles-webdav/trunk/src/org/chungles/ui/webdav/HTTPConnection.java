@@ -28,6 +28,14 @@ public class HTTPConnection extends AbstractHandler
         res.setStatus(403);        
     }
     
+    private void MOVED(HttpServletRequest req, HttpServletResponse res, String location) throws ServletException, IOException
+    {
+    	res.setStatus(301);
+    	res.setHeader("Location", location);
+    	res.setContentType("text/html");
+    	res.getWriter().write("<html><body>Document has moved to <a href=\""+location+"\">"+location+"</a></body></html>");
+    }
+    
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,IOException    
     {    
         
@@ -60,6 +68,11 @@ public class HTTPConnection extends AbstractHandler
             }
             
             FileSystem fs=new FileSystem();
+            if (fs.isPathDirectory(path) && !path.substring(path.length()-1).equals("/"))
+            {
+            	MOVED(req, res, req.getRequestURI()+"/");
+            	return;
+            }
             fs.changeDirectory(path);
             String[] list=fs.listPath();
             
@@ -98,7 +111,7 @@ public class HTTPConnection extends AbstractHandler
     public void doOptions(HttpServletRequest req, HttpServletResponse res) throws ServletException,IOException
     {
         res.setHeader("DAV", "1,2");
-        res.setHeader("Allow", "OPTIONS,GET,HEAD,POST,DELETE,TRACE,PROPFIND,PROPPATCH,COPY,MOVE,LOCK,UNLOCK");
+        res.setHeader("Allow", "OPTIONS,GET,PROPFIND");
     }
     
     public void doPropFind(HttpServletRequest req, HttpServletResponse res) throws ServletException,IOException
@@ -112,8 +125,16 @@ public class HTTPConnection extends AbstractHandler
                 return;
             }
     		
+            String path=new URI(req.getRequestURI()).getPath();
+            FileSystem fs=new FileSystem();
+            if (fs.isPathDirectory(path) && !path.substring(path.length()-1).equals("/"))
+            {
+            	MOVED(req, res, req.getRequestURI()+"/");
+            	return;
+            }
+            
 	    	String responseBody="";
-	    	String path=new URI(req.getRequestURI()).getPath();
+	    	
 	    	if (req.getContentLength()<=0)
 	    	{
 	    		responseBody=DAVPropFind.getAllProperties(path, depth);	    		
@@ -174,4 +195,6 @@ public class HTTPConnection extends AbstractHandler
             res.setStatus(405);
         ((Request)req).setHandled(true);
     }
+    
+    
 }

@@ -18,8 +18,12 @@ public class DAVPropFind
 			
 			xml+="<D:multistatus xmlns:D=\"DAV:\">\n";			
 			if (depth==1)
-			{
-				String[] list=fs.listPath();
+			{				
+				String[] templist=fs.listPath();
+				String[] list=new String[templist.length+1];
+				list[0]="D";
+				System.arraycopy(templist, 0, list, 1, templist.length);
+				
                 for (int i=0; i<list.length; i++)
                 {
                 	xml+="<D:response>\n";
@@ -139,7 +143,11 @@ public class DAVPropFind
 				"</D:response>\n";			
 			if (depth==1)
 			{
-				String[] pathlist=fs.listPath();
+				
+				String[] templist=fs.listPath();
+				String[] pathlist=new String[templist.length+1];
+				pathlist[0]="D";
+				System.arraycopy(templist, 0, pathlist, 1, templist.length);
                 for (int j=0; j<pathlist.length; j++)
                 {
 					okprops="";

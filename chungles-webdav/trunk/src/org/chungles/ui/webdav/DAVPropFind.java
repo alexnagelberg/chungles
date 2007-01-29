@@ -3,6 +3,7 @@ package org.chungles.ui.webdav;
 import java.net.URI;
 
 import org.w3c.dom.*;
+import org.chungles.core.FileList;
 import org.chungles.plugin.*;
 
 public class DAVPropFind
@@ -13,8 +14,10 @@ public class DAVPropFind
 		try
 		{
 			FileSystem fs=new FileSystem();
-			fs.changeDirectory(path);
-			String workingdir=fs.getWorkingDirectory();
+			if (fs.isPathDirectory(path))
+				fs.changeDirectory(path);
+			else if (!fs.isPathFile(path))
+				return null;
 			
 			xml+="<D:multistatus xmlns:D=\"DAV:\">\n";			
 			if (depth==1)
@@ -28,7 +31,7 @@ public class DAVPropFind
                 {
                 	xml+="<D:response>\n";
                 	String name=list[i].substring(1);
-                    String encoded=new URI(null, null, workingdir+name, null).getRawPath();
+                    String encoded=new URI(null, null, path+name, null).getRawPath();
                     xml+="<D:href>"+encoded+"</D:href>\n";
                     xml+="<D:propstat>\n";
                     xml+="<D:prop>\n";
@@ -45,7 +48,10 @@ public class DAVPropFind
                     }
                     
                     if (!list[i].substring(0, 1).equals("D"))
-                    	xml+="<D:getcontentlength>0</D:getcontentlength>\n";
+                    {
+                    	FileList file=fs.getFileInfo(path+list[i].substring(1));                    	
+                    	xml+="<D:getcontentlength>"+file.getSize()+"</D:getcontentlength>\n";
+                    }
                     
                     xml+="<D:getlastmodified>Thu, 28 Dec 2006 00:00:00 GMT</D:getlastmodified>\n";
                     xml+="</D:prop>\n";
@@ -57,14 +63,17 @@ public class DAVPropFind
 			else
 			{
 				xml+="<D:response>\n";
-                String encoded=new URI(null, null, workingdir, null).getRawPath();
+                String encoded=new URI(null, null, path, null).getRawPath();
                 xml+="<D:href>"+encoded+"</D:href>\n";
                 
                 xml+="<D:propstat>\n";
                 xml+="<D:prop>\n";
                 xml+="<D:getlastmodified>Thu, 28 Dec 2006 00:00:00 GMT</D:getlastmodified>\n";
                 xml+="<D:resourcetype>\n";
-                xml+="<D:collection/>\n";
+                if (fs.isPathDirectory(path))
+	                xml+="<D:collection/>\n";
+                else
+                	xml+="application/unknown\n";
                 xml+="</D:resourcetype>\n";
                 xml+="</D:prop>\n";
                 xml+="<D:status>HTTP/1.1 200 OK</D:status>\n";
@@ -88,59 +97,64 @@ public class DAVPropFind
 		try
 		{
 			FileSystem fs=new FileSystem();
-            fs.changeDirectory(path);            
-            String workingdir=fs.getWorkingDirectory();
+			if (fs.isPathDirectory(path))
+				fs.changeDirectory(path);
+			else if (!fs.isPathFile(path))
+				return null;
             
 			xml+="<D:multistatus xmlns:D=\"DAV:\">\n";
-				String okprops="";
-				String badprops="";
+			String okprops="";
+			String badprops="";
 				
-				for (int i=0; i<list.getLength(); i++)
+			for (int i=0; i<list.getLength(); i++)
+			{
+				Node item=list.item(i);
+				if (item.getNodeType()==Node.ELEMENT_NODE)
 				{
-					Node item=list.item(i);
-					if (item.getNodeType()==Node.ELEMENT_NODE)
+					if (item.getNodeName().indexOf("resourcetype")>=0)
 					{
-						if (item.getNodeName().indexOf("resourcetype")>=0)
-						{
-							okprops+="<D:resourcetype>\n"+
-		                    "<D:collection/>\n"+
-		                    "</D:resourcetype>\n";
-						}
-						else if (item.getNodeName().indexOf("getlastmodified")>=0)
-						{
-							okprops+="<D:getlastmodified>Thu, 28 Dec 2006 00:00:00 GMT</D:getlastmodified>\n";
-						}
+						okprops+="<D:resourcetype>\n";
+						if (fs.isPathDirectory(path))
+							okprops+="<D:collection/>\n";
 						else
-							badprops+="<"+item.getNodeName()+"/>\n";						
+							okprops+="application/unknown\n";
+						okprops+="</D:resourcetype>\n";
 					}
+					else if (item.getNodeName().indexOf("getlastmodified")>=0)
+					{
+						okprops+="<D:getlastmodified>Thu, 28 Dec 2006 00:00:00 GMT</D:getlastmodified>\n";
+					}
+					else
+						badprops+="<"+item.getNodeName()+"/>\n";						
 				}
+			}
 				
-				if (okprops.length()>0)
-				{
-					okprops="<D:propstat>\n"+
-					"<D:prop>\n"+
-					okprops +
-					"</D:prop>\n"+
-					"<D:status>HTTP/1.1 200 OK</D:status>\n"+
-					"</D:propstat>\n";
-				}
-				
-				if (badprops.length()>0)
-				{
-					badprops="<D:propstat>\n"+
-					"<D:prop>\n"+
-					badprops +
-					"</D:prop>\n"+
-					"<D:status>HTTP/1.1 404 Not Found</D:status>\n"+
-					"</D:propstat>\n";				
-				}
-				
-				String encoded=new URI(null, null, workingdir, null).getRawPath();
-				xml+="<D:response>\n"+			
-	            "<D:href>"+encoded+"</D:href>\n"+
+			if (okprops.length()>0)
+			{
+				okprops="<D:propstat>\n"+
+				"<D:prop>\n"+
 				okprops +
+				"</D:prop>\n"+
+				"<D:status>HTTP/1.1 200 OK</D:status>\n"+
+				"</D:propstat>\n";
+			}
+			
+			if (badprops.length()>0)
+			{
+				badprops="<D:propstat>\n"+
+				"<D:prop>\n"+
 				badprops +
-				"</D:response>\n";			
+				"</D:prop>\n"+
+				"<D:status>HTTP/1.1 404 Not Found</D:status>\n"+
+				"</D:propstat>\n";				
+			}
+				
+			String encoded=new URI(null, null, path, null).getRawPath();
+			xml+="<D:response>\n"+			
+	        "<D:href>"+encoded+"</D:href>\n"+
+			okprops +
+			badprops +
+			"</D:response>\n";			
 			if (depth==1)
 			{
 				
@@ -170,7 +184,8 @@ public class DAVPropFind
 							else if (item.getNodeName().indexOf("getcontentlength")>=0
 									&& !pathlist[j].substring(0,1).equals("D"))
 							{
-								okprops+="<D:getcontentlength>0</D:getcontentlength>\n";
+								FileList file=fs.getFileInfo(path+pathlist[j].substring(1));
+								okprops+="<D:getcontentlength>"+file.getSize()+"</D:getcontentlength>\n";
 							}
 							else if (item.getNodeName().indexOf("getlastmodified")>=0)
 							{
@@ -202,7 +217,7 @@ public class DAVPropFind
 					}
                 
 					String name=pathlist[j].substring(1);
-					encoded=new URI(null, null, workingdir+name, null).getRawPath();
+					encoded=new URI(null, null, path+name, null).getRawPath();
 					xml+="<D:response>\n"+			
 		            "<D:href>"+encoded+"</D:href>\n"+
 					okprops +

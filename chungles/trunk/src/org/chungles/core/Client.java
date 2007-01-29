@@ -156,6 +156,26 @@ public class Client
 	    return status==ServerConnectionThread.OK;
 	}
 	
+    public InputStream retrieveFileStream(FileList file)
+    {
+        DataOutputStream dout=new DataOutputStream(out);
+        try
+        {
+            if (file.getFileType()==FileList.FILE)
+            {
+                dout.write(ServerConnectionThread.REQUEST_RECEIVE);             
+                dout.writeBytes(file.getRemotePath()+"\n");
+                if (in.read()==ServerConnectionThread.OK)
+                    return in;                
+            }            
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
 	public void retrieveFile(final String savePath, final FileList file, final ReceiveProgressListener listener)
 	{
 	    if (file.getFileType()==FileList.DIRECTORY)
@@ -349,6 +369,5 @@ public class Client
         	return null;
         }
 	}
-    
-    
+        
 }

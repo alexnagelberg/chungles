@@ -1,6 +1,7 @@
 package org.chungles.plugin;
 
 import java.util.*;
+import java.io.*;
 
 import org.chungles.core.*;
 import org.chungles.application.*;
@@ -157,7 +158,9 @@ public class FileSystem
     	}
     	
     	StringTokenizer tok=new StringTokenizer(path,"/");                     
-        String compname=tok.nextToken();                
+        String compname=tok.nextToken();  
+        if (client!=null)
+            client.close();
         client=new Client(NodeDetect.ips.get(compname));
         
         if (!tok.hasMoreTokens())
@@ -187,7 +190,9 @@ public class FileSystem
     	}
     	
     	StringTokenizer tok=new StringTokenizer(path,"/");                     
-        String compname=tok.nextToken();                
+        String compname=tok.nextToken();
+        if (client!=null)
+            client.close();
         client=new Client(NodeDetect.ips.get(compname));
         
         if (!tok.hasMoreTokens())
@@ -198,5 +203,45 @@ public class FileSystem
             return true;
         else
         	return false;
+    }
+    
+    public InputStream getFileStream(String path)
+    {
+        if (isPathFile(path))
+        {
+            StringTokenizer tok=new StringTokenizer(path,"/");                     
+            String compname=tok.nextToken();
+            if (client!=null)
+                client.close();
+            client=new Client(NodeDetect.ips.get(compname));
+            FileList file=client.getPathInfo(path.substring(compname.length()+1));
+            return client.retrieveFileStream(file);
+        }
+        else
+            return null;
+    }
+    
+    public FileList getFileInfo(String path)
+    {
+        if (isPathFile(path))
+        {
+            StringTokenizer tok=new StringTokenizer(path,"/");                     
+            String compname=tok.nextToken();
+            if (client!=null)
+                client.close();
+            client=new Client(NodeDetect.ips.get(compname));
+            return client.getPathInfo(path.substring(compname.length()+1));
+        }
+        else
+            return null;
+    }
+    
+    public void close()
+    {
+        if (client!=null)
+        {
+            client.close();
+            client=null;
+        }
     }
 }

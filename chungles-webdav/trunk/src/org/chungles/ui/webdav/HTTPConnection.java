@@ -4,6 +4,7 @@ import org.chungles.plugin.*;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -37,33 +38,15 @@ public class HTTPConnection extends AbstractHandler
     }
     
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,IOException    
-    {    
-        
+    {        
         try
         {
             String path=new URI(req.getRequestURI()).getPath();
-            
+            HTTPGet httpget=new HTTPGet();
             if (path.length()>=7 && path.substring(0, 7).equals("/images"))
             {
-                InputStream in=getClass().getClassLoader().getResourceAsStream(path.substring(1));
-                if (in==null)
+                if (!httpget.getImage(path.substring(1), res))
                     NOTFOUND(req, res);
-                else
-                {
-                    res.setContentType("image/gif");
-                    OutputStream out=res.getOutputStream();
-                    byte buf[]=new byte[1024];
-                    int read;
-                    do
-                    {
-                            read=in.read(buf, 0, 1024);
-                            if (read>0)
-                                    out.write(buf, 0, read);
-                    }
-                    while (read>0);
-                    out.close();
-                    in.close();
-                }
                 return;
             }
             
@@ -73,30 +56,14 @@ public class HTTPConnection extends AbstractHandler
             	MOVED(req, res, req.getRequestURI()+"/");
             	return;
             }
-            fs.changeDirectory(path);
-            String[] list=fs.listPath();
             
-            try
-            {
-                String html="<html><body>";
-                for (int i=0; i<list.length; i++)
-                {
-                    String name=list[i].substring(1);
-                    if (list[i].substring(0,1).equals("D"))
-                        html+="<img src='/images/folder.gif' alt='[DIR]'/>";
-                    else
-                        html+="<img src='/images/file.gif'/>";
-                    String encoded=new URI(null, null, name, null).getRawPath();
-                    html+="<a href=\""+encoded+"/\">"+name+"</a><br/>";
-                }
-                html+="</body></html>";
-                res.setContentType("text/html");                   
-                res.getWriter().write(html);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            if (fs.isPathDirectory(path))
+                httpget.listDirectory(path, res);
+            else if (fs.isPathFile(path))
+                httpget.getFile(path, res);
+            else
+                NOTFOUND(req, res);
+            
         }
         catch (PathNotExistException e)
         {
@@ -110,7 +77,7 @@ public class HTTPConnection extends AbstractHandler
     
     public void doOptions(HttpServletRequest req, HttpServletResponse res) throws ServletException,IOException
     {
-        res.setHeader("DAV", "1,2");
+        res.setHeader("DAV", "1, 2");
         res.setHeader("Allow", "OPTIONS,GET,PROPFIND");
     }
     
@@ -185,6 +152,7 @@ public class HTTPConnection extends AbstractHandler
     
     public void handle(String target, HttpServletRequest req, HttpServletResponse res, int dispatch) throws IOException, ServletException
     {
+        res.setDateHeader("Date", new Date().getTime());
         if (req.getMethod().equals("GET"))
             doGet(req, res);
         else if (req.getMethod().equals("OPTIONS"))

@@ -3,6 +3,9 @@ package org.chungles.application;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.rmi.registry.*;
+import java.rmi.server.*;
+import java.rmi.*;
 
 import org.chungles.core.*;
 import org.chungles.plugin.*;
@@ -18,21 +21,32 @@ public class Main
     	
         if (!ConfigurationParser.parse())
         	PluginAction.openPreferencesDialog();
-
-        File lockfile=new File(System.getProperty("user.home")+"/.chungles/.lock");
-        isServer=!lockfile.exists();
-        
-        if (!isServer)
+                
+        try
         {
-        	System.out.println("Detected " + lockfile.getAbsolutePath() + ": Assuming " + 
-        			"another instance is running. Disabling server.");
+        	Registry registry = LocateRegistry.getRegistry("localhost");
+        	registry.lookup("running");
+        	System.out.println("Detected application already running. Disabling server.");
+        	isServer=false;
         }
-        else
-        {        	        
-        	lockfile.createNewFile();
-        	lockfile.deleteOnExit();
+        catch (Exception e)
+        {
+        	isServer=true;
         }
         
+        if (isServer)
+        {
+        	Remote rmi=(Remote)UnicastRemoteObject.exportObject(new RMIServer(),0);
+        	Registry registry=LocateRegistry.createRegistry(1099);
+        	try
+        	{
+        		registry.bind("running", rmi);
+        	}
+        	catch (Exception e)
+        	{
+        		e.printStackTrace();
+        	}
+        }
         /*if (ui.takeoverWaitsForInterfaces())
         	blockingmDNSBind();
         else

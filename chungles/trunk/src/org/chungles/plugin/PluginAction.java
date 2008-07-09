@@ -19,7 +19,7 @@ public class PluginAction
             JarFile jar=new JarFile(path);
             InputStream in=jar.getInputStream(jar.getJarEntry("config.xml"));
             Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
-            XPath xpath=XPathFactory.newInstance().newXPath();
+            XPath xpath=XPathFactory.newInstance().newXPath();            
             String type=((Node)xpath.evaluate("/plugin/class/@type", doc, XPathConstants.NODE)).getNodeValue();
             String main=((Node)xpath.evaluate("/plugin/class/@main", doc, XPathConstants.NODE)).getNodeValue();
             NodeList classpaths=(NodeList)xpath.evaluate("/plugin/classpath", doc, XPathConstants.NODESET);
@@ -142,11 +142,11 @@ public class PluginAction
             }
             try
             {
-                Thread.sleep(50);
+                Thread.sleep(1000);
             }
             catch (Exception e)
             {
-                
+                e.printStackTrace();
             }
         }
         
@@ -303,5 +303,16 @@ public class PluginAction
     	}
     	
     	return null;
+    }
+    
+    public static void notify(int type, String message)
+    {
+        Iterator<PluginInfo<StandardPlugin>> iter=Configuration.otherplugins.iterator();
+        while (iter.hasNext())
+        {
+            PluginInfo<StandardPlugin> p=iter.next();
+            if (p.isEnabled())
+                p.getPlugin().notification(type, message);
+        }
     }
 }

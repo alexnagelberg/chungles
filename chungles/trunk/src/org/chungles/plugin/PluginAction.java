@@ -12,6 +12,8 @@ import org.chungles.core.*;
 
 public class PluginAction
 {
+	private static Thread main_thread;
+	
     public static void loadPlugin(String path, boolean enabled)
     {
         try
@@ -130,34 +132,25 @@ public class PluginAction
     
     public static void mainloop()
     {
-        boolean done=false;
-        while (!done)
-        {
-            Iterator<PluginInfo<UIPlugin>> iter=Configuration.UIplugins.iterator();
-            while (iter.hasNext() && !done)
-            {
-                PluginInfo<UIPlugin> p=iter.next();
-                if (p.isEnabled())
-                    done=p.getPlugin().isDone();
-            }
-            try
-            {
-                Thread.sleep(1000);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        
-        // shutdown
-        Iterator<PluginInfo<UIPlugin>> iter=Configuration.UIplugins.iterator();
-        while (iter.hasNext())
-        {
-            PluginInfo<UIPlugin> p=iter.next();
-            if (p.isEnabled())
-                p.getPlugin().shutdown();
-        }
+        main_thread=Thread.currentThread();
+    	try
+    	{
+    		synchronized (main_thread)
+    		{
+    			main_thread.wait();
+    		}
+    	}
+    	catch (InterruptedException e)
+    	{
+    		// shutdown
+    		Iterator<PluginInfo<UIPlugin>> iter=Configuration.UIplugins.iterator();
+    		while (iter.hasNext())
+    		{
+    			PluginInfo<UIPlugin> p=iter.next();
+    			if (p.isEnabled())
+    				p.getPlugin().shutdown();
+    		}
+    	}
     }
     
     public static void addNode(String IP, String compname)
@@ -182,25 +175,10 @@ public class PluginAction
         }
     }
     
-    /*private static void addClasspath(String path, JARClassLoader loader)
+    public static void shutdown()
     {
-        try
-        {
-            Class[] parameters = new Class[]{URL.class};
-            URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
-            Class<URLClassLoader> sysclass = URLClassLoader.class;
-            
-            Method method = sysclass.getDeclaredMethod("addURL",parameters);
-            method.setAccessible(true);
-            method.invoke(sysloader,new Object[]{ new File(path).toURI().toURL() });
-        	
-        	
-        	
-        }
-        catch (Exception e)
-        {
-        }
-    }*/
+    	main_thread.interrupt();
+    }
     
     public static void initPlugin(String main)
     {        

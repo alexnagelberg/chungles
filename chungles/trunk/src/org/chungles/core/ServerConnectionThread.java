@@ -289,10 +289,12 @@ public class ServerConnectionThread extends Thread
 		try
 		{
 			String path=bin.readLine();
-			String directory=bin.readLine();            
-			String share=path.substring(1, path.substring(1).indexOf('/')+1);
-			
-			path=Configuration.getSharePath(share)+path.substring(share.length()+2)+directory;
+						
+			StringTokenizer tok=new StringTokenizer(path, "/");
+			String share=Configuration.getSharePath(tok.nextToken());
+			path=share;
+			if (tok.hasMoreTokens())
+				path+=tok.nextToken("");
 			
 			File file=new File(path);
 			if (validPath(path) && ((file.isDirectory() && !file.isFile()) || file.mkdirs()))

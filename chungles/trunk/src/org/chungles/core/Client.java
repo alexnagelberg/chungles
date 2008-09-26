@@ -84,8 +84,7 @@ public class Client
 			else
 			{
 				dout.write(ServerConnectionThread.REQUEST_MKDIR);
-				dout.writeBytes(path+"\n");
-				dout.writeBytes(file.getRemotePath()+"\n");
+				dout.writeBytes(path+file.getRemotePath()+"\n");
 			}
 			status=in.read();
 		}

@@ -12,8 +12,7 @@ import org.chungles.plugin.*;
 public class SWTUI implements UIPlugin
 {
 	private SWTUtil swtutil;
-	private static Hashtable<String, TreeItem> nodes;
-	private boolean done=false;    	
+	private static Hashtable<String, TreeItem> nodes;    	
     
 	public String getAuthor()
     {

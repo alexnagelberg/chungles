@@ -30,17 +30,12 @@ public class SWTUI implements UIPlugin
         return "0.3";
     }
     
-    public boolean isDone()
-    {
-        return done;
-    }
-	
 	public void init()
 	{
         swtutil=SWTUtil.getInstance();
         nodes=new Hashtable<String, TreeItem>();
         swtutil.mainLoop();
-        done=true;        		
+        PluginAction.shutdown();        		
 	}
 	
     public void shutdown()
@@ -110,5 +105,10 @@ public class SWTUI implements UIPlugin
                 }
             }
         });
+	}
+
+	public void notification(int type, String message) {
+		// TODO Auto-generated method stub
+		
 	}
 }

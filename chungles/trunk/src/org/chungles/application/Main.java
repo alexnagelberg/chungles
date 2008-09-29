@@ -58,10 +58,12 @@ public class Main
         {
         	public void finished(boolean successfully)
         	{
-        		if (successfully)
+        		//TODO: notify
+        		
+        		/*if (successfully)
         			PluginAction.finishnotification(true, "Received Multicast file.");
         		else
-        			PluginAction.finishnotification(false, "Error receiving incoming Multicast");
+        			PluginAction.finishnotification(false, "Error receiving incoming Multicast");*/
         	}
         });
         

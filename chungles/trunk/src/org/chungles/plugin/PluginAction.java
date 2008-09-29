@@ -13,7 +13,7 @@ import org.chungles.core.*;
 public class PluginAction
 {
 	private static Thread main_thread;
-	
+	//TODO: add Notification type plugin
     public static void loadPlugin(String path, boolean enabled)
     {
         try
@@ -119,7 +119,7 @@ public class PluginAction
         }
     }
     
-    public static void finishnotification(boolean success, String message)
+    /*public static void finishnotification(boolean success, String message)
     {
         Iterator<PluginInfo<UIPlugin>> iter=Configuration.UIplugins.iterator();
         while (iter.hasNext())
@@ -128,7 +128,7 @@ public class PluginAction
             if (p.isEnabled())
                 p.getPlugin().finishnotification(success, message);
         }
-    }
+    }*/
     
     public static void mainloop()
     {
@@ -283,7 +283,9 @@ public class PluginAction
     	return null;
     }
     
-    public static void notify(int type, String message)
+    //TODO: notification system
+    
+    /*public static void notify(int type, String message)
     {
         Iterator<PluginInfo<StandardPlugin>> iter=Configuration.otherplugins.iterator();
         while (iter.hasNext())
@@ -292,5 +294,5 @@ public class PluginAction
             if (p.isEnabled())
                 p.getPlugin().notification(type, message);
         }
-    }
+    }*/
 }

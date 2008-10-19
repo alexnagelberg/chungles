@@ -5,6 +5,7 @@ import java.util.jar.*;
 import java.io.*;
 
 import org.w3c.dom.*;
+
 import javax.xml.parsers.*;
 import javax.xml.xpath.*;
 
@@ -14,38 +15,60 @@ public class PluginAction
 {
 	private static Thread main_thread;
 	//TODO: add Notification type plugin
+	
     public static void loadPlugin(String path, boolean enabled)
     {
         try
         {
             JarFile jar=new JarFile(path);
             InputStream in=jar.getInputStream(jar.getJarEntry("config.xml"));
-            Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
-            XPath xpath=XPathFactory.newInstance().newXPath();            
-            String type=((Node)xpath.evaluate("/plugin/class/@type", doc, XPathConstants.NODE)).getNodeValue();
-            String main=((Node)xpath.evaluate("/plugin/class/@main", doc, XPathConstants.NODE)).getNodeValue();
-            NodeList classpaths=(NodeList)xpath.evaluate("/plugin/classpath", doc, XPathConstants.NODESET);
-            in.close();            
-            
-            if (findPlugin(main)!=null)
-                return;
-           
-            String[] classes=new String[classpaths.getLength()+1];
-            classes[0]=path;
-            for (int i=1;i<=classpaths.getLength(); i++)
-            {
-            	String classpath=((Node)xpath.evaluate("./@value", classpaths.item(i-1), XPathConstants.NODE)).getNodeValue();
-            	// If required classpath is relative, and plugin is absolute, set to same directory
-            	// as plugin
-            	if (!new File(classpath).exists())
-            	{
-            		int offset=path.lastIndexOf(File.separatorChar);
-            		if (offset>=0)
-            			classpath=path.substring(0,offset+1)+classpath;            			
-            	}
-            	classes[i]=classpath;
-            }            
-            JARClassLoader loader=new JARClassLoader(classes);
+            Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);            
+            String main="",type="";
+    		NodeList nodes=doc.getFirstChild().getChildNodes();
+    		LinkedList<String> classes=new LinkedList<String>();
+    		classes.add(path);
+    		for (int i=0; i<nodes.getLength(); i++)
+    		{
+    			Node node=nodes.item(i);
+    			if (node.getNodeName().equals("class"))
+    			{
+    				NamedNodeMap nnm=node.getAttributes();
+                	for (int j=0; j<nnm.getLength(); j++)
+                	{
+                		Node n=nnm.item(j);
+                		if (n.getNodeName().equals("main"))
+                		{
+                			main=n.getNodeValue();
+                			if (findPlugin(main)!=null)
+                                return;
+                		}
+                		else if (n.getNodeName().equals("type"))
+                			type=n.getNodeValue();
+                	}
+    			}
+    			else if (node.getNodeName().equals("classpath"))
+    			{
+    				NamedNodeMap nnm=node.getAttributes();
+    				for (int j=0; j<nnm.getLength(); j++)
+    				{
+    					Node n=nnm.item(j);
+    					if (n.getNodeName().equals("value"))
+    					{
+    						String classpath=n.getNodeValue();
+    						if (!new File(classpath).exists())
+    		            	{
+    		            		int offset=path.lastIndexOf(File.separatorChar);
+    		            		if (offset>=0)
+    		            			classpath=path.substring(0,offset+1)+classpath;            			
+    		            	}
+    						classes.add(classpath);
+    					}
+    						
+    				}
+    			}	
+    		}            
+            in.close();      
+            JARClassLoader loader=new JARClassLoader(classes.toArray(new String[classes.size()]));
             
             final StandardPlugin p=(StandardPlugin)loader.getClass(main).newInstance();
             if (enabled)
@@ -244,8 +267,17 @@ public class PluginAction
 	    	JarFile jar=new JarFile(path);
 	        InputStream in=jar.getInputStream(jar.getJarEntry("config.xml"));
 	        Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
-	        XPath xpath=XPathFactory.newInstance().newXPath();	        
-	        String main=((Node)xpath.evaluate("/plugin/class/@main", doc, XPathConstants.NODE)).getNodeValue();	        
+	        Node node=doc.getFirstChild().getFirstChild();
+            while (!node.getNodeName().equals("class"))
+                    node=node.getNextSibling();
+            NamedNodeMap nnm=node.getAttributes();
+            String main="";
+            for (int i=0; i<nnm.getLength(); i++)
+            {
+                    Node n=nnm.item(i);
+                    if (n.getNodeName().equals("main"))
+                    	main=n.getNodeValue();
+            }	        
 	        in.close();            
         
 	        return findPlugin(main)!=null;
@@ -265,9 +297,19 @@ public class PluginAction
 	    	JarFile jar=new JarFile(path);
 	        InputStream in=jar.getInputStream(jar.getJarEntry("config.xml"));
 	        Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
-	        XPath xpath=XPathFactory.newInstance().newXPath();
-	        String type=((Node)xpath.evaluate("/plugin/class/@type", doc, XPathConstants.NODE)).getNodeValue();
-	        String main=((Node)xpath.evaluate("/plugin/class/@main", doc, XPathConstants.NODE)).getNodeValue();	        
+	        Node node=doc.getFirstChild().getFirstChild();
+            while (!node.getNodeName().equals("class"))
+                    node=node.getNextSibling();
+            NamedNodeMap nnm=node.getAttributes();
+            String main="",type="";
+            for (int i=0; i<nnm.getLength(); i++)
+            {
+                    Node n=nnm.item(i);
+                    if (n.getNodeName().equals("main"))
+                    	main=n.getNodeValue();
+                    else if (n.getNodeName().equals("type"))
+                    	type=n.getNodeValue();
+            }	        
 	        in.close();            
 	        
 	        if (type.compareToIgnoreCase("ui")==0)	        

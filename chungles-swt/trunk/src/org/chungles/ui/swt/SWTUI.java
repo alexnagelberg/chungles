@@ -26,7 +26,7 @@ public class SWTUI implements UIPlugin
     
     public String getVersion()
     {
-        return "0.3";
+        return "0.4";
     }
     
 	public void init()

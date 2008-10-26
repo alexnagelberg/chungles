@@ -175,6 +175,7 @@ public class Client
         return null;
     }
     
+    //TODO: change savePath to be place of output and append remotepath here
 	public void retrieveFile(final String savePath, final FileList file, final ReceiveProgressListener listener)
 	{
 	    if (file.getFileType()==FileList.DIRECTORY)
@@ -327,8 +328,7 @@ public class Client
         try
         {
             dout.write(ServerConnectionThread.REQUEST_MKDIR);
-            dout.writeBytes(path+"\n");
-            dout.writeBytes(directory+"\n");
+            dout.writeBytes(path+directory+"\n");
             return in.read()==ServerConnectionThread.OK;
         }
         catch (Exception e)

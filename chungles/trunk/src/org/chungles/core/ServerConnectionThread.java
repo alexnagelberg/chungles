@@ -4,6 +4,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import org.chungles.plugin.PluginAction;
+import org.chungles.plugin.StandardPlugin;
+
 public class ServerConnectionThread extends Thread
 {
 	private Socket socket;
@@ -23,6 +26,10 @@ public class ServerConnectionThread extends Thread
 	public final static int BEGIN_MULTICAST=10;
 	public final static int RECOVER_PACKETS=11;	
 	public final static int FILE_INFO=12;
+	public final static int SENDING_FILES=13;
+	public final static int SENT_FILES=14;
+	public final static int GETTING_FILES=15;
+	public final static int GOT_FILES=16;
 	
 	public final static char IS_FILE='F';
 	public final static char IS_DIRECTORY='D';
@@ -125,6 +132,26 @@ public class ServerConnectionThread extends Thread
                 case FILE_INFO:
                 {
                 	fileInfo();
+                	break;
+                }
+                case GETTING_FILES:
+                {
+                	notification(GETTING_FILES);
+                	break;
+                }
+                case GOT_FILES:
+                {
+                	notification(GOT_FILES);
+                	break;
+                }
+                case SENDING_FILES:
+                {
+                	notification(SENDING_FILES);
+                	break;
+                }
+                case SENT_FILES:
+                {
+                	notification(SENT_FILES);
                 	break;
                 }
 			}
@@ -288,14 +315,13 @@ public class ServerConnectionThread extends Thread
         BufferedReader bin=new BufferedReader(new InputStreamReader(in));
 		try
 		{
-			String path=bin.readLine();
-						
+			String path=bin.readLine();			
 			StringTokenizer tok=new StringTokenizer(path, "/");
 			String share=Configuration.getSharePath(tok.nextToken());
 			path=share;
 			if (tok.hasMoreTokens())
 				path+=tok.nextToken("");
-			
+						
 			File file=new File(path);
 			if (validPath(path) && ((file.isDirectory() && !file.isFile()) || file.mkdirs()))
 				out.write(OK);
@@ -485,5 +511,27 @@ public class ServerConnectionThread extends Thread
 		else
 			dout.writeBytes(FileList.FILE+"\n");
 	    dout.writeBytes(file.length()+"\n");
+    }    
+    
+    private void notification(int type) throws IOException
+    {
+    	BufferedReader bin=new BufferedReader(new InputStreamReader(in));
+    	String client=bin.readLine()+" ["+socket.getInetAddress().getHostAddress()+"]";
+    	switch (type)
+    	{
+    		case SENDING_FILES:
+    			PluginAction.notify(StandardPlugin.NOTIFICATION_INFORMATION, client+" is sending files to you.");    			
+    			break;
+    		case SENT_FILES:
+    			PluginAction.notify(StandardPlugin.NOTIFICATION_INFORMATION, client+" finished sending files to you.");
+    			break;
+    		case GETTING_FILES:
+    			PluginAction.notify(StandardPlugin.NOTIFICATION_INFORMATION, client+" is getting files from you.");
+    			break;
+    		case GOT_FILES:
+    			PluginAction.notify(StandardPlugin.NOTIFICATION_INFORMATION, client+" finished getting files from you.");
+    			break;
+    	}
+    	
     }
 }

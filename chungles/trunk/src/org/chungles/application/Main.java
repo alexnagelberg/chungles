@@ -54,18 +54,7 @@ public class Main
         threadedmDNSBind();
 
         ServerThread server = new ServerThread();
-        mClient mclient=new mClient(new FinishNotification()
-        {
-        	public void finished(boolean successfully)
-        	{
-        		//TODO: notify
-        		
-        		/*if (successfully)
-        			PluginAction.finishnotification(true, "Received Multicast file.");
-        		else
-        			PluginAction.finishnotification(false, "Error receiving incoming Multicast");*/
-        	}
-        });
+        mClient mclient=new mClient();
         
         if (isServer)
         {

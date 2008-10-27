@@ -1,0 +1,392 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 44;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5219AECA0E8D93F6007ED199 /* Progress.nib in Resources */ = {isa = PBXBuildFile; fileRef = 5219AEC90E8D93F5007ED199 /* Progress.nib */; };
+		5219AEE20E8D9E17007ED199 /* Progress.m in Sources */ = {isa = PBXBuildFile; fileRef = 5219AEE10E8D9E17007ED199 /* Progress.m */; };
+		523DEB820D71F77B00E807D9 /* Outline.m in Sources */ = {isa = PBXBuildFile; fileRef = 523DEB810D71F77B00E807D9 /* Outline.m */; };
+		523E23AC0D77B9E600D45123 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 523E23AB0D77B9E600D45123 /* JavaVM.framework */; };
+		525C8F7C0D7761B700C1B427 /* OutlineItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 525C8F7B0D7761B700C1B427 /* OutlineItem.m */; };
+		526926D40D713854004A2ADF /* delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 526926CD0D713854004A2ADF /* delete.png */; };
+		526926D50D713854004A2ADF /* download.png in Resources */ = {isa = PBXBuildFile; fileRef = 526926CE0D713854004A2ADF /* download.png */; };
+		526926D60D713854004A2ADF /* mcast.png in Resources */ = {isa = PBXBuildFile; fileRef = 526926CF0D713854004A2ADF /* mcast.png */; };
+		526926D70D713854004A2ADF /* newdirectory.png in Resources */ = {isa = PBXBuildFile; fileRef = 526926D00D713854004A2ADF /* newdirectory.png */; };
+		526926D80D713854004A2ADF /* preferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 526926D10D713854004A2ADF /* preferences.png */; };
+		526926D90D713854004A2ADF /* quit.png in Resources */ = {isa = PBXBuildFile; fileRef = 526926D20D713854004A2ADF /* quit.png */; };
+		526926DA0D713854004A2ADF /* upload.png in Resources */ = {isa = PBXBuildFile; fileRef = 526926D30D713854004A2ADF /* upload.png */; };
+		526926E20D713A50004A2ADF /* Toolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 526926E10D713A50004A2ADF /* Toolbar.m */; };
+		526926F20D713D9B004A2ADF /* MainApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 526926F10D713D9B004A2ADF /* MainApp.m */; };
+		527059330D870AE60051A51A /* Chungles.icns in Resources */ = {isa = PBXBuildFile; fileRef = 527059320D870AE60051A51A /* Chungles.icns */; };
+		52BB69A80EABDCA30035DC07 /* chungles-cocoa.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 52BB69A70EABDCA30035DC07 /* chungles-cocoa.jar */; };
+		52BB69AA0EABDCEF0035DC07 /* chungles.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 52BB69A90EABDCEF0035DC07 /* chungles.jar */; };
+		52BB69AC0EABDD1B0035DC07 /* jmdns.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 52BB69AB0EABDD1B0035DC07 /* jmdns.jar */; };
+		52BB69C90EABE0210035DC07 /* jmdns.jar in Resources */ = {isa = PBXBuildFile; fileRef = 52BB69AB0EABDD1B0035DC07 /* jmdns.jar */; };
+		52BB69CA0EABE0210035DC07 /* chungles.jar in Resources */ = {isa = PBXBuildFile; fileRef = 52BB69A90EABDCEF0035DC07 /* chungles.jar */; };
+		52BB69CB0EABE0210035DC07 /* chungles-cocoa.jar in Resources */ = {isa = PBXBuildFile; fileRef = 52BB69A70EABDCA30035DC07 /* chungles-cocoa.jar */; };
+		52BB6A570EAD16CE0035DC07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		52D9931B0E9EB5270054A765 /* FileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9931A0E9EB5270054A765 /* FileTransfer.m */; };
+		52D993360E9EBE1A0054A765 /* Preferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 52D993350E9EBE1A0054A765 /* Preferences.nib */; };
+		52D9933D0E9EF8EE0054A765 /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9933C0E9EF8EE0054A765 /* Preferences.m */; };
+		52D993FC0E9FCEF50054A765 /* Shares.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D993FB0E9FCEF50054A765 /* Shares.m */; };
+		52D995100E9FF6DE0054A765 /* Plugins.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D9950F0E9FF6DE0054A765 /* Plugins.m */; };
+		8D11072A0486CEB800E47090 /* MainApp.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainApp.nib */; };
+		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainApp.nib; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		32CA4F630368D1EE00C91783 /* chungles-cocoa_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "chungles-cocoa_Prefix.pch"; sourceTree = "<group>"; };
+		5219AEC90E8D93F5007ED199 /* Progress.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Progress.nib; sourceTree = "<group>"; };
+		5219AEE00E8D9E17007ED199 /* Progress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Progress.h; sourceTree = "<group>"; };
+		5219AEE10E8D9E17007ED199 /* Progress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Progress.m; sourceTree = "<group>"; };
+		523DEB800D71F77B00E807D9 /* Outline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Outline.h; sourceTree = "<group>"; };
+		523DEB810D71F77B00E807D9 /* Outline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Outline.m; sourceTree = "<group>"; };
+		523E23AB0D77B9E600D45123 /* JavaVM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaVM.framework; path = /System/Library/Frameworks/JavaVM.framework; sourceTree = "<absolute>"; };
+		525C8F7A0D7761B700C1B427 /* OutlineItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutlineItem.h; sourceTree = "<group>"; };
+		525C8F7B0D7761B700C1B427 /* OutlineItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OutlineItem.m; sourceTree = "<group>"; };
+		526926CD0D713854004A2ADF /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete.png; sourceTree = "<group>"; };
+		526926CE0D713854004A2ADF /* download.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = download.png; sourceTree = "<group>"; };
+		526926CF0D713854004A2ADF /* mcast.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mcast.png; sourceTree = "<group>"; };
+		526926D00D713854004A2ADF /* newdirectory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newdirectory.png; sourceTree = "<group>"; };
+		526926D10D713854004A2ADF /* preferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = preferences.png; sourceTree = "<group>"; };
+		526926D20D713854004A2ADF /* quit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quit.png; sourceTree = "<group>"; };
+		526926D30D713854004A2ADF /* upload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upload.png; sourceTree = "<group>"; };
+		526926E00D713A50004A2ADF /* Toolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Toolbar.h; sourceTree = "<group>"; };
+		526926E10D713A50004A2ADF /* Toolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Toolbar.m; sourceTree = "<group>"; };
+		526926F00D713D9B004A2ADF /* MainApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainApp.h; sourceTree = "<group>"; };
+		526926F10D713D9B004A2ADF /* MainApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainApp.m; sourceTree = "<group>"; };
+		527059320D870AE60051A51A /* Chungles.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Chungles.icns; sourceTree = "<group>"; };
+		52BB69A70EABDCA30035DC07 /* chungles-cocoa.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = "chungles-cocoa.jar"; sourceTree = "<group>"; };
+		52BB69A90EABDCEF0035DC07 /* chungles.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = chungles.jar; sourceTree = "<group>"; };
+		52BB69AB0EABDD1B0035DC07 /* jmdns.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = jmdns.jar; sourceTree = "<group>"; };
+		52D993190E9EB5270054A765 /* FileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileTransfer.h; sourceTree = "<group>"; };
+		52D9931A0E9EB5270054A765 /* FileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileTransfer.m; sourceTree = "<group>"; };
+		52D993350E9EBE1A0054A765 /* Preferences.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Preferences.nib; sourceTree = "<group>"; };
+		52D9933B0E9EF8EE0054A765 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
+		52D9933C0E9EF8EE0054A765 /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Preferences.m; sourceTree = "<group>"; };
+		52D993FA0E9FCEF50054A765 /* Shares.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shares.h; sourceTree = "<group>"; };
+		52D993FB0E9FCEF50054A765 /* Shares.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Shares.m; sourceTree = "<group>"; };
+		52D9950E0E9FF6DE0054A765 /* Plugins.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Plugins.h; sourceTree = "<group>"; };
+		52D9950F0E9FF6DE0054A765 /* Plugins.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Plugins.m; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* chungles-cocoa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "chungles-cocoa.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				523E23AC0D77B9E600D45123 /* JavaVM.framework in Frameworks */,
+				52BB69A80EABDCA30035DC07 /* chungles-cocoa.jar in Frameworks */,
+				52BB69AA0EABDCEF0035DC07 /* chungles.jar in Frameworks */,
+				52BB69AC0EABDD1B0035DC07 /* jmdns.jar in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				526926E00D713A50004A2ADF /* Toolbar.h */,
+				526926E10D713A50004A2ADF /* Toolbar.m */,
+				526926F00D713D9B004A2ADF /* MainApp.h */,
+				526926F10D713D9B004A2ADF /* MainApp.m */,
+				523DEB800D71F77B00E807D9 /* Outline.h */,
+				525C8F7A0D7761B700C1B427 /* OutlineItem.h */,
+				525C8F7B0D7761B700C1B427 /* OutlineItem.m */,
+				523DEB810D71F77B00E807D9 /* Outline.m */,
+				5219AEE00E8D9E17007ED199 /* Progress.h */,
+				5219AEE10E8D9E17007ED199 /* Progress.m */,
+				52D993190E9EB5270054A765 /* FileTransfer.h */,
+				52D9931A0E9EB5270054A765 /* FileTransfer.m */,
+				52D9933B0E9EF8EE0054A765 /* Preferences.h */,
+				52D9933C0E9EF8EE0054A765 /* Preferences.m */,
+				52D993FA0E9FCEF50054A765 /* Shares.h */,
+				52D993FB0E9FCEF50054A765 /* Shares.m */,
+				52D9950E0E9FF6DE0054A765 /* Plugins.h */,
+				52D9950F0E9FF6DE0054A765 /* Plugins.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* chungles-cocoa.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* chungles-cocoa */ = {
+			isa = PBXGroup;
+			children = (
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+				52D993350E9EBE1A0054A765 /* Preferences.nib */,
+			);
+			name = "chungles-cocoa";
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32CA4F630368D1EE00C91783 /* chungles-cocoa_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				52BB69AB0EABDD1B0035DC07 /* jmdns.jar */,
+				52BB69A90EABDCEF0035DC07 /* chungles.jar */,
+				52BB69A70EABDCA30035DC07 /* chungles-cocoa.jar */,
+				527059320D870AE60051A51A /* Chungles.icns */,
+				526926CD0D713854004A2ADF /* delete.png */,
+				526926CE0D713854004A2ADF /* download.png */,
+				526926CF0D713854004A2ADF /* mcast.png */,
+				526926D00D713854004A2ADF /* newdirectory.png */,
+				526926D10D713854004A2ADF /* preferences.png */,
+				526926D20D713854004A2ADF /* quit.png */,
+				526926D30D713854004A2ADF /* upload.png */,
+				8D1107310486CEB800E47090 /* Info.plist */,
+				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				29B97318FDCFA39411CA2CEA /* MainApp.nib */,
+				5219AEC90E8D93F5007ED199 /* Progress.nib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				523E23AB0D77B9E600D45123 /* JavaVM.framework */,
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* chungles-cocoa */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "chungles-cocoa" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "chungles-cocoa";
+			productInstallPath = "$(HOME)/Applications";
+			productName = "chungles-cocoa";
+			productReference = 8D1107320486CEB800E47090 /* chungles-cocoa.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "chungles-cocoa" */;
+			compatibilityVersion = "Xcode 3.0";
+			hasScannedForEncodings = 1;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* chungles-cocoa */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* chungles-cocoa */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52BB69C90EABE0210035DC07 /* jmdns.jar in Resources */,
+				52BB69CA0EABE0210035DC07 /* chungles.jar in Resources */,
+				52BB69CB0EABE0210035DC07 /* chungles-cocoa.jar in Resources */,
+				8D11072A0486CEB800E47090 /* MainApp.nib in Resources */,
+				526926D40D713854004A2ADF /* delete.png in Resources */,
+				52BB6A570EAD16CE0035DC07 /* InfoPlist.strings in Resources */,
+				526926D50D713854004A2ADF /* download.png in Resources */,
+				526926D60D713854004A2ADF /* mcast.png in Resources */,
+				526926D70D713854004A2ADF /* newdirectory.png in Resources */,
+				526926D80D713854004A2ADF /* preferences.png in Resources */,
+				526926D90D713854004A2ADF /* quit.png in Resources */,
+				526926DA0D713854004A2ADF /* upload.png in Resources */,
+				527059330D870AE60051A51A /* Chungles.icns in Resources */,
+				5219AECA0E8D93F6007ED199 /* Progress.nib in Resources */,
+				52D993360E9EBE1A0054A765 /* Preferences.nib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				526926E20D713A50004A2ADF /* Toolbar.m in Sources */,
+				526926F20D713D9B004A2ADF /* MainApp.m in Sources */,
+				523DEB820D71F77B00E807D9 /* Outline.m in Sources */,
+				525C8F7C0D7761B700C1B427 /* OutlineItem.m in Sources */,
+				5219AEE20E8D9E17007ED199 /* Progress.m in Sources */,
+				52D9931B0E9EB5270054A765 /* FileTransfer.m in Sources */,
+				52D9933D0E9EF8EE0054A765 /* Preferences.m in Sources */,
+				52D993FC0E9FCEF50054A765 /* Shares.m in Sources */,
+				52D995100E9FF6DE0054A765 /* Plugins.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		29B97318FDCFA39411CA2CEA /* MainApp.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				29B97319FDCFA39411CA2CEA /* English */,
+			);
+			name = MainApp.nib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "chungles-cocoa_Prefix.pch";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = "chungles-cocoa";
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "chungles-cocoa_Prefix.pch";
+				HEADER_SEARCH_PATHS = "$(SDKROOT)/System/Library/Frameworks/JavaVM.framework/Headers/**";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = "chungles-cocoa";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.5.sdk";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "chungles-cocoa" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "chungles-cocoa" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

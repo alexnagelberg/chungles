@@ -106,8 +106,8 @@ public class SWTUI implements UIPlugin
         });
 	}
 
-	public void notification(int type, String message) {
-		// TODO Auto-generated method stub
+	public void notify(int type, String message)
+	{
 		
 	}
 }

@@ -103,4 +103,8 @@ public class Main implements UIPlugin
     		e.printStackTrace();
     	}
     }
+    
+    public void notify(int type, String message)
+    {	
+    }
 }

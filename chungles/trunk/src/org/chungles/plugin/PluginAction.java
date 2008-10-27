@@ -325,16 +325,14 @@ public class PluginAction
     	return null;
     }
     
-    //TODO: notification system
-    
-    /*public static void notify(int type, String message)
+    public static void notify(int type, String message)
     {
         Iterator<PluginInfo<StandardPlugin>> iter=Configuration.otherplugins.iterator();
         while (iter.hasNext())
         {
             PluginInfo<StandardPlugin> p=iter.next();
             if (p.isEnabled())
-                p.getPlugin().notification(type, message);
+                p.getPlugin().notify(type, message);
         }
-    }*/
+    }
 }

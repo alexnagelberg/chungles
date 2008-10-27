@@ -4,21 +4,13 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import org.chungles.plugin.PluginAction;
+import org.chungles.plugin.StandardPlugin;
+
 public class mClient extends Thread
 {
 	private boolean stoprunning=false;
-	private FinishNotification finishnotification;
 	private static int PACKET_SIZE=1024;
-	
-	private mClient()
-	{
-		
-	}
-	
-	public mClient(FinishNotification finishnotification)
-	{
-		this.finishnotification=finishnotification;
-	}
 	
 	public void run()
 	{
@@ -38,7 +30,7 @@ public class mClient extends Thread
 				if (buf[0]==ServerConnectionThread.BEGIN_MULTICAST && !mDNSUtil.isBound(pack.getAddress()))
 				{
 					s.setSoTimeout(10000); // 10 seconds allowed between receiving packets before exception
-					
+					PluginAction.notify(StandardPlugin.NOTIFICATION_INFORMATION, "Receiving multicast.");
 					Hashtable<Long, Boolean> unreceivedpackets=new Hashtable<Long, Boolean>();
 					byte filesizebuf[]=new byte[8];
 					byte strlengthbuf[]=new byte[4];
@@ -151,12 +143,12 @@ public class mClient extends Thread
 						}
 		                sock.close();
 		                fout.close();
-		                finishnotification.finished(true);
+		                PluginAction.notify(StandardPlugin.NOTIFICATION_INFORMATION, "Received multicast successfully.");
 	                }
 		            catch (SocketTimeoutException e)
 		            {
 		            	// When fallback fails, file fails
-		            	finishnotification.finished(false);
+		            	PluginAction.notify(StandardPlugin.NOTIFICATION_ERROR, "Error receiving multicast.");
 		            }
 		            s.setSoTimeout(0);
 				}

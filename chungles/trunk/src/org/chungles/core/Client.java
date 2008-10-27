@@ -321,9 +321,7 @@ public class Client
 	}
     
     public boolean mkdir(String path, String directory)
-    {
-        directory="/"+directory;
-        
+    {    	
         DataOutputStream dout=new DataOutputStream(out);
         try
         {
@@ -369,4 +367,16 @@ public class Client
         }
 	}
         
+    public void sendNotification(int type)
+    {
+    	try
+    	{
+    		out.write(type);
+    		out.write((Configuration.getComputerName()+"\n").getBytes());
+    	}
+    	catch (Exception e)
+    	{
+    		e.printStackTrace();
+    	}
+    }
 }

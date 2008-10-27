@@ -76,11 +76,12 @@ public class TransferFromNode implements SelectionListener
                 final SWTTransferDialog dialog = SWTTransferDialog
                         .getInstance(display);
                 int i;
-                dialog.progressThread();
+                dialog.progressThread();                
                 for (i = 0; i < lists.length; i++)
                 {
                     FileList list = lists[i];
                     client = new Client(IPs[i]);
+                    client.sendNotification(ServerConnectionThread.GETTING_FILES);
                     int offset = list.getRemotePath().lastIndexOf('/') + 1;
                     String separator = System.getProperty("file.separator");
                     while (list.getRemotePath() != null)
@@ -118,6 +119,7 @@ public class TransferFromNode implements SelectionListener
                         }
                         list = list.getNext();
                     }
+                    client.sendNotification(ServerConnectionThread.GOT_FILES);
                     client.close();
                 }
                 dialog.closeDialog();

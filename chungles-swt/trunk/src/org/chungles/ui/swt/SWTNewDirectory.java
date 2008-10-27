@@ -96,6 +96,7 @@ public class SWTNewDirectory implements SelectionListener
     {
         Client client=new Client(IP);
         boolean status=client.mkdir(path, directory);
+        client.sendNotification(ServerConnectionThread.SENT_FILES);
         client.close();
         return status;
     }

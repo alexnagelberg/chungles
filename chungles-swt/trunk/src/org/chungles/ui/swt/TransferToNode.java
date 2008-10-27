@@ -89,6 +89,7 @@ public class TransferToNode extends DropTargetAdapter implements SelectionListen
 		    	int i=0;
 		    	FileList list=FileList.recurseFiles(files);
 		    	dialog.progressThread();
+		    	client.sendNotification(ServerConnectionThread.SENDING_FILES);
 		    	while (list!=null)
 		    	{		    		
 		    		i++;
@@ -118,6 +119,7 @@ public class TransferToNode extends DropTargetAdapter implements SelectionListen
 		    		}
 		    		list=list.getNext();
 		    	}
+		    	client.sendNotification(ServerConnectionThread.SENT_FILES);
 		    	client.close();
 		    	dialog.closeDialog();
     		}

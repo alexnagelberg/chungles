@@ -23,6 +23,7 @@ public class SWTUtil implements SelectionListener
     private TreeEditor treeeditor;
     private TrayItem trayitem;
     private boolean visible=true;
+    private ToolTip tip;
     
 	private SWTUtil()
 	{
@@ -36,12 +37,14 @@ public class SWTUtil implements SelectionListener
 	    
 	    // Set system tray icon
 	    in=getClass().getClassLoader().getResourceAsStream("images/chungles-16.png");
-	    Tray tray=display.getSystemTray();
+	    Tray tray=display.getSystemTray();	    
 	    trayitem=new TrayItem(tray, SWT.NONE);
 	    trayitem.setImage(new Image(display, in));
 	    trayitem.addSelectionListener(this);
-	    trayitem.setToolTipText("Chungles");
-        
+	    trayitem.setToolTipText("Chungles");	    	    	   
+	    tip = new ToolTip(shell, SWT.BALLOON | SWT.ICON_INFORMATION);	    
+	    trayitem.setToolTip(tip);
+	    
         // Add tray menu
         final Menu traymenu=new Menu(shell, SWT.POP_UP);
 	    quitMenuItem=new MenuItem(traymenu, SWT.PUSH);
@@ -357,5 +360,11 @@ public class SWTUtil implements SelectionListener
     	putFileMenuItem.setEnabled(false);
     	deleteMenuItem.setEnabled(false);
     	newdirMenuItem.setEnabled(false);
+    }
+    
+    public void notify(String message)
+    {    	
+    	tip.setMessage(message);
+    	tip.setVisible(true);
     }
 }

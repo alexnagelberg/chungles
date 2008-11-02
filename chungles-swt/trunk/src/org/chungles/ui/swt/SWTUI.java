@@ -106,8 +106,14 @@ public class SWTUI implements UIPlugin
         });
 	}
 
-	public void notify(int type, String message)
+	public void notify(int type, final String message)
 	{
-		
+		swtutil.getShell().getDisplay().asyncExec(new Runnable()
+		{
+			public void run()
+			{ 
+				swtutil.notify(message);
+			}
+		});
 	}
 }

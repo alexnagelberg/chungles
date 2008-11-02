@@ -327,10 +327,18 @@ public class PluginAction
     
     public static void notify(int type, String message)
     {
-        Iterator<PluginInfo<StandardPlugin>> iter=Configuration.otherplugins.iterator();
-        while (iter.hasNext())
+    	Iterator<PluginInfo<UIPlugin>> iter=Configuration.UIplugins.iterator();
+    	while (iter.hasNext())
+    	{
+    		PluginInfo<UIPlugin> p=iter.next();
+    		if (p.isEnabled())
+    			p.getPlugin().notify(type, message);
+    	}
+    	
+        Iterator<PluginInfo<StandardPlugin>> iter2=Configuration.otherplugins.iterator();
+        while (iter2.hasNext())
         {
-            PluginInfo<StandardPlugin> p=iter.next();
+            PluginInfo<StandardPlugin> p=iter2.next();
             if (p.isEnabled())
                 p.getPlugin().notify(type, message);
         }

@@ -39,7 +39,11 @@ public class ConfigurationParser extends DefaultHandler
 	public void startElement(String namespaceURI, String localName,
 			String qualifiedName, Attributes attrs) throws SAXException
 	{		
-		if (qualifiedName.equals("share")) // A share
+		if (qualifiedName.equals("chungles"))
+		{
+			Configuration.setVersion(attrs.getValue("version"));
+		}
+		else if (qualifiedName.equals("share")) // A share
 		{
 			String name=attrs.getValue("name");
 			String map=attrs.getValue("map");
@@ -100,7 +104,7 @@ public class ConfigurationParser extends DefaultHandler
 			
 			// Opening
 			out.println("<?xml version='1.0'?>");
-			out.println("<chungles>");
+			out.println("<chungles version='"+Configuration.getVersion()+"'>");
 			
 			// Shares			
 			out.println("<shares>");

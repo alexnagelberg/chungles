@@ -15,7 +15,8 @@ public class Configuration
     private static int mCastKBPSSpeed;
     public static LinkedList<PluginInfo<UIPlugin>> UIplugins=new LinkedList<PluginInfo<UIPlugin>>();
     public static LinkedList<PluginInfo<StandardPlugin>> otherplugins=new LinkedList<PluginInfo<StandardPlugin>>();
-    private static String REV="188:190M";    
+    private static String REV="svn: This client is too old to work with working copy '.'; please get a newer Subversion client";    
+	private static String version="0.4";
 	
 	public static void init()
 	{
@@ -28,7 +29,12 @@ public class Configuration
 	
 	public static String getVersion()
 	{
-		return "r"+REV;
+		return version;
+	}
+	
+	public static void setVersion(String version)
+	{
+		Configuration.version=version;
 	}
 	
 	public static String getSharePath(String name)

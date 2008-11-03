@@ -28,13 +28,6 @@ public class Main
 			ConfigurationParser.saveConfig();			
 			try
 			{
-				// rewrite run script
-				FileOutputStream fout=new FileOutputStream("run.sh");
-				fout.write("#!/bin/sh\n".getBytes());
-				fout.write("java -jar chungles.jar".getBytes());
-				fout.close();
-				new File("run.sh").setExecutable(true);
-				
 				// copy swt plugin to plugin dir
 				FileInputStream in=new FileInputStream("chungles-swt.jar");
 				FileOutputStream out=new FileOutputStream(System.getProperty("user.home")+"/.chungles/plugins/chungles-swt.jar");
@@ -54,16 +47,29 @@ public class Main
 					out.write(buf, 0, len);
 				}
 				in.close();
-				out.close();
-				
-				// run chungles
-				org.chungles.application.Main.main(args);
+				out.close();				
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
 			
+		}
+		
+		try
+		{
+			// rewrite run script
+			FileOutputStream fout=new FileOutputStream("run.sh");
+			fout.write("#!/bin/sh\n".getBytes());
+			fout.write("java -cp chungles.jar:jmdns.jar org.chungles.application.Main".getBytes());
+			fout.close();
+			new File("run.sh").setExecutable(true);
+			// run chungles
+			org.chungles.application.Main.main(args);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 		
 	}

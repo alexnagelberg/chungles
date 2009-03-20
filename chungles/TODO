@@ -1,0 +1,10 @@
+bugs:
+*keep a hash table of interfaces available and handle changes in interfaces showing up/going down
+
+features:
+*(optional) gzip compression on line (default: no)
+*(optional) ssl encryption (default: no)
+*user authentication
+*file resuming
+*search feature
+*integrate stateless

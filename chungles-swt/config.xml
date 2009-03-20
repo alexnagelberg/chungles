@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
 <plugin>
 	<class type="ui" main="org.chungles.ui.swt.SWTUI"/>
-	<classpath value="swt.jar"/>
+	<classpath value="/home/alex/workspace/org.eclipse.swt/swt.jar"/>
 </plugin>

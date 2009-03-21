@@ -59,14 +59,12 @@ public class ServerConnectionThread extends Thread
 	public void run()
 	{
 		try
-		{			
-			DataInputStream din = new DataInputStream(in);
-			
-			int command=din.read();
+		{						
+			int command=in.read();
 			while (command!=-1)
 			{				
 				executeCommand(command);
-				command=din.read();
+				command=in.read();
 			}
 			socket.close();			
 		}
@@ -514,9 +512,16 @@ public class ServerConnectionThread extends Thread
     }    
     
     private void notification(int type) throws IOException
-    {
-    	BufferedReader bin=new BufferedReader(new InputStreamReader(in));
-    	String client=bin.readLine()+" ["+socket.getInetAddress().getHostAddress()+"]";
+    {    	    	
+    	int c=0;
+    	String client="";
+    	while (c!='\n')
+    	{
+    		c=in.read();
+    		client+=(char)c;
+    	}
+    	client+=" ["+socket.getInetAddress().getHostAddress()+"]";
+
     	switch (type)
     	{
     		case SENDING_FILES:
@@ -531,7 +536,7 @@ public class ServerConnectionThread extends Thread
     		case GOT_FILES:
     			PluginAction.notify(StandardPlugin.NOTIFICATION_INFORMATION, client+" finished getting files from you.");
     			break;
-    	}
+    	}    	
     	
     }
 }

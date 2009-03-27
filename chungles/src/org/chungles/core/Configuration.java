@@ -14,8 +14,7 @@ public class Configuration
     private static boolean mCastThrottled;
     private static int mCastKBPSSpeed;
     public static LinkedList<PluginInfo<UIPlugin>> UIplugins=new LinkedList<PluginInfo<UIPlugin>>();
-    public static LinkedList<PluginInfo<StandardPlugin>> otherplugins=new LinkedList<PluginInfo<StandardPlugin>>();
-    private static String REV="svn: This client is too old to work with working copy '.'; please get a newer Subversion client";    
+    public static LinkedList<PluginInfo<StandardPlugin>> otherplugins=new LinkedList<PluginInfo<StandardPlugin>>();    
 	private static String version="0.4";
 	
 	public static void init()

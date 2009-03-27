@@ -4,6 +4,11 @@
 #import "MainApp.h"
 #import <jni.h>
 
+const int SENDING_FILES=13;
+const int SENT_FILES=14;
+const int GETTING_FILES=15;
+const int GOT_FILES=16;
+
 JNIEXPORT void JNICALL updateProgress(JNIEnv *env, jobject obj, jlong increment)
 {
 	Progress *progress=[Progress getInstance];
@@ -102,6 +107,10 @@ JNIEXPORT void JNICALL updateProgress(JNIEnv *env, jobject obj, jlong increment)
 	mid=(*env)->GetMethodID(env,cls,"lastIndexOf", "(I)I");
 	int offset=(*env)->CallIntMethod(env,remotepath,mid, '/');
 	
+	// Send notification
+	mid=(*env)->GetMethodID(env, client_cls, "sendNotification", "(I)V");
+	(*env)->CallObjectMethod(env, client_inst, mid, GETTING_FILES);
+	
 	jmethodID remotepath_mid=(*env)->GetMethodID(env,filelist_cls,"getRemotePath","()Ljava/lang/String;");
 	while ((*env)->CallObjectMethod(env,filelist,remotepath_mid)!=nil)
 	{
@@ -137,6 +146,11 @@ JNIEXPORT void JNICALL updateProgress(JNIEnv *env, jobject obj, jlong increment)
 		jmethodID getnext_mid=(*env)->GetMethodID(env,filelist_cls,"getNext","()Lorg/chungles/core/FileList;");
 		filelist=(*env)->CallObjectMethod(env,filelist,getnext_mid);
 	}
+	
+	// Send notification
+	mid=(*env)->GetMethodID(env, client_cls, "sendNotification", "(I)V");
+	(*env)->CallObjectMethod(env, client_inst, mid, GOT_FILES);
+	
 	[[progress getPanel] close];
 	
 	(*env)->UnregisterNatives(env,progress_cls);
@@ -194,6 +208,10 @@ JNIEXPORT void JNICALL updateProgress(JNIEnv *env, jobject obj, jlong increment)
 	nm.fnPtr=updateProgress;
 	(*env)->RegisterNatives(env,progress_cls,&nm,1);
 
+	// Send notification
+	mid=(*env)->GetMethodID(env,client_cls, "sendNotification", "(I)V");
+	(*env)->CallObjectMethod(env, client_inst, mid, SENDING_FILES);
+	
 	// Traverse file list sending files
 	while (filelist!=nil)
 	{
@@ -218,6 +236,10 @@ JNIEXPORT void JNICALL updateProgress(JNIEnv *env, jobject obj, jlong increment)
 		
 		filelist=(*env)->CallObjectMethod(env,filelist,getnext_mid);
 	}
+	// send notification
+	mid=(*env)->GetMethodID(env, client_cls, "sendNotification", "(I)V");
+	(*env)->CallObjectMethod(env, client_inst, mid, SENT_FILES);
+	
 	[[progress getPanel] close];
 	// Cleanup
 	mid=(*env)->GetMethodID(env,client_cls,"close","()V");

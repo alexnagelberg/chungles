@@ -56,22 +56,24 @@ public class Main
 			
 		}
 		
-		try
+		if (System.getProperty("os.name").compareToIgnoreCase("Windows")<0)
 		{
-			// rewrite run script
-			FileOutputStream fout=new FileOutputStream("run.sh");
-			fout.write("#!/bin/sh\n".getBytes());
-			fout.write("java -cp chungles.jar:jmdns.jar org.chungles.application.Main".getBytes());
-			fout.close();
-			new File("run.sh").setExecutable(true);
-			// run chungles
-			org.chungles.application.Main.main(args);
+			try
+			{						
+				// rewrite run script
+				FileOutputStream fout=new FileOutputStream("run.sh");
+				fout.write("#!/bin/sh\n".getBytes());
+				fout.write("java -cp chungles.jar:jmdns.jar org.chungles.application.Main".getBytes());
+				fout.close();
+				new File("run.sh").setExecutable(true);
+				// run chungles
+				org.chungles.application.Main.main(args);						
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		
 	}
 	
 	private static boolean isLatest(File file)

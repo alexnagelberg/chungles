@@ -2,6 +2,7 @@
 #import "MainApp.h"
 #import "Shares.h"
 #import "Plugins.h"
+#import "Outline.h"
 #import <jni.h>
 static Preferences *inst;
 @implementation Preferences
@@ -181,7 +182,11 @@ static Preferences *inst;
 		jobject path=(*env)->NewStringUTF(env,[[pathtable objectAtIndex:i] UTF8String]);
 		(*env)->CallObjectMethod(env,cls,mid,share,path);
 	}
-		
+	
+	// Set node name	
+	jobject compname_j=(*env)->NewStringUTF(env, [[[self getCompname] title] UTF8String]);
+	mid=(*env)->GetStaticMethodID(env,cls,"setComputerName","(Ljava/lang/String;)V");
+	(*env)->CallStaticVoidMethod(env,cls,mid,compname_j);
 		
 	// Set mcast properties
 	jobject mcastshare_j=(*env)->NewStringUTF(env, [[[self getMcastshare] title] UTF8String]);
@@ -318,7 +323,12 @@ static Preferences *inst;
 	cls=(*env)->FindClass(env, "org/chungles/core/ConfigurationParser");
 	mid=(*env)->GetStaticMethodID(env, cls, "saveConfig", "()V");
 	(*env)->CallStaticObjectMethod(env,cls,mid);
-		
+	
+	// Reload interfaces
+	cls=(*env)->FindClass(env, "org/chungles/core/mDNSUtil");
+	mid=(*env)->GetStaticMethodID(env,cls,"reloadInterfaces", "()V");
+	(*env)->CallStaticVoidMethod(env,cls,mid);
+	
 	(*jvm)->DetachCurrentThread(jvm);
 	[window setDocumentEdited:NO];
 }

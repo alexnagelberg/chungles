@@ -24,9 +24,23 @@ public class Main implements StandardPlugin
 
 	public void init()
 	{
-		Runtime.getRuntime().load("/Users/nalex/chungles-growl/build/Release/libchungles-growl.jnilib");
 		try
 		{
+			// Load library from JAR to temp file, then load temp file as native lib
+			InputStream fin=getClass().getClassLoader().getResource("libchungles-growl.jnilib").openStream();
+			File tmp=File.createTempFile("libchunglesgrowl", "jnilib");
+			FileOutputStream fout=new FileOutputStream(tmp);
+			int lastread=0;
+			byte[] buf=new byte[2046];
+			while (lastread!=-1)
+			{
+				lastread=fin.read(buf, 0, 2046);
+				if (lastread!=-1) fout.write(buf, 0, lastread);
+			}
+			fin.close();
+			fout.close();
+			
+			Runtime.getRuntime().load(tmp.getAbsolutePath());
 			InputStream in=getClass().getClassLoader().getResourceAsStream("images/chungles-32.png");
 			int size=2009;
 			byte[] image=new byte[size];
@@ -43,23 +57,18 @@ public class Main implements StandardPlugin
 		
 	}
 
-	public void notification(int type, String message)
+	public void shutdown()
+	{
+		
+	}
+	public void notify(int type, String message)
 	{
 		String notification;
 		if (type==StandardPlugin.NOTIFICATION_ERROR)
 			notification="Error";
-		else if (type==StandardPlugin.NOTIFICATION_GENERAL)
-			notification="General";
-		else if (type==StandardPlugin.NOTIFICATION_FINISH_TRANSFER)
-			notification="Finished Transfer";
 		else
-			notification="Start Transfer";
+			notification="General";
 		notify(notification,notification,message);
-	}
-
-	public void shutdown()
-	{
-		
 	}
 
 }

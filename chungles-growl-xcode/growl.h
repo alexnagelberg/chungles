@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
-#import <GrowlDefines.h>
-#import <jni.h>
+#import <Growl/GrowlDefines.h>
+#import <JavaVM/jni.h>
 
 @interface growl : NSObject {
 

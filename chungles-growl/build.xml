@@ -18,6 +18,9 @@
 			<fileset dir="${basedir}">
 				<filename name="**/images/*"/>
 			</fileset>
+			<fileset dir="${basedir}">
+				<filename name="**/libchungles-growl.jnilib"/>
+			</fileset>
 		</jar>
 	</target>
 		

@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		52AB0FB30E2504CD00ADBA3F /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52AB0FB20E2504CD00ADBA3F /* JavaVM.framework */; };
 		52AB0FB90E2504E600ADBA3F /* growl.h in Headers */ = {isa = PBXBuildFile; fileRef = 52AB0FB70E2504E600ADBA3F /* growl.h */; };
 		52AB0FBA0E2504E600ADBA3F /* growl.m in Sources */ = {isa = PBXBuildFile; fileRef = 52AB0FB80E2504E600ADBA3F /* growl.m */; };
 		52AB0FF50E2509D000ADBA3F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52AB0FF40E2509D000ADBA3F /* Foundation.framework */; };
+		FA3A5BFB105D80EC00BF48DF /* Growl.framework in Headers */ = {isa = PBXBuildFile; fileRef = 52AB0FBE0E2505DB00ADBA3F /* Growl.framework */; };
+		FA3A5C41105D8B8E00BF48DF /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52AB0FB20E2504CD00ADBA3F /* JavaVM.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52AB0FB30E2504CD00ADBA3F /* JavaVM.framework in Frameworks */,
+				FA3A5C41105D8B8E00BF48DF /* JavaVM.framework in Frameworks */,
 				52AB0FF50E2509D000ADBA3F /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,6 +72,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA3A5BFB105D80EC00BF48DF /* Growl.framework in Headers */,
 				52AB0FB90E2504E600ADBA3F /* growl.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

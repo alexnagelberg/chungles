@@ -25,7 +25,7 @@ JNIEXPORT void JNICALL Java_org_chungles_growl_Main_notify (JNIEnv *env, jobject
 + (void) regApp:(NSData *)image
 {
   NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:NULL] init];
-  NSArray *notifications=[[NSArray alloc] initWithObjects:@"General",@"Error",@"Transfer Started",@"Transfer Finished",nil];
+  NSArray *notifications=[[NSArray alloc] initWithObjects:@"General",@"Error",nil];
   NSArray *keys=[[NSArray alloc] initWithObjects:GROWL_APP_NAME,GROWL_NOTIFICATIONS_ALL,GROWL_NOTIFICATIONS_DEFAULT,GROWL_APP_ICON,nil];
   NSArray *objs=[[NSArray alloc] initWithObjects:@"Chungles",notifications,notifications,image,nil];
   NSDictionary *regDict=[NSDictionary dictionaryWithObjects:objs forKeys:keys];
